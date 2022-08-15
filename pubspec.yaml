@@ -1,0 +1,65 @@
+name: levels
+description: A robot who do navigation and mapping to make ads more interesting.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0-69.2.beta <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  firebase_core: ^1.6.0
+  cloud_firestore: ^2.5.1
+  fl_animated_linechart: ^1.1.6
+  swipe_deck: ^1.1.0
+  carousel_slider: ^4.1.1
+  firebase_auth: ^3.4.2
+  google_sign_in: ^5.4.0
+  firebase_database: ^9.0.20
+  pinput: ^2.2.11
+  easy_container: ^1.0.4
+  intl_phone_field: ^3.1.0
+  firebase_phone_auth_handler:
+  flutter_launcher_icons: ^0.9.3
+  flutter_toggle_tab: ^1.2.0
+  multi_select_flutter: ^4.1.2
+  animated_button: ^0.2.0
+  flutter_native_splash: ^2.2.7
+
+  flutter_rounded_date_picker: ^3.0.1
+
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/icon.png"
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/images/profiles/
+  #   - images/a_dot_ham.jpeg
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+
+flutter_native_splash:
+  color: "#a11d9c"
+  image: assets/images/axon.png
+
+
+
+
+
