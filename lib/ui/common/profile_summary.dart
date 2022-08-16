@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:levels/model/profiles.dart';
-import 'package:levels/services/firebase_service.dart';
-import 'package:levels/ui/common/separator.dart';
-import 'package:levels/ui/detail/detail_page.dart';
-import 'package:levels/ui/text_style.dart';
+import 'package:Aerobotix/model/profiles.dart';
+import 'package:Aerobotix/services/firebase_service.dart';
+import 'package:Aerobotix/ui/common/separator.dart';
+import 'package:Aerobotix/ui/detail/detail_page.dart';
+import 'package:Aerobotix/ui/text_style.dart';
 
 class ProfileSummary extends StatelessWidget {
   final Profile profile;

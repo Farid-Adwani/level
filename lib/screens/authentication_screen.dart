@@ -1,11 +1,12 @@
+import 'package:Aerobotix/screens/profile_screen.dart';
 import 'package:easy_container/easy_container.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:levels/screens/sign_up_screen.dart';
-import 'package:levels/screens/verify_phone_number_screen.dart';
-import 'package:levels/services/firebase_service.dart';
-import 'package:levels/ui/text_style.dart';
-import 'package:levels/utils/helpers.dart';
+import 'package:Aerobotix/screens/sign_up_screen.dart';
+import 'package:Aerobotix/screens/verify_phone_number_screen.dart';
+import 'package:Aerobotix/services/firebase_service.dart';
+import 'package:Aerobotix/ui/text_style.dart';
+import 'package:Aerobotix/utils/helpers.dart';
 
 class AuthenticationScreen extends StatefulWidget {
   static const id = 'AuthenticationScreen';
@@ -37,6 +38,12 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Image.asset(
+              "assets/images/icon.png",
+              fit: BoxFit.cover,
+              height: MediaQuery.of(context).size.height / 8,
+              width: MediaQuery.of(context).size.width,
+            ),
                 const Text(
                   "Please Enter Your Phone Number ",
                   style: TextStyle(fontSize: 22),
@@ -70,7 +77,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                         Navigator.pushNamed(context, SignUpScreen.id);
                       },
                        child: Text("Create account",style:TextStyle(
-                        color: Colors.redAccent,
+                        color: Color.fromARGB(255, 249, 0, 0),
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                        )),
@@ -91,23 +98,33 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                         !_formKey.currentState!.validate()) {
                       showSnackBar('Please enter a valid phone number!',col: Colors.redAccent[700]);
                     } else {
-                 String userN= await FirestoreService.getUserFromPhoneNumber(phoneNumber.toString()).timeout(Duration(seconds: 5), onTimeout: () { 
-  return "timeout"; });
-  
-                 if(userN.isEmpty){
-                   showSnackBar('No user with this phone number!',col: Colors.redAccent[700]);
-                 }else if(userN=="timeout"){
-  showSnackBar('Please check your internet connection!',col: Colors.redAccent[700]);
-                 }else{
-                  print(userN.toString());
+                     bool exist=false;
+                      bool timeout=false;
+
+                try {
+                  print("heh");
+                  print(phoneNumber);
+                  exist=await FirestoreService.fetchUser(phoneNumber!);
+                  // .timeout(Duration(seconds: 5), onTimeout: () { 
+  //  showSnackBar('Please check your internet connection!',col: Colors.redAccent[700]);
+  //  timeout==true;
+  //  return false;
+   
+  //   }) ;
+                } catch (e) {
+                  
+                }
+
+              if(timeout==false){
+                  if(exist==false){
+                   showSnackBar('There is no user with this phone number!',col: Colors.redAccent[700]); 
+                }else{
                   showSnackBar('Phone Number Identified Successfully!');
-                  FirestoreService.userId=userN;
-                   Navigator.pushNamed(
-                        context,
-                        VerifyPhoneNumberScreen.id,
-                        arguments: phoneNumber,
-                      );      
-                 }
+                   Navigator.pushNamed(context,VerifyPhoneNumberScreen.id) ;
+                }
+              }
+                      
+                 
                      
                     }
                     setState(() {

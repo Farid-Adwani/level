@@ -1,4 +1,4 @@
-package com.example.levels
+package com.insat.aerobotix
 
 import io.flutter.embedding.android.FlutterActivity
 

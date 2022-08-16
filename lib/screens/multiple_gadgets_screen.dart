@@ -1,14 +1,14 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
-import 'package:levels/model/profiles.dart';
-import 'package:levels/services/firebase_service.dart';
-import 'package:levels/ui/common/profile_summary.dart';
-import 'package:levels/ui/common/separator.dart';
+import 'package:Aerobotix/model/profiles.dart';
+import 'package:Aerobotix/services/firebase_service.dart';
+import 'package:Aerobotix/ui/common/profile_summary.dart';
+import 'package:Aerobotix/ui/common/separator.dart';
 import 'package:fl_animated_linechart/chart/area_line_chart.dart';
 import 'package:fl_animated_linechart/common/pair.dart';
 import 'package:fl_animated_linechart/fl_animated_linechart.dart';
-import 'package:levels/ui/text_style.dart';
+import 'package:Aerobotix/ui/text_style.dart';
 
 class MultipleGadgets extends StatefulWidget {
   static const id = 'MultipleGadgets';

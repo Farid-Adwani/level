@@ -6,15 +6,15 @@ import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:levels/screens/authentication_screen.dart';
-import 'package:levels/screens/male_screen.dart';
-import 'package:levels/screens/multiple_gadgets_screen.dart';
-import 'package:levels/screens/people_screen.dart';
-import 'package:levels/screens/utils/helpers.dart';
-import 'package:levels/screens/utils/route_generator.dart';
-import 'package:levels/services/firebase_service.dart';
+import 'package:Aerobotix/screens/authentication_screen.dart';
+import 'package:Aerobotix/screens/male_screen.dart';
+import 'package:Aerobotix/screens/multiple_gadgets_screen.dart';
+import 'package:Aerobotix/screens/people_screen.dart';
+import 'package:Aerobotix/screens/utils/helpers.dart';
+import 'package:Aerobotix/screens/utils/route_generator.dart';
+import 'package:Aerobotix/services/firebase_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:levels/ui/text_style.dart';
+import 'package:Aerobotix/ui/text_style.dart';
 
 class HomeScreen extends StatefulWidget {
   static const id = 'HomeScreen';

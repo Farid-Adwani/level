@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:levels/screens/authentication_screen.dart';
-import 'package:levels/screens/gadget_screen.dart';
-import 'package:levels/utils/globals.dart';
-import 'package:levels/widgets/custom_loader.dart';
+import 'package:Aerobotix/screens/authentication_screen.dart';
+import 'package:Aerobotix/screens/gadget_screen.dart';
+import 'package:Aerobotix/utils/globals.dart';
+import 'package:Aerobotix/widgets/custom_loader.dart';
 
 class SplashScreen extends StatefulWidget {
   static const id = 'SplashScreen';

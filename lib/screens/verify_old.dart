@@ -1,10 +1,10 @@
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
-import 'package:levels/screens/gadget_screen.dart';
-import 'package:levels/services/firebase_service.dart';
-import 'package:levels/utils/helpers.dart';
-import 'package:levels/widgets/custom_loader.dart';
-import 'package:levels/widgets/pin_input_field.dart';
+import 'package:Aerobotix/screens/gadget_screen.dart';
+import 'package:Aerobotix/services/firebase_service.dart';
+import 'package:Aerobotix/utils/helpers.dart';
+import 'package:Aerobotix/widgets/custom_loader.dart';
+import 'package:Aerobotix/widgets/pin_input_field.dart';
 
 class VerifyPhoneNumberScreen extends StatefulWidget {
   static const id = 'VerifyPhoneNumberScreen';

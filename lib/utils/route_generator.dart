@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:levels/screens/authentication_screen.dart';
-import 'package:levels/screens/gadget_screen.dart';
-import 'package:levels/screens/people_screen.dart';
-import 'package:levels/screens/splash_screen.dart';
-import 'package:levels/screens/verify_phone_number_screen.dart';
-import 'package:levels/utils/helpers.dart';
+import 'package:Aerobotix/screens/authentication_screen.dart';
+import 'package:Aerobotix/screens/gadget_screen.dart';
+import 'package:Aerobotix/screens/people_screen.dart';
+import 'package:Aerobotix/screens/splash_screen.dart';
+import 'package:Aerobotix/screens/verify_phone_number_screen.dart';
+import 'package:Aerobotix/utils/helpers.dart';
 
 class RouteGenerator {
   static const _id = 'RouteGenerator';
@@ -18,7 +18,7 @@ class RouteGenerator {
       case AuthenticationScreen.id:
         return _route(const AuthenticationScreen());
       case VerifyPhoneNumberScreen.id:
-        return _route(VerifyPhoneNumberScreen(phoneNumber: args));
+        return _route(VerifyPhoneNumberScreen());
       case HomeScreen.id:
         return _route(const HomeScreen());
       default:

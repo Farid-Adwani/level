@@ -1,9 +1,15 @@
 import 'dart:math';
 
+import 'package:Aerobotix/model/member.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:gender_picker/source/enums.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:levels/model/profiles.dart';
+import 'package:Aerobotix/model/profiles.dart';
+import 'package:platform_device_id/platform_device_id.dart';
+
+
 
 class FirestoreService {
   static late FirestoreService singleton;
@@ -32,7 +38,185 @@ class FirestoreService {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+static Future<void> addProfilePhoto(String photo,String phone) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentReference memberRef =
+        db.collection('members').doc(phone);
+        
+   
+      try {
+         memberRef.set({
+      "photo":photo,
+      "profile_photos": FieldValue.arrayUnion([photo]),
+    
+    }, SetOptions(merge : true));
+   
 
+      } catch (e) {
+      
+      }
+     
+ 
+  }
+
+static Future<bool> addUser(String first_name,String last_name,String phone ,String password, Gender gender, int level ,String branch,String photo,DateTime birthDate) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentReference memberRef =
+        db.collection('members').doc(phone);
+        String g="";
+        gender==Gender.Female?g="Female":g="Male";
+        bool exist=false;
+        try {
+        await memberRef.get().then((doc) {
+            exist = doc.exists;
+        });
+       
+    } catch (e) {
+        // If any error
+        return false;
+    }
+    if(exist==false) {
+      String? deviceId="";
+      try {
+        print("hereeeeeeeeeeeeeee");
+         deviceId = await PlatformDeviceId.getDeviceId;
+        print("id");
+        print(deviceId);
+
+      } catch (e) {
+        print("rrr");
+      }
+      try {
+
+         memberRef.set({
+      "phone":phone,
+      "password":password,
+
+      "first_name":first_name,
+      "last_name":last_name,
+      "gender":g,
+      "level":level,
+      "branch":branch,
+      "photo":photo,
+      "birth_date":birthDate,
+      "auth":true,
+      'device':deviceId,
+      "online":true,
+          });
+    Member.phone=phone;
+    Member.first_name=first_name;
+    Member.last_name=last_name;
+    Member.gender=gender;
+    Member.level=level;
+    Member.branch=branch;
+    Member.photo=photo;
+    Member.birthDate=birthDate;
+    Member.password=password;
+    Member.auth=true;
+    Member.online=true;
+    Member.device=deviceId!;
+
+      } catch (e) {
+        
+      }
+     }
+     return exist;
+  }
+
+  static Future<void> updateDevice(phone) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentReference memberRef =
+        db.collection('members').doc(phone);
+   
+      String? deviceId="";
+      try {
+         deviceId = await PlatformDeviceId.getDeviceId;
+      } catch (e) {
+        print("error");
+      }
+      try {
+         memberRef.update({
+      "auth":true,
+      'device':deviceId,
+      "online":true,
+          });
+    Member.auth=true;
+    Member.online=true;
+    Member.device=deviceId!;
+
+
+      } catch (e) {
+        
+      }
+     
+  }
+
+static Future<bool> fetchUser(String phone ) async {
+
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentReference memberRef =
+        db.collection('members').doc(phone);
+      
+        
+        bool exist=true;
+       late  DocumentSnapshot user;
+        try {
+        await memberRef.get().then((doc) {
+            exist = doc.exists;
+            user=doc;
+          
+        }).timeout(Duration(seconds:5),onTimeout: (){exist=false;});
+    } catch (e) {
+        // If any error
+       exist=false;
+    }
+print("eeeeeeeee");
+    if(exist==true) {
+     
+     try {
+        Member.birthDate=user.get("birth_date").toDate();
+      print(Member.birthDate);
+      Member.first_name=user.get("first_name");
+      Member.last_name=user.get("last_name");
+      user.get("gender")=="Female"?Member.gender=Gender.Female:Member.gender=Gender.Male;
+      print(Member.gender);
+      Member.level=user.get("level");
+      Member.branch=user.get("branch");
+      Member.photo=user.get("photo");
+      
+      Member.phone=user.get("phone");
+     
+      Member.password=user.get("password");
+      print(Member.password);
+      Member.profilePhotos=user.get("profile_photos");
+      print(Member.profilePhotos);
+     } catch (e) {
+       
+     }
+
+     }
+
+     return exist;
+  }
+
+
+  static Future<String> getImage(path,image) async {
+
+     String downloadURL ="";
+     if(image==""){
+      return "";     }
+    try {
+       downloadURL= await FirebaseStorage.instance
+        .ref()
+        .child(path+image)
+        .getDownloadURL().onError((error, stackTrace) => "").timeout(Duration(seconds:5),onTimeout: () => "");
+        print(downloadURL);
+    } catch (e) {
+      return "";
+    }
+        return downloadURL;
+  }
+  
   void fakeData() async {
     try {
       print("aaaaaaaaaaaaaa");

@@ -1,14 +1,15 @@
+import 'package:Aerobotix/screens/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
-import 'package:levels/screens/daily.dart';
-import 'package:levels/screens/hourly.dart';
-import 'package:levels/screens/multiple_gadgets_screen.dart';
-import 'package:levels/screens/sign_up_screen.dart';
-import 'package:levels/screens/splash_screen.dart';
-import 'package:levels/utils/app_theme.dart';
-import 'package:levels/utils/globals.dart';
-import 'package:levels/utils/route_generator.dart';
+import 'package:Aerobotix/screens/daily.dart';
+import 'package:Aerobotix/screens/hourly.dart';
+import 'package:Aerobotix/screens/multiple_gadgets_screen.dart';
+import 'package:Aerobotix/screens/sign_up_screen.dart';
+import 'package:Aerobotix/screens/splash_screen.dart';
+import 'package:Aerobotix/utils/app_theme.dart';
+import 'package:Aerobotix/utils/globals.dart';
+import 'package:Aerobotix/utils/route_generator.dart';
 import 'screens/people_screen.dart';
 import 'screens/female_screen.dart';
 import 'screens/male_screen.dart';
@@ -43,6 +44,8 @@ class levelsApp extends StatelessWidget {
           HourlyPage.id: (context) => HourlyPage(),
           SignUpScreen.id: (context) => SignUpScreen(),
           MultipleGadgets.id: (context) => MultipleGadgets(),
+          ProfileScreen.id: (context) => ProfileScreen(),
+
         },
         initialRoute: SplashScreen.id,
       ),

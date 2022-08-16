@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:levels/services/firebase_service.dart';
-import 'package:levels/model/profiles.dart';
-import 'package:levels/ui/common/profile_summary.dart';
+import 'package:Aerobotix/services/firebase_service.dart';
+import 'package:Aerobotix/model/profiles.dart';
+import 'package:Aerobotix/ui/common/profile_summary.dart';
 
 class MaleScreen extends StatefulWidget {
   static const id = 'MaleScreen';

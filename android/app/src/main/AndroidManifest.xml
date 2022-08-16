@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.levels">
+    package="com.insat.aerobotix">
    <application
         android:label="levels"
         android:name="${applicationName}"

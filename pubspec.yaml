@@ -1,4 +1,4 @@
-name: levels
+name: Aerobotix
 description: A robot who do navigation and mapping to make ads more interesting.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -31,6 +31,10 @@ dependencies:
   flutter_native_splash: ^2.2.7
   flutter_datetime_picker: ^1.5.1
   gender_picker: ^1.1.0
+  firebase_storage: ^10.3.5
+  image_picker: ^0.8.5+3
+  path: ^1.8.1
+  platform_device_id: ^1.0.1
  
  
 
@@ -58,8 +62,8 @@ flutter:
   #       - asset: fonts/Schyler-Italic.ttf
 
 flutter_native_splash:
-  color: "#a11d9c"
-  image: assets/images/axon.png
+  color: "#ffffff"
+  image: assets/images/icon.png
 
 
 

@@ -1,34 +1,33 @@
 {
   "project_info": {
-    "project_number": "11353719715",
-    "firebase_url": "https://levelsbot-aerobotix-default-rtdb.europe-west1.firebasedatabase.app",
-    "project_id": "levelsbot-aerobotix",
-    "storage_bucket": "levelsbot-aerobotix.appspot.com"
+    "project_number": "763273785938",
+    "project_id": "aerobotix-a2033",
+    "storage_bucket": "aerobotix-a2033.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:11353719715:android:671cdc64c91612f5eb1016",
+        "mobilesdk_app_id": "1:763273785938:android:93975c78d01bdfecd4a58b",
         "android_client_info": {
-          "package_name": "com.example.levels"
+          "package_name": "com.insat.aerobotix"
         }
       },
       "oauth_client": [
         {
-          "client_id": "11353719715-e3fu0d36slr5qut16s0sm9kfaa3hem9q.apps.googleusercontent.com",
+          "client_id": "763273785938-9kngm2d2pfnsfl7mmoi3cph7hufucfhd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC4_J1Ld9hovHH0LpX0kpkMOV0_EA4q4pc"
+          "current_key": "AIzaSyCHnsrr2R6mpgcqVEnm0tl9Ytwpabo-f_Q"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "11353719715-e3fu0d36slr5qut16s0sm9kfaa3hem9q.apps.googleusercontent.com",
+              "client_id": "763273785938-9kngm2d2pfnsfl7mmoi3cph7hufucfhd.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

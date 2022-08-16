@@ -1,19 +1,22 @@
+import 'package:Aerobotix/model/member.dart';
+import 'package:Aerobotix/screens/profile_screen.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
-import 'package:levels/screens/gadget_screen.dart';
-import 'package:levels/services/firebase_service.dart';
-import 'package:levels/utils/helpers.dart';
-import 'package:levels/widgets/custom_loader.dart';
-import 'package:levels/widgets/pin_input_field.dart';
+import 'package:Aerobotix/screens/gadget_screen.dart';
+import 'package:Aerobotix/services/firebase_service.dart';
+import 'package:Aerobotix/utils/helpers.dart';
+import 'package:Aerobotix/widgets/custom_loader.dart';
+import 'package:Aerobotix/widgets/pin_input_field.dart';
+import 'package:gender_picker/source/enums.dart';
 
 class VerifyPhoneNumberScreen extends StatefulWidget {
   static const id = 'VerifyPhoneNumberScreen';
 
-  final String phoneNumber;
+  
 
   const VerifyPhoneNumberScreen({
     Key? key,
-    required this.phoneNumber,
+    
   }) : super(key: key);
 
   @override
@@ -26,11 +29,23 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
   bool isKeyboardVisible = false;
 
   late final ScrollController scrollController;
-
+String netIm="wait";
+void getIm() async {
+  try {
+    netIm=await FirestoreService.getImage("profiles/"+Member.phone+"/profile/",Member.photo);
+    print(netIm+"fffff");
+                         setState(() {
+                          
+                        });
+  } catch (e) {
+    
+  }
+}
   @override
   void initState() {
     scrollController = ScrollController();
     WidgetsBinding.instance.addObserver(this);
+     getIm();
     super.initState();
   }
 
@@ -62,70 +77,12 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: FirebasePhoneAuthHandler(
-        phoneNumber: widget.phoneNumber,
-        signOutOnSuccessfulVerification: false,
-        linkWithExistingUser: false,
-        onLoginSuccess: (userCredential, autoVerified) async {
-          log(
-            VerifyPhoneNumberScreen.id,
-            msg: autoVerified
-                ? 'OTP was fetched automatically!'
-                : 'OTP was verified manually!',
-          );
 
-          showSnackBar('Phone number verified successfully!');
-          FirestoreService.phone = userCredential.user!.phoneNumber!;
-
-          log(
-            VerifyPhoneNumberScreen.id,
-            msg: 'Login Success UID: ${userCredential.user?.uid}',
-          );
-
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            HomeScreen.id,
-            (route) => false,
-          );
-        },
-        onLoginFailed: (authException, stackTrace) {
-          log(
-            VerifyPhoneNumberScreen.id,
-            msg: authException.message,
-            error: authException,
-            stackTrace: stackTrace,
-          );
-
-          switch (authException.code) {
-            case 'invalid-phone-number':
-              // invalid phone number
-              return showSnackBar('Invalid phone number!',
-                  col: Colors.redAccent[700]);
-            case 'invalid-verification-code':
-              // invalid otp entered
-              return showSnackBar('The code is invalid!',
-                  col: Colors.redAccent[700]);
-            // handle other error codes
-            default:
-              showSnackBar('You are blocked for spamming!',
-                  col: Colors.redAccent[700]);
-            // handle error further if needed
-          }
-        },
-        onError: (error, stackTrace) {
-          log(
-            VerifyPhoneNumberScreen.id,
-            error: error,
-            stackTrace: stackTrace,
-          );
-
-          showSnackBar('An error occurred!', col: Colors.redAccent[700]);
-        },
-        builder: (context, controller) {
-          return Scaffold(
+    return 
+    Scaffold(
             appBar: AppBar(
               leadingWidth: 0,
               leading: const SizedBox.shrink(),
@@ -139,44 +96,50 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
                 padding: const EdgeInsets.all(20),
                 controller: scrollController,
                 children: [
-                  Container(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height / 4,
-                      width: MediaQuery.of(context).size.width / 2,
-                    ),
-                    margin: EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: (FirestoreService.userAvatar.isEmpty ||
-                                  int.tryParse(FirestoreService.userAvatar) ==
-                                      null ||
-                                  int.parse(FirestoreService.userAvatar) > 15 ||
-                                  int.parse(FirestoreService.userAvatar) < 0)
-                              ? AssetImage("assets/images/profiles/0.jpg")
-                              : AssetImage("assets/images/profiles/" +
-                                  FirestoreService.userAvatar +
-                                  ".jpg")),
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                  ),        
+                   CircleAvatar(
+              
+              radius:  MediaQuery.of(context).size.width/2.5,
+                backgroundColor:Colors.white,
+                child: 
+                    ClipRRect(
+                      
+                        borderRadius: BorderRadius.circular(200),
+                        child: netIm!="wait"? netIm.isNotEmpty?
+                            Image.network(
+                          netIm,
+                          width:  MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width,
+                          fit: BoxFit.fill
+                        ):
+                        Member.gender==Gender.Female?
+                        Image.asset(
+                            "assets/images/gadget2.jpg",
+                          ):
+                          Image.asset(
+                            "assets/images/gadget4.jpg",
+                          ):CircularProgressIndicator()
+                      ,
+                      )
+                   
+              ),
+                     const SizedBox(height: 10),
                   Center(
-                    child: Text("${FirestoreService.userName}",
+                    child: Text(Member.first_name+" "+Member.last_name,
                         style: const TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
                         )),
                   ),
                   Center(
-                    child: Text(
-                      "☎️ : ${widget.phoneNumber}",
+                    child:  Text(
+                      "☎️ : "+Member.phone.replaceFirst("+216",""),
                       style: const TextStyle(fontSize: 25),
                     ),
                   ),
                   const SizedBox(height: 10),
                   const Divider(),
                   const Text(
-                    'Enter Your Code',
+                    'Enter Your Password',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
@@ -188,23 +151,28 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
                     onFocusChange: (hasFocus) async {
                       if (hasFocus) await _scrollToBottomOnKeyboardOpen();
                     },
-                    onSubmit: (enteredOtp) async {
-                      final verified = await controller.verifyOtp(enteredOtp);
-                      if (verified) {
-                        // number verify success
-                        // will call onLoginSuccess handler
-                      } else {
-                        // phone verification failed
-                        // will call onLoginFailed or onError callbacks with the error
-                      }
+                    onSubmit: (code) async {
+                    if(code==Member.password){
+                      
+                      await FirestoreService.updateDevice(Member.phone);
+                         showSnackBar("Mar7ba biiiiik fi lFamilia 💖 👪 💖!");
+                          Navigator.pushNamedAndRemoveUntil(
+              context,
+              ProfileScreen.id,
+              (route) => false,
+            );
+                    }else{
+                       showSnackBar("Incorrect password ✋ !",
+                        col: Colors.red);
+                        
+                    }
+                      
                     },
                   ),
                 ],
               ),
             ),
           );
-        },
-      ),
-    );
+       
   }
 }
