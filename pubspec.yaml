@@ -29,8 +29,10 @@ dependencies:
   multi_select_flutter: ^4.1.2
   animated_button: ^0.2.0
   flutter_native_splash: ^2.2.7
-
-  flutter_rounded_date_picker: ^3.0.1
+  flutter_datetime_picker: ^1.5.1
+  gender_picker: ^1.1.0
+ 
+ 
 
 
 flutter_icons:
