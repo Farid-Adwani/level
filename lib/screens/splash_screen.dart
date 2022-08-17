@@ -1,6 +1,7 @@
+import 'package:Aerobotix/screens/profile_screen.dart';
+import 'package:Aerobotix/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:Aerobotix/screens/authentication_screen.dart';
-import 'package:Aerobotix/screens/gadget_screen.dart';
 import 'package:Aerobotix/utils/globals.dart';
 import 'package:Aerobotix/widgets/custom_loader.dart';
 
@@ -20,13 +21,18 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     (() async {
       await Future.delayed(Duration.zero);
-      final isLoggedIn = Globals.firebaseUser != null;
+      bool isLoggedIn=false;
+       isLoggedIn =await FirestoreService.isConnected();
 
-      if (!mounted) return;
+      if (isLoggedIn) {return
       Navigator.pushReplacementNamed(
         context,
-        isLoggedIn ? HomeScreen.id : AuthenticationScreen.id,
-      );
+        ProfileScreen.id ,
+      );}else{
+Navigator.pushReplacementNamed(
+        context,
+        AuthenticationScreen.id );
+      }
     })();
     super.initState();
   }

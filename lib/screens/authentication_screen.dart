@@ -24,26 +24,32 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   String? phoneNumber;
 
   final _formKey = GlobalKey<FormState>();
-    bool verif=false;
+  bool verif = false;
+void popUp(){
   
+}
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        
         body: Container(
+          
           child: Padding(
-             padding: const EdgeInsets.all(15),
+            
+            padding: const EdgeInsets.all(15),
             // padding: const EdgeInsets.all(8.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-              "assets/images/icon.png",
-              fit: BoxFit.cover,
-              height: MediaQuery.of(context).size.height / 8,
-              width: MediaQuery.of(context).size.width,
-            ),
+                GestureDetector(
+                  onTap: FirestoreService.isConnected,
+                  child: Image.asset(
+                    "assets/images/icon.png",
+                    fit: BoxFit.cover,
+                    height: MediaQuery.of(context).size.height / 8,
+                    width: MediaQuery.of(context).size.width,
+                  ),
+                ),
                 const Text(
                   "Please Enter Your Phone Number ",
                   style: TextStyle(fontSize: 22),
@@ -71,71 +77,70 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("You don't have an account ?   ",style: Style.commonTextStyle,),
-                     GestureDetector(
+                    Text(
+                      "You don't have an account ?   ",
+                      style: Style.commonTextStyle,
+                    ),
+                    GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(context, SignUpScreen.id);
                       },
-                       child: Text("Create account",style:TextStyle(
-                        color: Color.fromARGB(255, 249, 0, 0),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                       )),
-                     ),
+                      child: Text("Create account",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 249, 0, 0),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          )),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 15),
-                verif==true?  
-               CircularProgressIndicator()
-               
-               :EasyContainer(
-                  width: double.infinity,
-                  onTap: () async {
-                    setState(() {
-                      verif=true;
-                    });
-                    if (isNullOrBlank(phoneNumber) ||
-                        !_formKey.currentState!.validate()) {
-                      showSnackBar('Please enter a valid phone number!',col: Colors.redAccent[700]);
-                    } else {
-                     bool exist=false;
-                      bool timeout=false;
-
-                try {
-                  print("heh");
-                  print(phoneNumber);
-                  exist=await FirestoreService.fetchUser(phoneNumber!);
-                  // .timeout(Duration(seconds: 5), onTimeout: () { 
-  //  showSnackBar('Please check your internet connection!',col: Colors.redAccent[700]);
-  //  timeout==true;
-  //  return false;
-   
-  //   }) ;
-                } catch (e) {
-                  
-                }
-
-              if(timeout==false){
-                  if(exist==false){
-                   showSnackBar('There is no user with this phone number!',col: Colors.redAccent[700]); 
-                }else{
-                  showSnackBar('Phone Number Identified Successfully!');
-                   Navigator.pushNamed(context,VerifyPhoneNumberScreen.id) ;
-                }
-              }
-                      
-                 
-                     
-                    }
-                    setState(() {
-                      verif=false;
-                    });
+                GestureDetector(
+                  onTap: (){
+                    popUp();
                   },
-                  child: const Text(
-                    'Verify',
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  child: Text(
+                        "Forget Password ? 😕",
+                        style: Style.commonTextStyle,
+                      ),
                 ),
+                const SizedBox(height: 15),
+
+                verif == true
+                    ? CircularProgressIndicator()
+                    : EasyContainer(
+                        width: double.infinity,
+                        onTap: () async {
+                          setState(() {
+                            verif = true;
+                          });
+                          if (isNullOrBlank(phoneNumber) ||
+                              !_formKey.currentState!.validate()) {
+                            showSnackBar('Please enter a valid phone number!',
+                                col: Colors.redAccent[700]);
+                          } else {
+                            bool exist = false;
+
+                            try {
+                              exist = await FirestoreService.fetchUser(
+                                  phoneNumber!);
+                            } catch (e) {}
+                            if (exist == true) {
+                              showSnackBar(
+                                  'Phone Number Identified Successfully!');
+                              Navigator.pushNamed(
+                                  context, VerifyPhoneNumberScreen.id);
+                            }
+                          }
+                          setState(() {
+                            verif = false;
+                          });
+                        },
+                        child: const Text(
+                          'Verify',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
               ],
             ),
           ),

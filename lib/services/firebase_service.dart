@@ -1,33 +1,21 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:Aerobotix/model/member.dart';
+import 'package:Aerobotix/screens/authentication_screen.dart';
+import 'package:Aerobotix/utils/helpers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:gender_picker/source/enums.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:Aerobotix/model/profiles.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:platform_device_id/platform_device_id.dart';
-
-
 
 class FirestoreService {
   static late FirestoreService singleton;
   static String userId = "user1";
-  static String userName = "";
-  static String userAvatar= "";
-
-  static List<String> selectedGadgets = [];
   static bool hasInstance = false;
-  static String gadget = "gadget1";
-  static String phone = "";
 
-  static List<String> days = [];
-  static List<String> gadgets = [];
-
-  static String selectedDay = "2022-07-25";
-  static String selectedMonth = "07";
-  static String selectedMonthName = "July";
   static FirestoreService getInstance() {
     if (hasInstance == false) {
       singleton = FirestoreService();
@@ -36,674 +24,292 @@ class FirestoreService {
     return singleton;
   }
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-static Future<void> addProfilePhoto(String photo,String phone) async {
+  static Future<void> addProfilePhoto(String photo, String phone) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentReference memberRef =
-        db.collection('members').doc(phone);
-        
-   
-      try {
-         memberRef.set({
-      "photo":photo,
-      "profile_photos": FieldValue.arrayUnion([photo]),
-    
-    }, SetOptions(merge : true));
-   
+    DocumentReference memberRef = db.collection('members').doc(phone);
 
-      } catch (e) {
-      
-      }
-     
- 
+    try {
+      memberRef.set({
+        "photo": photo,
+        "profile_photos": FieldValue.arrayUnion([photo]),
+      }, SetOptions(merge: true));
+    } catch (e) {}
   }
 
-static Future<bool> addUser(String first_name,String last_name,String phone ,String password, Gender gender, int level ,String branch,String photo,DateTime birthDate) async {
+  static Future<bool> addUser(
+      String first_name,
+      String last_name,
+      String phone,
+      String password,
+      Gender gender,
+      int level,
+      String branch,
+      String photo,
+      DateTime birthDate) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentReference memberRef =
-        db.collection('members').doc(phone);
-        String g="";
-        gender==Gender.Female?g="Female":g="Male";
-        bool exist=false;
-        try {
-        await memberRef.get().then((doc) {
-            exist = doc.exists;
-        });
-       
+    DocumentReference memberRef = db.collection('members').doc(phone);
+    String g = "";
+    gender == Gender.Female ? g = "Female" : g = "Male";
+    bool exist = false;
+    try {
+      await memberRef.get().then((doc) {
+        exist = doc.exists;
+      });
     } catch (e) {
-        // If any error
-        return false;
+      // If any error
+      return false;
     }
-    if(exist==false) {
-      String? deviceId="";
+    if (exist == false) {
+      String? deviceId = "";
       try {
         print("hereeeeeeeeeeeeeee");
-         deviceId = await PlatformDeviceId.getDeviceId;
+        deviceId = await PlatformDeviceId.getDeviceId;
         print("id");
         print(deviceId);
-
       } catch (e) {
         print("rrr");
       }
       try {
+        memberRef.set({
+          "phone": phone,
+          "password": password,
+          "first_name": first_name,
+          "last_name": last_name,
+          "gender": g,
+          "level": level,
+          "branch": branch,
+          "photo": photo,
+          "birth_date": birthDate,
+          "auth": true,
+          'device': deviceId,
+          "online": DateTime.now(),
+        });
+        Member.phone = phone;
+        Member.first_name = first_name;
+        Member.last_name = last_name;
+        Member.gender = gender;
+        Member.level = level;
+        Member.branch = branch;
+        Member.photo = photo;
+        Member.birthDate = birthDate;
+        Member.password = password;
+        Member.auth = true;
+        Member.online = DateTime.now();
+        Member.device = deviceId!;
+      } catch (e) {}
+    }
+    return exist;
+  }
 
-         memberRef.set({
-      "phone":phone,
-      "password":password,
+  static Future<bool> isConnected() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    CollectionReference memberRef = db.collection('members');
+    String? deviceId = "";
+    try {
+      deviceId = await PlatformDeviceId.getDeviceId;
+      print(deviceId);
+    } catch (e) {
+      return false;
+    }
 
-      "first_name":first_name,
-      "last_name":last_name,
-      "gender":g,
-      "level":level,
-      "branch":branch,
-      "photo":photo,
-      "birth_date":birthDate,
-      "auth":true,
-      'device':deviceId,
-      "online":true,
-          });
-    Member.phone=phone;
-    Member.first_name=first_name;
-    Member.last_name=last_name;
-    Member.gender=gender;
-    Member.level=level;
-    Member.branch=branch;
-    Member.photo=photo;
-    Member.birthDate=birthDate;
-    Member.password=password;
-    Member.auth=true;
-    Member.online=true;
-    Member.device=deviceId!;
-
-      } catch (e) {
-        
+    try {
+      print("tryinnnnnnnnnnnnnnnnnnnnng");
+      QuerySnapshot user = await memberRef
+          .where("device", isEqualTo: deviceId)
+          .where("auth", isEqualTo: true)
+          .limit(1)
+          .get();
+      DocumentSnapshot logged = user.docs.first;
+      if (logged.id.isNotEmpty) {
+        allocateData(logged);
+        return true;
       }
-     }
-     return exist;
+    } catch (e) {
+      return false;
+    }
+    return false;
   }
 
   static Future<void> updateDevice(phone) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentReference memberRef =
-        db.collection('members').doc(phone);
-   
-      String? deviceId="";
-      try {
-         deviceId = await PlatformDeviceId.getDeviceId;
-      } catch (e) {
-        print("error");
-      }
-      try {
-         memberRef.update({
-      "auth":true,
-      'device':deviceId,
-      "online":true,
-          });
-    Member.auth=true;
-    Member.online=true;
-    Member.device=deviceId!;
+    DocumentReference memberRef = db.collection('members').doc(phone);
 
-
-      } catch (e) {
-        
-      }
-     
-  }
-
-static Future<bool> fetchUser(String phone ) async {
-
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentReference memberRef =
-        db.collection('members').doc(phone);
-      
-        
-        bool exist=true;
-       late  DocumentSnapshot user;
-        try {
-        await memberRef.get().then((doc) {
-            exist = doc.exists;
-            user=doc;
-          
-        }).timeout(Duration(seconds:5),onTimeout: (){exist=false;});
-    } catch (e) {
-        // If any error
-       exist=false;
-    }
-print("eeeeeeeee");
-    if(exist==true) {
-     
-     try {
-        Member.birthDate=user.get("birth_date").toDate();
-      print(Member.birthDate);
-      Member.first_name=user.get("first_name");
-      Member.last_name=user.get("last_name");
-      user.get("gender")=="Female"?Member.gender=Gender.Female:Member.gender=Gender.Male;
-      print(Member.gender);
-      Member.level=user.get("level");
-      Member.branch=user.get("branch");
-      Member.photo=user.get("photo");
-      
-      Member.phone=user.get("phone");
-     
-      Member.password=user.get("password");
-      print(Member.password);
-      Member.profilePhotos=user.get("profile_photos");
-      print(Member.profilePhotos);
-     } catch (e) {
-       
-     }
-
-     }
-
-     return exist;
-  }
-
-
-  static Future<String> getImage(path,image) async {
-
-     String downloadURL ="";
-     if(image==""){
-      return "";     }
+    String? deviceId = "";
     try {
-       downloadURL= await FirebaseStorage.instance
-        .ref()
-        .child(path+image)
-        .getDownloadURL().onError((error, stackTrace) => "").timeout(Duration(seconds:5),onTimeout: () => "");
-        print(downloadURL);
+      deviceId = await PlatformDeviceId.getDeviceId;
+    } catch (e) {
+      print("error");
+    }
+    try {
+      memberRef.update({
+        "auth": true,
+        'device': deviceId,
+        "online": DateTime.now(),
+      });
+      Member.auth = true;
+      Member.online = DateTime.now();
+      Member.device = deviceId!;
+    } catch (e) {}
+  }
+
+  static Future<bool> disconnect(phone, context) async {
+    bool result = await InternetConnectionChecker().hasConnection;
+if(result == false) {
+    showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+          return false;
+   }
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentReference memberRef = db.collection('members').doc(phone);
+    bool success = true;
+    try {
+      await memberRef.update({
+        "auth": false,
+        "online": DateTime.now(),
+      }).timeout(
+          Duration(
+            seconds: 10,
+          ), onTimeout: () {
+        success = false;
+        return false;
+      }).onError((error, stackTrace) {
+        success = false;
+        return false;
+      });
+      if (success) {
+        Member.auth = false;
+        Member.online = DateTime.now();
+
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AuthenticationScreen.id,
+          (route) => false,
+        );
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> auth(code, phone) async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+    try {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      DocumentReference memberRef = db.collection('members').doc(phone);
+      DocumentSnapshot? user;
+
+      user = await memberRef.get().timeout(Duration(
+            seconds: 7,
+          ));
+      print(user.data());
+      if (user.get("password") != "") {
+        if (user.get("password").toString() != code) {
+          showSnackBar("Incorrect password ✋ !", col: Colors.red);
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return false;
+      }
+    } on TimeoutException catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    } catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+  }
+
+  static void allocateData(user) {
+    try {
+      Member.birthDate = user.get("birth_date").toDate();
+      print(Member.birthDate);
+      Member.first_name = user.get("first_name");
+      Member.last_name = user.get("last_name");
+      user.get("gender") == "Female"
+          ? Member.gender = Gender.Female
+          : Member.gender = Gender.Male;
+      print(Member.gender);
+      Member.level = user.get("level");
+      Member.branch = user.get("branch");
+      Member.photo = user.get("photo");
+
+      Member.phone = user.get("phone");
+
+      Member.password = user.get("password");
+      print(Member.password);
+      Member.profilePhotos = user.get("profile_photos");
+      print(Member.profilePhotos);
+    } catch (e) {}
+  }
+
+  static Future<bool> fetchUser(String phone) async {
+    bool exist = false;
+    late DocumentSnapshot user;
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+    try {
+      FirebaseFirestore db = await FirebaseFirestore.instance;
+      DocumentReference memberRef = db.collection('members').doc(phone);
+
+      await memberRef.get().then((doc) {
+        exist = doc.exists;
+        user = doc;
+      }).timeout(Duration(seconds: 5));
+    } on TimeoutException catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    } catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+    if (exist == true) {
+      allocateData(user);
+    } else {
+      showSnackBar('There is no user with this phone number!',
+          col: Colors.redAccent[700]);
+    }
+    return exist;
+  }
+
+  static Future<String> getImage(path, image) async {
+    String downloadURL = "";
+    if (image == "") {
+      return "";
+    }
+    try {
+      downloadURL = await FirebaseStorage.instance
+          .ref()
+          .child(path + image)
+          .getDownloadURL()
+          .onError((error, stackTrace) => "")
+          .timeout(Duration(seconds: 5), onTimeout: () => "");
+      print(downloadURL);
     } catch (e) {
       return "";
     }
-        return downloadURL;
-  }
-  
-  void fakeData() async {
-    try {
-      print("aaaaaaaaaaaaaa");
-      QuerySnapshot qs =
-          await FirebaseFirestore.instance.collectionGroup("days").get();
-      print(qs.docs.toString());
-      for (var item in qs.docs) {
-        print(item.data());
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-
-    for (var i = 0; i < 31; i++) {
-      String d = i.toString();
-      if (i < 10) {
-        d = "0" + d;
-      }
-      FirestoreService.setData("user1", "gadget1", "2022-07-" + d.toString());
-      FirestoreService.setData("user1", "gadget2", "2022-07-" + d.toString());
-      FirestoreService.setData("user1", "gadget3", "2022-07-" + d.toString());
-      FirestoreService.setData("user1", "gadget4", "2022-07-" + d.toString());
-
-      FirestoreService.setData("user2", "gadget1", "2022-07-" + d.toString());
-      FirestoreService.setData("user2", "gadget2", "2022-07-" + d.toString());
-      FirestoreService.setData("user2", "gadget3", "2022-07-" + d.toString());
-      FirestoreService.setData("user2", "gadget4", "2022-07-" + d.toString());
-      FirestoreService.setData("user3", "gadget1", "2022-07-" + d.toString());
-      FirestoreService.setData("user3", "gadget2", "2022-07-" + d.toString());
-      FirestoreService.setData("user3", "gadget3", "2022-07-" + d.toString());
-      FirestoreService.setData("user3", "gadget4", "2022-07-" + d.toString());
-    }
-  }
-
-  Future<String?> signInwithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleSignInAccount =
-          await _googleSignIn.signIn();
-      final GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount!.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
-      await _auth.signInWithCredential(credential);
-    } on FirebaseAuthException catch (e) {
-      print(e.message);
-      throw e;
-    }
-  }
-
-  Future<void> signOutFromGoogle() async {
-    await _googleSignIn.signOut();
-    await _auth.signOut();
+    return downloadURL;
   }
 
   Future<void> setString(String key, String value) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentReference userRef = db.collection('users').doc(userId);
+    DocumentReference userRef = db.collection('members').doc(Member.phone);
     userRef.update({key: value});
     print("updated " + key + " to " + value);
   }
-
-  Future<void> setNumber(String key, double value) async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentReference userRef = db.collection('users').doc(userId);
-    userRef.update({key: value});
-    print("updated " + key.toString() + " to " + value.toString());
-  }
-
-  Future<void> toggleOnlieStatus(bool isOnline) async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentReference userRef = db.collection('users').doc(userId);
-    userRef.update({'isOnline': isOnline});
-  }
-
-  Future<void> setGadgetField(String gadgetId, String key, double value) async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentReference gadgetRef =
-        db.collection('users').doc(userId).collection('gadgets').doc(gadgetId);
-    gadgetRef.update({key: value});
-  }
-
-  static Future<String> getUserFromPhoneNumber(String phone) async {
-    var user = await FirebaseFirestore.instance
-        .collection('users')
-        .where('phone', isEqualTo: phone)
-        .limit(1)
-        .get();
-    List userList = user.docs.toList();
-    if (!userList.isEmpty) {
-      print(userList[0].id);
-      try {
-        FirestoreService.userName= userList[0]["name"].toString() ;
-      } catch (e) {
-        
-      }
-      try {
-        FirestoreService.userAvatar= userList[0]["avatar"].toString() ;
-      } catch (e) {
-        
-      }
-      return userList[0].id;
-    }
-    return "";
-  }
-
-  static Future<void> setData(String user, String gadget, String day) async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentReference users = db
-        .collection('users')
-        .doc(user)
-        .collection("gadgets")
-        .doc(gadget)
-        .collection("days")
-        .doc(day) as DocumentReference<Object?>;
-    var data = {
-      "8h": {
-        "fadult": Random().nextDouble() * 100,
-        "fold": Random().nextDouble() * 100,
-        "myoung": Random().nextDouble() * 100,
-        "mold": Random().nextDouble() * 100,
-        "fyoung": Random().nextDouble() * 100,
-        "mkid": Random().nextDouble() * 100,
-        "total_persons": Random().nextInt(500),
-        "madult": Random().nextDouble() * 100,
-        "fkid": Random().nextDouble() * 100
-      },
-      "9h": {
-        "fadult": Random().nextDouble() * 100,
-        "fold": Random().nextDouble() * 100,
-        "myoung": Random().nextDouble() * 100,
-        "mold": Random().nextDouble() * 100,
-        "fyoung": Random().nextDouble() * 100,
-        "mkid": Random().nextDouble() * 100,
-        "total_persons": Random().nextInt(500),
-        "madult": Random().nextDouble() * 100,
-        "fkid": Random().nextDouble() * 100
-      },
-      "10h": {
-        "fadult": Random().nextDouble() * 100,
-        "fold": Random().nextDouble() * 100,
-        "myoung": Random().nextDouble() * 100,
-        "mold": Random().nextDouble() * 100,
-        "fyoung": Random().nextDouble() * 100,
-        "mkid": Random().nextDouble() * 100,
-        "total_persons": Random().nextInt(500),
-        "madult": Random().nextDouble() * 100,
-        "fkid": Random().nextDouble() * 100
-      },
-      "11h": {
-        "fadult": Random().nextDouble() * 100,
-        "fold": Random().nextDouble() * 100,
-        "myoung": Random().nextDouble() * 100,
-        "mold": Random().nextDouble() * 100,
-        "fyoung": Random().nextDouble() * 100,
-        "mkid": Random().nextDouble() * 100,
-        "total_persons": Random().nextInt(500),
-        "madult": Random().nextDouble() * 100,
-        "fkid": Random().nextDouble() * 100
-      },
-      "12h": {
-        "fadult": Random().nextDouble() * 100,
-        "fold": Random().nextDouble() * 100,
-        "myoung": Random().nextDouble() * 100,
-        "mold": Random().nextDouble() * 100,
-        "fyoung": Random().nextDouble() * 100,
-        "mkid": Random().nextDouble() * 100,
-        "total_persons": Random().nextInt(500),
-        "madult": Random().nextDouble() * 100,
-        "fkid": Random().nextDouble() * 100
-      },
-      "13h": {
-        "fadult": Random().nextDouble() * 100,
-        "fold": Random().nextDouble() * 100,
-        "myoung": Random().nextDouble() * 100,
-        "mold": Random().nextDouble() * 100,
-        "fyoung": Random().nextDouble() * 100,
-        "mkid": Random().nextDouble() * 100,
-        "total_persons": Random().nextInt(500),
-        "madult": Random().nextDouble() * 100,
-        "fkid": Random().nextDouble() * 100
-      },
-      "14h": {
-        "fadult": Random().nextDouble() * 100,
-        "fold": Random().nextDouble() * 100,
-        "myoung": Random().nextDouble() * 100,
-        "mold": Random().nextDouble() * 100,
-        "fyoung": Random().nextDouble() * 100,
-        "mkid": Random().nextDouble() * 100,
-        "total_persons": Random().nextInt(500),
-        "madult": Random().nextDouble() * 100,
-        "fkid": Random().nextDouble() * 100
-      },
-      "15h": {
-        "fadult": Random().nextDouble() * 100,
-        "fold": Random().nextDouble() * 100,
-        "myoung": Random().nextDouble() * 100,
-        "mold": Random().nextDouble() * 100,
-        "fyoung": Random().nextDouble() * 100,
-        "mkid": Random().nextDouble() * 100,
-        "total_persons": Random().nextInt(500),
-        "madult": Random().nextDouble() * 100,
-        "fkid": Random().nextDouble() * 100
-      },
-      "16h": {
-        "fadult": Random().nextDouble() * 100,
-        "fold": Random().nextDouble() * 100,
-        "myoung": Random().nextDouble() * 100,
-        "mold": Random().nextDouble() * 100,
-        "fyoung": Random().nextDouble() * 100,
-        "mkid": Random().nextDouble() * 100,
-        "total_persons": Random().nextInt(500),
-        "madult": Random().nextDouble() * 100,
-        "fkid": Random().nextDouble() * 100
-      },
-      "17h": {
-        "fadult": Random().nextDouble() * 100,
-        "fold": Random().nextDouble() * 100,
-        "myoung": Random().nextDouble() * 100,
-        "mold": Random().nextDouble() * 100,
-        "fyoung": Random().nextDouble() * 100,
-        "mkid": Random().nextDouble() * 100,
-        "total_persons": Random().nextInt(500),
-        "madult": Random().nextDouble() * 100,
-        "fkid": Random().nextDouble() * 100
-      },
-      "all_day_stats": {
-        "fadult": Random().nextDouble() * 100,
-        "fold": Random().nextDouble() * 100,
-        "myoung": Random().nextDouble() * 100,
-        "mold": Random().nextDouble() * 100,
-        "fyoung": Random().nextDouble() * 100,
-        "mkid": Random().nextDouble() * 100,
-        "total_persons": Random().nextInt(2000) + 500,
-        "madult": Random().nextDouble() * 100,
-        "fkid": Random().nextDouble() * 100
-      },
-    };
-
-    users.set(data);
-  }
-
-  Future<Map<DateTime, double>> getDayHoursMultiple(
-      String day, String categorie) async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    print(FirestoreService.selectedGadgets);
-    print("i,nn");
-    var data;
-    Map<DateTime, double> hours = {};
-
-    for (var gad in FirestoreService.selectedGadgets) {
-      print("===============================" + gad.toString());
-      await db
-          .collection('users')
-          .doc(FirestoreService.userId)
-          .collection('gadgets')
-          .doc(gad)
-          .collection("days")
-          .doc(day)
-          .get()
-          .then((doc) => {data = doc.data()});
-      print(data);
-      for (var i = 0; i < 24; i++) {
-        String hour = i.toString() + "h";
-        try {
-          String sfer = "";
-          if (i < 10) {
-            sfer = "0";
-          }
-
-          if (data[hour] != null) {
-            print(i);
-            if (hours.containsKey(DateTime.parse(
-                "2020-02-02 " + sfer + i.toString() + ":00:00Z"))) {
-              double old = hours[DateTime.parse(
-                  "2020-02-02 " + sfer + i.toString() + ":00:00Z")]!;
-              hours[DateTime.parse(
-                      "2020-02-02 " + sfer + i.toString() + ":00:00Z")] =
-                  old +
-                    
-                          data[hour]["total_persons"].toDouble() ;
-            } else {
-              hours[DateTime.parse(
-                      "2020-02-02 " + sfer + i.toString() + ":00:00Z")] =
-                 
-                      data[hour]["total_persons"].toDouble() ;
-            }
-            print(hours[DateTime.parse(
-                "2020-02-02 " + sfer + i.toString() + ":00:00Z")]);
-
-            // print(hour + "  ==> " + data[hour].toString());
-          }
-        } catch (e) {
-          // print("errorrrr " + e.toString());
-        }
-      }
-    }
-
-    print(hours.toString());
-    return hours;
-  }
-
-  Future<Map<DateTime, double>> getDayHours(
-      String gadgetId, String day, String categorie) async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    var data;
-    Map<DateTime, double> hours = {};
-    await db
-        .collection('users')
-        .doc(FirestoreService.userId)
-        .collection('gadgets')
-        .doc(gadgetId)
-        .collection("days")
-        .doc(day)
-        .get()
-        .then((doc) => {data = doc.data()});
-
-    for (var i = 0; i < 24; i++) {
-      String hour = i.toString() + "h";
-      try {
-        String sfer = "";
-        if (i < 10) {
-          sfer = "0";
-        }
-        if (data[hour] != null) {
-          hours[DateTime.parse(
-                  "2020-02-02 " + sfer + i.toString() + ":00:00Z")] =
-              data[hour][categorie].toDouble() *
-                  data[hour]["total_persons"].toDouble() /
-                  100.0;
-          print(hour + "  ==> " + data[hour].toString());
-        }
-      } catch (e) {
-        print("errorrrr " + e.toString());
-      }
-    }
-
-    print(hours.toString());
-    return hours;
-  }
-
-  Future<Map<DateTime, double>> getDaysMonthMultiple(String Month) async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    var data;
-    print("innn");
-    print(userId);
-    print(FirestoreService.selectedGadgets);
-    Map<DateTime, double> daysMap = {};
-    List<String> daysList = [];
-    for (String gad in FirestoreService.selectedGadgets) {
-      print(gad + "rrrrrrrrrrrr");
-      await db
-          .collection('users')
-          .doc(FirestoreService.userId)
-          .collection('gadgets')
-          .doc(gad)
-          .collection("days")
-          .get()
-          .then((doc) => {data = doc.docs.toList()});
-      print(data);
-      try {
-        for (var day in data) {
-          if (day.id.toString().contains("-" + Month + "-")) {
-            print(day.id);
-            print(
-                double.parse(day["all_day_stats"]["total_persons"].toString()));
-            if (daysMap.containsKey(DateTime.parse(day.id.toString()))) {
-              double old = daysMap[DateTime.parse(day.id.toString())]!;
-              daysMap[DateTime.parse(day.id.toString())] = old +
-                  double.parse(
-                      day["all_day_stats"]["total_persons"].toString());
-            } else {
-              daysMap[DateTime.parse(day.id.toString())] = double.parse(
-                  day["all_day_stats"]["total_persons"].toString());
-            }
-          }
-        }
-      } catch (e) {
-        print("errorrrr " + e.toString());
-      }
-    }
-
-    // print(hours.toString());
-    return daysMap;
-  }
-
-  Future<Map<DateTime, double>> getDaysMonth(
-      String gadgetId, String Month) async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    var data;
-    Map<DateTime, double> daysMap = {};
-    List<String> daysList = [];
-
-    print(daysList);
-    await db
-        .collection('users')
-        .doc(FirestoreService.userId)
-        .collection('gadgets')
-        .doc(gadgetId)
-        .collection("days")
-        .get()
-        .then((doc) => {data = doc.docs.toList()});
-    print(data);
-
-    try {
-      for (var day in data) {
-        if (day.id.toString().contains("-" + Month + "-")) {
-          print(day.id);
-
-          daysMap[DateTime.parse(day.id.toString())] =
-              double.parse(day["all_day_stats"]["total_persons"].toString());
-        }
-      }
-    } catch (e) {
-      print("errorrrr " + e.toString());
-    }
-
-    // print(hours.toString());
-    return daysMap;
-  }
-
-  Future<List<String>> getDays(gadgetId) async {
-    late List<String> days = [];
-    FirebaseFirestore db = FirebaseFirestore.instance;
-
-    var snapshot = await db
-        .collection('users')
-        .doc(FirestoreService.userId)
-        .collection('gadgets')
-        .doc(gadgetId)
-        .collection("days")
-        .get();
-    for (var item in snapshot.docs.toList()) {
-      days.add(item.id.toString());
-    }
-
-    print(days);
-    print("daysssssssssssssssssssssssssssssssss");
-    return days;
-  }
-
-  // Future<String> getNotification() {
-
-  // }
-
-  /*Future<void> sendFile(String notificationType, String filePath) async {
-    final file = File(filePath);
-    // Create the file metadata
-    final metadata = SettableMetadata(contentType: "image/jpeg");
-    // Create a reference to the Firebase Storage bucket
-    final storageRef = FirebaseStorage.instance.ref();
-    // Upload file and metadata to the path 'images/mountains.jpg'
-    final uploadTask = storageRef
-        .child("images/path/to/mountains.jpg")
-        .putFile(file, metadata);
-
-    // Listen for state changes, errors, and completion of the upload.
-    uploadTask.snapshotEvents.listen((TaskSnapshot taskSnapshot) {
-      switch (taskSnapshot.state) {
-        case TaskState.running:
-          final progress =
-              100.0 * (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
-          print("Upload is $progress% complete.");
-          break;
-        case TaskState.paused:
-          print("Upload is paused.");
-          break;
-        case TaskState.canceled:
-          print("Upload was canceled");
-          break;
-        case TaskState.error:
-          // Handle unsuccessful uploads
-          break;
-        case TaskState.success:
-          // Handle successful uploads on complete
-          // ...
-          break;
-      }
-    });
-
-    // String fileUrl =
-    //     await storageRef.child("images/path/to/mountains.jpg").getDownloadURL();
-
-    // FirebaseFirestore db = FirebaseFirestore.instance;
-    // DocumentReference patientRef = db.collection('rooms').doc(userId);
-
-    // patientRef.update({'files': fileUrl});
-  }*/
 }

@@ -14,6 +14,6 @@ class Member {
   static List<dynamic> profilePhotos = [];
   static DateTime birthDate = DateTime.now();
   static bool auth = false;
-  static bool online = false;
+  static DateTime online = DateTime.now();
   static String device = "";
 }

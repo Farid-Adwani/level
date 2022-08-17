@@ -2,7 +2,6 @@ import 'package:Aerobotix/model/member.dart';
 import 'package:Aerobotix/screens/profile_screen.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
-import 'package:Aerobotix/screens/gadget_screen.dart';
 import 'package:Aerobotix/services/firebase_service.dart';
 import 'package:Aerobotix/utils/helpers.dart';
 import 'package:Aerobotix/widgets/custom_loader.dart';
@@ -12,11 +11,8 @@ import 'package:gender_picker/source/enums.dart';
 class VerifyPhoneNumberScreen extends StatefulWidget {
   static const id = 'VerifyPhoneNumberScreen';
 
-  
-
   const VerifyPhoneNumberScreen({
     Key? key,
-    
   }) : super(key: key);
 
   @override
@@ -29,23 +25,21 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
   bool isKeyboardVisible = false;
 
   late final ScrollController scrollController;
-String netIm="wait";
-void getIm() async {
-  try {
-    netIm=await FirestoreService.getImage("profiles/"+Member.phone+"/profile/",Member.photo);
-    print(netIm+"fffff");
-                         setState(() {
-                          
-                        });
-  } catch (e) {
-    
+  String netIm = "wait";
+  void getIm() async {
+    try {
+      netIm = await FirestoreService.getImage(
+          "profiles/" + Member.phone + "/profile/", Member.photo);
+      print(netIm + "fffff");
+      setState(() {});
+    } catch (e) {}
   }
-}
+
   @override
   void initState() {
     scrollController = ScrollController();
     WidgetsBinding.instance.addObserver(this);
-     getIm();
+    getIm();
     super.initState();
   }
 
@@ -77,102 +71,98 @@ void getIm() async {
     );
   }
 
+bool loading=false;
 
   @override
   Widget build(BuildContext context) {
-
-    return 
-    Scaffold(
-            appBar: AppBar(
-              leadingWidth: 0,
-              leading: const SizedBox.shrink(),
-              title: const Text('Verify Phone Number'),
-              actions: [],
+    return Scaffold(
+      appBar: AppBar(
+        leadingWidth: 0,
+        leading: const SizedBox.shrink(),
+        title: const Text('Verify Phone Number'),
+        actions: [],
+      ),
+      body: Center(
+        // padding: const EdgeInsets.all(8.0),
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(20),
+          controller: scrollController,
+          children: [
+            CircleAvatar(
+                radius: MediaQuery.of(context).size.width / 2.5,
+                backgroundColor: Colors.white,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(200),
+                  child: netIm != "wait"
+                      ? netIm.isNotEmpty
+                          ? Image.network(netIm,
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.width,
+                              fit: BoxFit.fill)
+                          : Member.gender == Gender.Female
+                              ? Image.asset(
+                                  "assets/images/gadget2.jpg",
+                                )
+                              : Image.asset(
+                                  "assets/images/gadget4.jpg",
+                                )
+                      : CircularProgressIndicator(),
+                )),
+            const SizedBox(height: 10),
+            Center(
+              child: Text(Member.first_name + " " + Member.last_name,
+                  style: const TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  )),
             ),
-            body: Center(
-              // padding: const EdgeInsets.all(8.0),
-              child: ListView(
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(20),
-                controller: scrollController,
-                children: [
-                   CircleAvatar(
-              
-              radius:  MediaQuery.of(context).size.width/2.5,
-                backgroundColor:Colors.white,
-                child: 
-                    ClipRRect(
-                      
-                        borderRadius: BorderRadius.circular(200),
-                        child: netIm!="wait"? netIm.isNotEmpty?
-                            Image.network(
-                          netIm,
-                          width:  MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.width,
-                          fit: BoxFit.fill
-                        ):
-                        Member.gender==Gender.Female?
-                        Image.asset(
-                            "assets/images/gadget2.jpg",
-                          ):
-                          Image.asset(
-                            "assets/images/gadget4.jpg",
-                          ):CircularProgressIndicator()
-                      ,
-                      )
-                   
-              ),
-                     const SizedBox(height: 10),
-                  Center(
-                    child: Text(Member.first_name+" "+Member.last_name,
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ),
-                  Center(
-                    child:  Text(
-                      "☎️ : "+Member.phone.replaceFirst("+216",""),
-                      style: const TextStyle(fontSize: 25),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Divider(),
-                  const Text(
-                    'Enter Your Password',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  PinInputField(
-                    length: 6,
-                    onFocusChange: (hasFocus) async {
-                      if (hasFocus) await _scrollToBottomOnKeyboardOpen();
-                    },
-                    onSubmit: (code) async {
-                    if(code==Member.password){
-                      
-                      await FirestoreService.updateDevice(Member.phone);
-                         showSnackBar("Mar7ba biiiiik fi lFamilia 💖 👪 💖!");
-                          Navigator.pushNamedAndRemoveUntil(
-              context,
-              ProfileScreen.id,
-              (route) => false,
-            );
-                    }else{
-                       showSnackBar("Incorrect password ✋ !",
-                        col: Colors.red);
-                        
-                    }
-                      
-                    },
-                  ),
-                ],
+            Center(
+              child: Text(
+                "☎️ : " + Member.phone.replaceFirst("+216", ""),
+                style: const TextStyle(fontSize: 25),
               ),
             ),
-          );
-       
+            const SizedBox(height: 10),
+            const Divider(),
+            const Text(
+              'Enter Your Password',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 15),
+            PinInputField(
+              length: 6,
+              onFocusChange: (hasFocus) async {
+                if (hasFocus) await _scrollToBottomOnKeyboardOpen();
+              },
+              onSubmit: (code) async {
+                setState(() {
+                  loading=true;
+                });
+                bool result=false;
+                result = await FirestoreService.auth(code, Member.phone);
+                if (result == true) {
+                  await FirestoreService.updateDevice(Member.phone);
+                  showSnackBar("Mar7ba biiiiik fi lFamilia 💖 👪 💖!");
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    ProfileScreen.id,
+                    (route) => false,
+                  );
+                } else{
+                   setState(() {
+                  loading=false;
+                });
+                }
+              },
+            ),
+            if(loading) Center(child: CircularProgressIndicator()),
+          ],
+        ),
+      ),
+    );
   }
 }

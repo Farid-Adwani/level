@@ -2,7 +2,6 @@ import 'package:Aerobotix/model/member.dart';
 import 'package:Aerobotix/screens/profile_screen.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
-import 'package:Aerobotix/screens/gadget_screen.dart';
 import 'package:Aerobotix/services/firebase_service.dart';
 import 'package:Aerobotix/utils/helpers.dart';
 import 'package:Aerobotix/widgets/custom_loader.dart';
@@ -34,16 +33,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
   }
 
-  
+  bool tryingDisconnect=false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
+        
         leadingWidth: 0,
         leading: const SizedBox.shrink(),
         title: const Text('Profile'),
-        actions: [],
+        actions: [IconButton(onPressed: () async {
+          setState(() {
+            tryingDisconnect=true;
+          });
+          bool conn=await FirestoreService.disconnect(Member.phone, context);
+          if (conn==false){
+            setState(() {
+              tryingDisconnect=false;
+            });
+          }
+          }, icon: tryingDisconnect==true?CircularProgressIndicator(): Icon(Icons.logout))],
       ),
       body: Center(
         // padding: const EdgeInsets.all(8.0),

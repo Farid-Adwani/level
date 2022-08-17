@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:Aerobotix/screens/authentication_screen.dart';
-import 'package:Aerobotix/screens/gadget_screen.dart';
-import 'package:Aerobotix/screens/people_screen.dart';
 import 'package:Aerobotix/screens/splash_screen.dart';
 import 'package:Aerobotix/screens/verify_phone_number_screen.dart';
 import 'package:Aerobotix/utils/helpers.dart';
@@ -19,8 +17,7 @@ class RouteGenerator {
         return _route(const AuthenticationScreen());
       case VerifyPhoneNumberScreen.id:
         return _route(VerifyPhoneNumberScreen());
-      case HomeScreen.id:
-        return _route(const HomeScreen());
+    
       default:
         return _errorRoute(settings.name);
     }
