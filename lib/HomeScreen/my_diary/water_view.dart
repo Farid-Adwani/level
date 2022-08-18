@@ -36,6 +36,9 @@ class _WaterViewState extends State<WaterView> with TickerProviderStateMixin {
                   left: 24, right: 24, top: 16, bottom: 18),
               child: Container(
                 decoration: BoxDecoration(
+                  image: DecorationImage(image: AssetImage("assets/HomeScreen/r3ad.gif"),
+                  fit: BoxFit.fill,
+                  ),
                   color: AerobotixAppTheme.white,
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(8.0),
@@ -69,7 +72,7 @@ class _WaterViewState extends State<WaterView> with TickerProviderStateMixin {
                                       padding: const EdgeInsets.only(
                                           left: 4, bottom: 3),
                                       child: Text(
-                                        '2100',
+                                        'R3ad ⚡',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontFamily: AerobotixAppTheme.fontName,
@@ -79,39 +82,9 @@ class _WaterViewState extends State<WaterView> with TickerProviderStateMixin {
                                         ),
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8, bottom: 8),
-                                      child: Text(
-                                        'ml',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: AerobotixAppTheme.fontName,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 18,
-                                          letterSpacing: -0.2,
-                                          color: AerobotixAppTheme.nearlyDarkBlue,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                     ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 4, top: 2, bottom: 14),
-                                  child: Text(
-                                    'of daily goal 3.5L',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: AerobotixAppTheme.fontName,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      letterSpacing: 0.0,
-                                      color: AerobotixAppTheme.darkText,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                               ],
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
@@ -149,7 +122,7 @@ class _WaterViewState extends State<WaterView> with TickerProviderStateMixin {
                                         padding:
                                             const EdgeInsets.only(left: 4.0),
                                         child: Text(
-                                          'Last drink 8:26 AM',
+                                          DateTime.now().toString().split(':')[0]+":"+DateTime.now().toString().split(':')[1],
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontFamily:
@@ -207,52 +180,7 @@ class _WaterViewState extends State<WaterView> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Container(
-                              decoration: BoxDecoration(
-                                color: AerobotixAppTheme.nearlyWhite,
-                                shape: BoxShape.circle,
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                      color: AerobotixAppTheme.nearlyDarkBlue
-                                          .withOpacity(0.4),
-                                      offset: const Offset(4.0, 4.0),
-                                      blurRadius: 8.0),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Icon(
-                                  Icons.add,
-                                  color: AerobotixAppTheme.nearlyDarkBlue,
-                                  size: 24,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 28,
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: AerobotixAppTheme.nearlyWhite,
-                                shape: BoxShape.circle,
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                      color: AerobotixAppTheme.nearlyDarkBlue
-                                          .withOpacity(0.4),
-                                      offset: const Offset(4.0, 4.0),
-                                      blurRadius: 8.0),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Icon(
-                                  Icons.remove,
-                                  color: AerobotixAppTheme.nearlyDarkBlue,
-                                  size: 24,
-                                ),
-                              ),
-                            ),
-                          ],
+  ],
                         ),
                       ),
                       Padding(
@@ -276,7 +204,8 @@ class _WaterViewState extends State<WaterView> with TickerProviderStateMixin {
                             ],
                           ),
                           child: WaveView(
-                            percentageValue: 60.0,
+                            percentageValue: 99,
+                            
                           ),
                         ),
                       )

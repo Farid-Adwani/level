@@ -148,6 +148,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
 
     listViews.add(
       WaterView(
+        
         mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
             CurvedAnimation(
                 parent: widget.animationController!,
@@ -249,7 +250,8 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
               AdvancedAvatar(
                 size: 150,
                 statusSize: 40,
-                statusColor: Colors.green,
+              //  statusColor: Colors.green,
+
                 image: AssetImage('assets/images/gadget2.jpg'),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -262,10 +264,10 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                 ),
                 children: [
                   Align(
-                    alignment: Alignment.topRight,
+                    alignment: Alignment.bottomRight,
                     child: Container(
-                      width: 20,
-                      height: 20,
+                      width:  MediaQuery.of(context).size.width/10,
+                      height:  MediaQuery.of(context).size.width/10,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -275,14 +277,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                         color: Colors.red,
                         shape: BoxShape.circle,
                       ),
-                      child: Text(
-                        '12',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: IconButton(onPressed: (){print("waaaaa");}, icon: Icon(Icons.edit))
                     ),
                   ),
                 ],

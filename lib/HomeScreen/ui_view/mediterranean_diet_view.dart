@@ -1,4 +1,5 @@
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
+import 'package:Aerobotix/HomeScreen/ui_view/wave_view.dart';
 import 'package:Aerobotix/ui/HexColor.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
@@ -26,232 +27,40 @@ class MediterranesnDietView extends StatelessWidget {
                   left: 24, right: 24, top: 16, bottom: 18),
               child: Container(
                 decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/HomeScreen/r3ad4.gif"),
+                    fit: BoxFit.fill,
+                  ),
                   color: AerobotixAppTheme.white,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(8.0),
                       bottomLeft: Radius.circular(8.0),
                       bottomRight: Radius.circular(8.0),
-                      topRight: Radius.circular(68.0)),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                        color: AerobotixAppTheme.grey.withOpacity(0.2),
-                        offset: Offset(1.1, 1.1),
-                        blurRadius: 10.0),
-                  ],
+                      topRight: Radius.circular(58.0)),
+                      
                 ),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                  
+                    Column(
+                      children: [
+                            Text(
+                              'R3ad ⚡',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: AerobotixAppTheme.fontName,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 32,
+                                color: Colors.white,
+                              ),
+                            ),
+                                 Padding(
                       padding:
                           const EdgeInsets.only(top: 16, left: 16, right: 16),
                       child: Row(
                         children: <Widget>[
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8, right: 8, top: 4),
-                              child: Column(
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Container(
-                                        height: 48,
-                                        width: 2,
-                                        decoration: BoxDecoration(
-                                          color: HexColor('#87A0E5')
-                                              .withOpacity(0.5),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(4.0)),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4, bottom: 2),
-                                              child: Text(
-                                                'Eaten',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      AerobotixAppTheme.fontName,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 16,
-                                                  letterSpacing: -0.1,
-                                                  color: AerobotixAppTheme.grey
-                                                      .withOpacity(0.5),
-                                                ),
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: <Widget>[
-                                                SizedBox(
-                                                  width: 28,
-                                                  height: 28,
-                                                  child: Image.asset(
-                                                      "assets/HomeScreen/eaten.png"),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 4, bottom: 3),
-                                                  child: Text(
-                                                    '${(1127 * animation!.value).toInt()}',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontFamily:
-                                                          AerobotixAppTheme
-                                                              .fontName,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 16,
-                                                      color: AerobotixAppTheme
-                                                          .darkerText,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 4, bottom: 3),
-                                                  child: Text(
-                                                    'Kcal',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontFamily:
-                                                          AerobotixAppTheme
-                                                              .fontName,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 12,
-                                                      letterSpacing: -0.2,
-                                                      color: AerobotixAppTheme
-                                                          .grey
-                                                          .withOpacity(0.5),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Container(
-                                        height: 48,
-                                        width: 2,
-                                        decoration: BoxDecoration(
-                                          color: HexColor('#F56E98')
-                                              .withOpacity(0.5),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(4.0)),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4, bottom: 2),
-                                              child: Text(
-                                                'Burned',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      AerobotixAppTheme.fontName,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 16,
-                                                  letterSpacing: -0.1,
-                                                  color: AerobotixAppTheme.grey
-                                                      .withOpacity(0.5),
-                                                ),
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: <Widget>[
-                                                SizedBox(
-                                                  width: 28,
-                                                  height: 28,
-                                                  child: Image.asset(
-                                                      "assets/HomeScreen/burned.png"),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 4, bottom: 3),
-                                                  child: Text(
-                                                    '${(102 * animation!.value).toInt()}',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontFamily:
-                                                          AerobotixAppTheme
-                                                              .fontName,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 16,
-                                                      color: AerobotixAppTheme
-                                                          .darkerText,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 8, bottom: 3),
-                                                  child: Text(
-                                                    'Kcal',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontFamily:
-                                                          AerobotixAppTheme
-                                                              .fontName,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 12,
-                                                      letterSpacing: -0.2,
-                                                      color: AerobotixAppTheme
-                                                          .grey
-                                                          .withOpacity(0.5),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          Padding(
+                      Padding(
                             padding: const EdgeInsets.only(right: 16),
                             child: Center(
                               child: Stack(
@@ -280,7 +89,7 @@ class MediterranesnDietView extends StatelessWidget {
                                             CrossAxisAlignment.center,
                                         children: <Widget>[
                                           Text(
-                                            '${(1503 * animation!.value).toInt()}',
+                                            '${(5478 * animation!.value).toInt()}',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily:
@@ -293,7 +102,7 @@ class MediterranesnDietView extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            'Kcal left',
+                                            'XP',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily:
@@ -318,7 +127,7 @@ class MediterranesnDietView extends StatelessWidget {
                                             HexColor("#8A98E8"),
                                             HexColor("#8A98E8")
                                           ],
-                                          angle: 140 +
+                                          angle: 180 +
                                               (360 - 140) *
                                                   (1.0 - animation!.value)),
                                       child: SizedBox(
@@ -334,230 +143,41 @@ class MediterranesnDietView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 24, right: 24, top: 8, bottom: 8),
-                      child: Container(
-                        height: 2,
-                        decoration: BoxDecoration(
-                          color: AerobotixAppTheme.background,
-                          borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 24, right: 24, top: 8, bottom: 16),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  'Carbs',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: AerobotixAppTheme.fontName,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    letterSpacing: -0.2,
-                                    color: AerobotixAppTheme.darkText,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4),
-                                  child: Container(
-                                    height: 4,
-                                    width: 70,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          HexColor('#87A0E5').withOpacity(0.2),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(4.0)),
-                                    ),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Container(
-                                          width: ((70 / 1.2) * animation!.value),
-                                          height: 4,
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(colors: [
-                                              HexColor('#87A0E5'),
-                                              HexColor('#87A0E5')
-                                                  .withOpacity(0.5),
-                                            ]),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(4.0)),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 6),
-                                  child: Text(
-                                    '12g left',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: AerobotixAppTheme.fontName,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
-                                      color:
-                                          AerobotixAppTheme.grey.withOpacity(0.5),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      'Protein',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily: AerobotixAppTheme.fontName,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16,
-                                        letterSpacing: -0.2,
-                                        color: AerobotixAppTheme.darkText,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 4),
-                                      child: Container(
-                                        height: 4,
-                                        width: 70,
-                                        decoration: BoxDecoration(
-                                          color: HexColor('#F56E98')
-                                              .withOpacity(0.2),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(4.0)),
-                                        ),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Container(
-                                              width: ((70 / 2) *
-                                                  animationController!.value),
-                                              height: 4,
-                                              decoration: BoxDecoration(
-                                                gradient:
-                                                    LinearGradient(colors: [
-                                                  HexColor('#F56E98')
-                                                      .withOpacity(0.1),
-                                                  HexColor('#F56E98'),
-                                                ]),
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(4.0)),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 6),
-                                      child: Text(
-                                        '30g left',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: AerobotixAppTheme.fontName,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 12,
-                                          color: AerobotixAppTheme.grey
-                                              .withOpacity(0.5),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      'Fat',
-                                      style: TextStyle(
-                                        fontFamily: AerobotixAppTheme.fontName,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16,
-                                        letterSpacing: -0.2,
-                                        color: AerobotixAppTheme.darkText,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 0, top: 4),
-                                      child: Container(
-                                        height: 4,
-                                        width: 70,
-                                        decoration: BoxDecoration(
-                                          color: HexColor('#F1B440')
-                                              .withOpacity(0.2),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(4.0)),
-                                        ),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Container(
-                                              width: ((70 / 2.5) *
-                                                  animationController!.value),
-                                              height: 4,
-                                              decoration: BoxDecoration(
-                                                gradient:
-                                                    LinearGradient(colors: [
-                                                  HexColor('#F1B440')
-                                                      .withOpacity(0.1),
-                                                  HexColor('#F1B440'),
-                                                ]),
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(4.0)),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 6),
-                                      child: Text(
-                                        '10g left',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: AerobotixAppTheme.fontName,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 12,
-                                          color: AerobotixAppTheme.grey
-                                              .withOpacity(0.5),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                  
+                          
+                           
+                      ],
                     )
+                  , 
+                    Padding(
+                        padding:
+                            const EdgeInsets.only(left: 16, right: 8, top: 16),
+                        child: Container(
+                          width: 60,
+                          height: 160,
+                          decoration: BoxDecoration(
+                            color: HexColor('#E8EDFE'),
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(80.0),
+                                bottomLeft: Radius.circular(80.0),
+                                bottomRight: Radius.circular(80.0),
+                                topRight: Radius.circular(80.0)),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: AerobotixAppTheme.grey.withOpacity(0.4),
+                                  offset: const Offset(2, 2),
+                                  blurRadius: 4),
+                            ],
+                          ),
+                          child: WaveView(
+                            percentageValue: 99,
+
+                          ),
+                        ),
+                      )
+
+                  
+                    ,
                   ],
                 ),
               ),
