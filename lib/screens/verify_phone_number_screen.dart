@@ -30,7 +30,6 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
     try {
       netIm = await FirestoreService.getImage(
           "profiles/" + Member.phone + "/profile/", Member.photo);
-      print(netIm + "fffff");
       setState(() {});
     } catch (e) {}
   }
@@ -71,7 +70,7 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
     );
   }
 
-bool loading=false;
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -89,26 +88,57 @@ bool loading=false;
           padding: const EdgeInsets.all(20),
           controller: scrollController,
           children: [
-            CircleAvatar(
-                radius: MediaQuery.of(context).size.width / 2.5,
-                backgroundColor: Colors.white,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(200),
-                  child: netIm != "wait"
-                      ? netIm.isNotEmpty
-                          ? Image.network(netIm,
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width,
-                              fit: BoxFit.fill)
-                          : Member.gender == Gender.Female
-                              ? Image.asset(
+            Container(
+                width: MediaQuery.of(context).size.width / 1.2,
+                height: MediaQuery.of(context).size.width / 1.2,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Member.gender == Gender.Female
+                            ? Colors.pinkAccent
+                            : Colors.blue,
+                        width: 5),
+                    shape: BoxShape.circle,
+                    image: (netIm.isNotEmpty && netIm != "wait")
+                        ? DecorationImage(
+                            image: NetworkImage(
+                              netIm,
+                            ),
+                            fit: BoxFit.fill)
+                        : Member.gender == Gender.Female
+                            ? DecorationImage(
+                                image: AssetImage(
                                   "assets/images/gadget2.jpg",
-                                )
-                              : Image.asset(
+                                ),
+                                fit: BoxFit.fill)
+                            : DecorationImage(
+                                image: AssetImage(
                                   "assets/images/gadget4.jpg",
-                                )
-                      : CircularProgressIndicator(),
-                )),
+                                ),
+                                fit: BoxFit.fill)),
+                child: netIm == "wait"
+                    ? Center(child: CircularProgressIndicator())
+                    : Container()),
+            // CircleAvatar(
+            //     radius: MediaQuery.of(context).size.width / 2.5,
+            //     backgroundColor: Colors.white,
+            //     child: ClipRRect(
+            //       borderRadius: BorderRadius.circular(200),
+            //       child: netIm != "wait"
+            //           ? netIm.isNotEmpty
+            //               ? Image.network(netIm,
+            //                   width: MediaQuery.of(context).size.width,
+            //                   height: MediaQuery.of(context).size.width,
+            //                   fit: BoxFit.fill)
+            //               : Member.gender == Gender.Female
+            //                   ? Image.asset(
+            //                       "assets/images/gadget2.jpg",
+            //                     )
+            //                   : Image.asset(
+            //                       "assets/images/gadget4.jpg",
+            //                     )
+            //           : CircularProgressIndicator(),
+            //     ))
+            // ,
             const SizedBox(height: 10),
             Center(
               child: Text(Member.first_name + " " + Member.last_name,
@@ -140,9 +170,9 @@ bool loading=false;
               },
               onSubmit: (code) async {
                 setState(() {
-                  loading=true;
+                  loading = true;
                 });
-                bool result=false;
+                bool result = false;
                 result = await FirestoreService.auth(code, Member.phone);
                 if (result == true) {
                   await FirestoreService.updateDevice(Member.phone);
@@ -152,14 +182,14 @@ bool loading=false;
                     ProfileScreen.id,
                     (route) => false,
                   );
-                } else{
-                   setState(() {
-                  loading=false;
-                });
+                } else {
+                  setState(() {
+                    loading = false;
+                  });
                 }
               },
             ),
-            if(loading) Center(child: CircularProgressIndicator()),
+            if (loading) Center(child: CircularProgressIndicator()),
           ],
         ),
       ),

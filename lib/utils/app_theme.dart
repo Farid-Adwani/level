@@ -123,6 +123,7 @@ class _SlideLeftTransitionsBuilder extends PageTransitionsBuilder {
   @override
   Widget buildTransitions<T>(_, __, animation, ___, child) {
     return SlideTransition(
+      
       position: CurvedAnimation(
         parent: animation,
         curve: Curves.easeIn,
@@ -132,6 +133,7 @@ class _SlideLeftTransitionsBuilder extends PageTransitionsBuilder {
         end: const Offset(0, 0),
       )),
       child: child,
+      
     );
   }
 }

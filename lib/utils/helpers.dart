@@ -5,18 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:Aerobotix/utils/globals.dart';
 
 void showSnackBar(
- 
   String text, {
-  Duration duration = const Duration(seconds: 2), Color? col=Colors.green,
+  Duration duration = const Duration(seconds: 2),
+  Color? col = Colors.green,
 }) {
   Globals.scaffoldMessengerKey.currentState
     ?..clearSnackBars()
     ..showSnackBar(
-      SnackBar(content: Text(text,style: TextStyle(
-color: Colors.white,
-fontWeight: FontWeight.bold,
-
-      )), duration: duration,backgroundColor: col,),
+      SnackBar(
+        content: Text(text,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.normal,
+            ), textAlign: TextAlign.center),
+        duration: duration,
+        backgroundColor: col,
+      ),
     );
 }
 

@@ -1,4 +1,5 @@
 import 'package:Aerobotix/screens/profile_screen.dart';
+import 'package:Aerobotix/screens/sign_up_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +22,7 @@ class levelsApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return FirebasePhoneAuthProvider(
-      child: MaterialApp(
+    return  MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'levels',
         scaffoldMessengerKey: Globals.scaffoldMessengerKey,
@@ -31,10 +31,11 @@ class levelsApp extends StatelessWidget {
         onGenerateRoute: RouteGenerator.generateRoute,
         routes: {
           ProfileScreen.id: (context) => ProfileScreen(),
-
+          SignUpScreen.id: (context) => SignUpScreen(),
         },
         initialRoute: SplashScreen.id,
-      ),
-    );
-  }
+      );
+    
+  
+}
 }

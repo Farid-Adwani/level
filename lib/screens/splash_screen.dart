@@ -39,9 +39,23 @@ Navigator.pushReplacementNamed(
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return  SafeArea(
       child: Scaffold(
-        body: CustomLoader(),
+        body: 
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:[
+            Image.asset(
+              "assets/images/icon.png",
+              fit: BoxFit.cover,
+              height: MediaQuery.of(context).size.height / 8,
+              width: MediaQuery.of(context).size.width,
+            ),
+CustomLoader(),
+          ]
+        )
+        
+        
       ),
     );
   }

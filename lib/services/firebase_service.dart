@@ -7,9 +7,11 @@ import 'package:Aerobotix/utils/helpers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 import 'package:gender_picker/source/enums.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FirestoreService {
   static late FirestoreService singleton;
@@ -27,12 +29,16 @@ class FirestoreService {
   static Future<void> addProfilePhoto(String photo, String phone) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentReference memberRef = db.collection('members').doc(phone);
-
+print("11111111111111111");
     try {
+print("11111111111111111");
+
       memberRef.set({
         "photo": photo,
         "profile_photos": FieldValue.arrayUnion([photo]),
       }, SetOptions(merge: true));
+print("11111111111111111");
+
     } catch (e) {}
   }
 
@@ -81,6 +87,7 @@ class FirestoreService {
           "photo": photo,
           "birth_date": birthDate,
           "auth": true,
+          "verified": false,
           'device': deviceId,
           "online": DateTime.now(),
         });
@@ -94,6 +101,8 @@ class FirestoreService {
         Member.birthDate = birthDate;
         Member.password = password;
         Member.auth = true;
+        Member.verified = false;
+
         Member.online = DateTime.now();
         Member.device = deviceId!;
       } catch (e) {}
@@ -154,11 +163,11 @@ class FirestoreService {
 
   static Future<bool> disconnect(phone, context) async {
     bool result = await InternetConnectionChecker().hasConnection;
-if(result == false) {
-    showSnackBar('Please check your internet connection!',
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
           col: Colors.redAccent[700]);
-          return false;
-   }
+      return false;
+    }
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentReference memberRef = db.collection('members').doc(phone);
     bool success = true;
@@ -188,6 +197,123 @@ if(result == false) {
       }
       return true;
     } catch (e) {
+      return false;
+    }
+  }
+
+  static void _sendSMS(String message, List<String> recipents) async {
+    String _result = await sendSMS(message: message, recipients: recipents)
+        .catchError((onError) {
+      print(onError);
+    });
+    print(_result);
+  }
+
+  static Future<bool> sms(phoneNumber) async {
+    if (phoneNumber == "") {
+      showSnackBar('Please enter your phone number!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+    bool exist = false;
+    String firstName = "";
+    String lastName = "";
+    String userphone = "";
+    DocumentSnapshot? user;
+    DocumentSnapshot? smsAdmin;
+
+    try {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      DocumentReference memberRef = db.collection('admins').doc("sms");
+      DocumentReference userRef = db.collection('members').doc(phoneNumber);
+
+      await userRef.get().then((doc) {
+        exist = doc.exists;
+        user = doc;
+      }).timeout(Duration(seconds: 5));
+
+      if (exist == true) {
+        userphone = user!.get("phone");
+        firstName = user!.get("first_name");
+        lastName = user!.get("first_name");
+      } else {
+        showSnackBar('There is no user with this phone number!',
+            col: Colors.redAccent[700]);
+        return false;
+      }
+
+      smsAdmin = await memberRef.get().timeout(Duration(
+            seconds: 7,
+          ));
+      print(smsAdmin.data());
+      if (smsAdmin.get("phone_sms") != "" && smsAdmin.get("reset_sms") != "") {
+        String template = smsAdmin.get("reset_sms");
+        template = template.replaceFirst("<phone>", userphone);
+        template = template.replaceFirst("<name>", firstName + " " + lastName);
+        template = template.replaceAll("<break>", '\n');
+        template = template.replaceFirst("<emoji1>", "💗");
+        template = template.replaceFirst("<emoji2>", "😭");
+        template = template.replaceFirst("<emoji3>", "📞");
+        if (user!.get("gender") == "Female") {
+          template = template.replaceFirst("<emoji4>", "👧");
+        } else {
+          template = template.replaceFirst("<emoji4>", "👦");
+        }
+
+        FirestoreService._sendSMS(
+            template, [smsAdmin.get("phone_sms").toString()]);
+        return true;
+      } else {
+        showSnackBar("You can not do this ✋ !", col: Colors.red);
+        return false;
+      }
+    } on TimeoutException catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    } catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+  }
+
+  static Future<bool> call() async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+    try {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      DocumentReference memberRef = db.collection('admins').doc("sms");
+      DocumentSnapshot? callAdmin;
+
+      callAdmin = await memberRef.get().timeout(Duration(
+            seconds: 7,
+          ));
+      print(callAdmin.data());
+      if (callAdmin.get("phone_call") != "") {
+        launch("tel://" + callAdmin.get("phone_call").toString());
+        return true;
+      } else {
+        showSnackBar("You can not do this ✋ !", col: Colors.red);
+        return false;
+      }
+    } on TimeoutException catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    } catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
       return false;
     }
   }
@@ -232,23 +358,19 @@ if(result == false) {
   static void allocateData(user) {
     try {
       Member.birthDate = user.get("birth_date").toDate();
-      print(Member.birthDate);
       Member.first_name = user.get("first_name");
       Member.last_name = user.get("last_name");
       user.get("gender") == "Female"
           ? Member.gender = Gender.Female
           : Member.gender = Gender.Male;
-      print(Member.gender);
       Member.level = user.get("level");
       Member.branch = user.get("branch");
       Member.photo = user.get("photo");
-
       Member.phone = user.get("phone");
-
+      Member.auth = user.get("auth");
+      Member.verified = user.get("verified");
       Member.password = user.get("password");
-      print(Member.password);
       Member.profilePhotos = user.get("profile_photos");
-      print(Member.profilePhotos);
     } catch (e) {}
   }
 

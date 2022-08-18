@@ -82,24 +82,42 @@ class _SignUpScreenState extends State<SignUpScreen>
   DateTime dateBirth = DateTime.now();
   File? _photo;
   final ImagePicker _picker = ImagePicker();
-
+  bool uploading = false;
   Future uploadFile() async {
-
     if (_photo == null) return;
     setState(() {
-      
+      uploading = true;
     });
     final fileName = basename(_photo!.path);
     final destination = 'profiles/${Member.phone}/profile/';
 
     try {
-      String name=DateTime.now().toString()+fileName;
+      String name = DateTime.now().toString() + fileName;
+      Member.photo = name;
       final ref = FirebaseStorage.instance.ref(destination).child(name);
-      await ref.putFile(_photo!);
-      await FirestoreService.addProfilePhoto(name,Member.phone);
+
+      await ref.putFile(_photo!).timeout(Duration(seconds: 7));
+      await FirestoreService.addProfilePhoto(name, Member.phone)
+          .timeout(Duration(seconds: 7));
+    } on TimeoutException {
+      showSnackBar("Please check your internet connection and retry !",
+          col: Colors.red);
+      setState(() {
+        uploading = false;
+        _photo = null;
+      });
     } catch (e) {
-      print('error occured');
+      showSnackBar("Please check your internet connection and retry !",
+          col: Colors.red);
+      print(e);
+      setState(() {
+        uploading = false;
+        _photo = null;
+      });
     }
+    setState(() {
+      uploading = false;
+    });
   }
 
   Future imgFromGallery() async {
@@ -108,6 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen>
     setState(() {
       if (pickedFile != null) {
         _photo = File(pickedFile.path);
+
         uploadFile();
       } else {
         print('No image selected.');
@@ -211,49 +230,66 @@ class _SignUpScreenState extends State<SignUpScreen>
               width: MediaQuery.of(context).size.width,
             ),
             if (step == 4)
-            CircleAvatar(
-              
-              radius:  MediaQuery.of(context).size.width/2.5,
-                backgroundColor: Color(0xffFDCF09),
-                child: 
-                    ClipRRect(
-                      
-                        borderRadius: BorderRadius.circular(200),
-                        child:  _photo!=null?
-                            Image.file(
-                          _photo!,
-                          width:  MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.width,
-                          fit: BoxFit.fill
-                        ):
-                        gender==Gender.Female?
-                        Image.asset(
-                            "assets/images/gadget2.jpg",
-                          ):
-                          Image.asset(
-                            "assets/images/gadget4.jpg",
-                          )
-                      ,
-                      )
-                   
-              ),
-             if (step == 4) 
-             Container(
-              margin: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color.fromARGB(255, 249, 0, 0),
+              Container(
+                  width: MediaQuery.of(context).size.width / 1.2,
+                  height: MediaQuery.of(context).size.width / 1.2,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Member.gender == Gender.Female
+                              ? Colors.pinkAccent
+                              : Colors.blue,
+                          width: 5),
+                      shape: BoxShape.circle,
+                      image: (_photo != null)
+                          ? DecorationImage(
+                              fit: BoxFit.fill,
+                              image: FileImage(
+                                _photo!,
+                              ))
+                          : (gender == Gender.Female)
+                              ? DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: AssetImage(
+                                    "assets/images/gadget2.jpg",
+                                  ))
+                              : DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: AssetImage(
+                                    "assets/images/gadget4.jpg",
+                                  )))),
 
+            // radius:  MediaQuery.of(context).size.width/2.5,
+            // backgroundColor: Color(0xffFDCF09),
+            // child:
+            //     _photo!=null?
+
+            //         Image.file(
+            //       _photo!,
+            //       fit: BoxFit.cover,
+
+            //     ):
+            // gender==Gender.Female?
+            // Image.asset(
+            //     "assets/images/gadget2.jpg",
+            //   ):
+            //   Image.asset(
+            //     "assets/images/gadget4.jpg",
+            //   )
+
+            if (step == 4)
+              Container(
+                margin: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color.fromARGB(255, 249, 0, 0),
+                ),
+                child: IconButton(
+                  icon: Icon(Icons.file_upload_outlined),
+                  onPressed: () {
+                    _showPicker(context);
+                  },
+                ),
               ),
-               child: IconButton(
-                
-                        icon: Icon(Icons.file_upload_outlined),
-                        onPressed: () {
-                          print("clicked upload button");
-                          _showPicker(context);
-                        },
-                      ),
-             ),
             if (step == 1)
               const Text(
                 'First Name',
@@ -322,7 +358,6 @@ class _SignUpScreenState extends State<SignUpScreen>
                 unSelectedGenderTextStyle: TextStyle(
                     color: Colors.white, fontWeight: FontWeight.normal),
                 onChanged: (g) {
-                  print(g);
                   gender = g!;
 
                   // setState(() {
@@ -541,7 +576,6 @@ class _SignUpScreenState extends State<SignUpScreen>
                           onTap: () async {
                             DatePicker.showDatePicker(context,
                                 showTitleActions: true, onConfirm: (d) {
-                              print('confirm $d');
                               setState(() {
                                 dateBirth = d;
                                 birthDate = d.day.toString() +
@@ -665,11 +699,13 @@ class _SignUpScreenState extends State<SignUpScreen>
                     });
                   }
                 } else if (step == 4) {
-                   Navigator.pushNamedAndRemoveUntil(
-              context,
-              ProfileScreen.id,
-              (route) => false,
-            );
+                  if (!uploading) {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      ProfileScreen.id,
+                      (route) => false,
+                    );
+                  }
                 } else if (step == 2) {
                   bool one = false;
                   bool two = false;
@@ -729,17 +765,8 @@ class _SignUpScreenState extends State<SignUpScreen>
                             "There is an existing user with this phone number",
                             col: Colors.red);
                       } else {
-                        print(Member.birthDate);
-                        print(Member.branch);
-                        print(Member.first_name);
-                        print(Member.last_name);
-                        print(Member.gender);
-                        print(Member.level);
-                        print(Member.phone);
-                        print(Member.photo);
                         step = 4;
                         showSnackBar("Your account is created successfully!");
-
                       }
                     } on TimeoutException catch (e) {
                       showSnackBar("Please check your internet connection",
@@ -749,7 +776,6 @@ class _SignUpScreenState extends State<SignUpScreen>
                     }
                     setState(() {
                       loading = false;
-                      
                     });
                   }
                 }
@@ -761,10 +787,14 @@ class _SignUpScreenState extends State<SignUpScreen>
                           style: TextStyle(fontSize: 18),
                         )
                       : CircularProgressIndicator()
-                  : const Text(
-                      'Continue',
-                      style: TextStyle(fontSize: 18),
-                    ),
+                  : (step == 4)
+                      ? uploading == false
+                          ? const Text(
+                              'Continue',
+                              style: TextStyle(fontSize: 18),
+                            )
+                          : CircularProgressIndicator()
+                      : const Text('Continue', style: TextStyle(fontSize: 18)),
             ),
           ],
         ),
