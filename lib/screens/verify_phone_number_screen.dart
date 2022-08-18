@@ -1,3 +1,4 @@
+import 'package:Aerobotix/HomeScreen/Aerobotix_app_home_screen.dart';
 import 'package:Aerobotix/model/member.dart';
 import 'package:Aerobotix/screens/profile_screen.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
@@ -179,7 +180,8 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
                   showSnackBar("Mar7ba biiiiik fi lFamilia 💖 👪 💖!");
                   Navigator.pushNamedAndRemoveUntil(
                     context,
-                    ProfileScreen.id,
+                    AerobotixAppHomeScreen.id,
+                    //ProfileScreen.id,
                     (route) => false,
                   );
                 } else {

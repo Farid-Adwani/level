@@ -1,3 +1,4 @@
+import 'package:Aerobotix/HomeScreen/Aerobotix_app_home_screen.dart';
 import 'package:Aerobotix/screens/profile_screen.dart';
 import 'package:Aerobotix/screens/sign_up_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -30,8 +31,9 @@ class levelsApp extends StatelessWidget {
         darkTheme: AppTheme.darkTheme,
         onGenerateRoute: RouteGenerator.generateRoute,
         routes: {
-          ProfileScreen.id: (context) => ProfileScreen(),
+          ProfileScreen.id: (context) => AerobotixAppHomeScreen(),
           SignUpScreen.id: (context) => SignUpScreen(),
+          AerobotixAppHomeScreen.id: (context) => AerobotixAppHomeScreen(),
         },
         initialRoute: SplashScreen.id,
       );

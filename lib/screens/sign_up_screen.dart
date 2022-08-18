@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:Aerobotix/HomeScreen/Aerobotix_app_home_screen.dart';
 import 'package:Aerobotix/model/member.dart';
 import 'package:Aerobotix/screens/profile_screen.dart';
 import 'package:Aerobotix/ui/text_style.dart' as textStyle;
@@ -703,6 +704,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                     Navigator.pushNamedAndRemoveUntil(
                       context,
                       ProfileScreen.id,
+                     //AerobotixAppHomeScreen.id,
                       (route) => false,
                     );
                   }
