@@ -425,13 +425,126 @@ print("11111111111111111");
     } catch (e) {
       return "";
     }
+    Member.photo=downloadURL;
     return downloadURL;
   }
 
-  Future<void> setString(String key, String value) async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    DocumentReference userRef = db.collection('members').doc(Member.phone);
-    userRef.update({key: value});
-    print("updated " + key + " to " + value);
+  static Future<bool> setString(String key, String value) async {
+     
+    if (value.trim() == "") {
+      showSnackBar('Please enter a valid value!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+    bool exist = false;
+    String firstName = "";
+
+    DocumentSnapshot? user;
+
+
+    try {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      DocumentReference memberRef = db.collection('admins').doc("sms");
+      DocumentReference userRef = db.collection('members').doc(Member.phone);
+
+      await userRef.get().then((doc) {
+        exist = doc.exists;
+        user = doc;
+      }).timeout(Duration(seconds: 5));
+
+      if (exist == true) {
+         userRef.update({key: value.trim()});
+    print("updated " + key + " to " + value.trim());
+     showSnackBar("Data updated successfully");
+     return true;
+      } else {
+        showSnackBar('There is no user with this phone number!',
+            col: Colors.redAccent[700]);
+        return false;
+      }
+
+    
+   
+
+    } on TimeoutException catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    } catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+  
+
+
+   
   }
+
+
+ static Future<bool> setlevel(String key, int value) async {
+     
+    if (value== "0")  {
+      showSnackBar('Please select a level',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+    bool exist = false;
+    String firstName = "";
+
+    DocumentSnapshot? user;
+
+
+    try {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      DocumentReference memberRef = db.collection('admins').doc("sms");
+      DocumentReference userRef = db.collection('members').doc(Member.phone);
+
+      await userRef.get().then((doc) {
+        exist = doc.exists;
+        user = doc;
+      }).timeout(Duration(seconds: 5));
+
+      if (exist == true) {
+         userRef.update({key: value});
+    print("updated " + key + " to " + value.toString());
+     showSnackBar("Data updated successfully");
+     return true;
+      } else {
+        showSnackBar('There is no user with this phone number!',
+            col: Colors.redAccent[700]);
+        return false;
+      }
+
+    
+   
+
+    } on TimeoutException catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    } catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+  
+
+
+   
+  }
+
+
 }

@@ -25,7 +25,7 @@ class levelsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'levels',
+        title: 'Aerobotix',
         scaffoldMessengerKey: Globals.scaffoldMessengerKey,
         theme: AppTheme.darkTheme,
         darkTheme: AppTheme.darkTheme,

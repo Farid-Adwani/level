@@ -1,14 +1,21 @@
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
+import 'package:Aerobotix/HomeScreen/ui_view/GlassTextView.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/body_measurement.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/glass_view.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/mediterranean_diet_view.dart';
+import 'package:Aerobotix/HomeScreen/ui_view/detailsView.dart';
+import 'package:Aerobotix/HomeScreen/ui_view/photoView.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/title_view.dart';
 import 'package:Aerobotix/HomeScreen/my_diary/meals_list_view.dart';
 import 'package:Aerobotix/HomeScreen/my_diary/water_view.dart';
+import 'package:Aerobotix/model/member.dart';
+import 'package:Aerobotix/services/firebase_service.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:status_view/status_view.dart';
 
 class MyDiaryScreen extends StatefulWidget {
@@ -21,6 +28,9 @@ class MyDiaryScreen extends StatefulWidget {
 
 class _MyDiaryScreenState extends State<MyDiaryScreen>
     with TickerProviderStateMixin {
+      
+
+
   Animation<double>? topBarAnimation;
   late ConfettiController _controllerCenter;
 
@@ -28,8 +38,9 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
 
-  @override
   void initState() {
+                 
+
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
             parent: widget.animationController!,
@@ -67,12 +78,75 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
     super.initState();
   }
 
+
+
+
   void addAllListData() {
     const int count = 9;
+    listViews.add(
+      PhotoView(
+        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            parent: widget.animationController!,
+            curve:
+                Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn))),
+        animationController: widget.animationController!,
+      ),
+    );
+    listViews.add(
+      GlassTextView(
+        field: "first_name",
+        ratio: 1.1,
+        text: Member.first_name,
+        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            parent: widget.animationController!,
+            curve:
+                Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
+        animationController: widget.animationController!,
+      ),
+    );
+    listViews.add(
+      GlassTextView(
+        field: "last_name",
+
+        ratio: 1.5,
+        text: Member.last_name,
+        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            parent: widget.animationController!,
+            curve:
+                Interval((1 / count) * 4, 1.0, curve: Curves.fastOutSlowIn))),
+        animationController: widget.animationController!,
+      ),
+    );
+    listViews.add(
+      GlassTextView(
+        field: "branch",
+
+        ratio: 2.5,
+        text: Member.branch,
+        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            parent: widget.animationController!,
+            curve:
+                Interval((1 / count) * 6, 1.0, curve: Curves.fastOutSlowIn))),
+        animationController: widget.animationController!,
+      ),
+    );
+    listViews.add(
+      GlassTextView(
+        field: "level",
+
+        ratio: 5,
+        text: Member.level.toString(),
+        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            parent: widget.animationController!,
+            curve:
+                Interval((1 / count) * 7, 1.0, curve: Curves.fastOutSlowIn))),
+        animationController: widget.animationController!,
+      ),
+    );
 
     listViews.add(
       TitleView(
-        titleTxt: 'Mediterranean diet',
+        titleTxt: 'Level',
         subTxt: 'Details',
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
@@ -86,79 +160,88 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
             curve:
-                Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController!,
-      ),
-    );
-    listViews.add(
-      TitleView(
-        titleTxt: 'Meals today',
-        subTxt: 'Customize',
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController!,
-            curve:
                 Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController!,
       ),
     );
+    // listViews.add(
+    //   TitleView(
+    //     titleTxt: 'Meals today',
+    //     subTxt: 'Customize',
+    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    //         parent: widget.animationController!,
+    //         curve:
+    //             Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
+    //     animationController: widget.animationController!,
+    //   ),
+    // );
+
+    // listViews.add(
+    //   MealsListView(
+    //     mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
+    //         CurvedAnimation(
+    //             parent: widget.animationController!,
+    //             curve: Interval((1 / count) * 3, 1.0,
+    //                 curve: Curves.fastOutSlowIn))),
+    //     mainScreenAnimationController: widget.animationController,
+    //   ),
+    // );
+
+    // listViews.add(
+    //   TitleView(
+    //     titleTxt: 'Body measurement',
+    //     subTxt: 'Today',
+    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    //         parent: widget.animationController!,
+    //         curve:
+    //             Interval((1 / count) * 4, 1.0, curve: Curves.fastOutSlowIn))),
+    //     animationController: widget.animationController!,
+    //   ),
+    // );
+
+    // listViews.add(
+    //   BodyMeasurementView(
+    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    //         parent: widget.animationController!,
+    //         curve:
+    //             Interval((1 / count) * 5, 1.0, curve: Curves.fastOutSlowIn))),
+    //     animationController: widget.animationController!,
+    //   ),
+    // );
+    // listViews.add(
+    //   TitleView(
+    //     titleTxt: 'Water',
+    //     subTxt: 'Aqua SmartBottle',
+    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    //         parent: widget.animationController!,
+    //         curve:
+    //             Interval((1 / count) * 6, 1.0, curve: Curves.fastOutSlowIn))),
+    //     animationController: widget.animationController!,
+    //   ),
+    // );
 
     listViews.add(
-      MealsListView(
-        mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(
-                parent: widget.animationController!,
-                curve: Interval((1 / count) * 3, 1.0,
-                    curve: Curves.fastOutSlowIn))),
-        mainScreenAnimationController: widget.animationController,
-      ),
-    );
-
-    listViews.add(
-      TitleView(
-        titleTxt: 'Body measurement',
-        subTxt: 'Today',
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController!,
-            curve:
-                Interval((1 / count) * 4, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController!,
-      ),
-    );
-
-    listViews.add(
-      BodyMeasurementView(
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController!,
-            curve:
-                Interval((1 / count) * 5, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController!,
-      ),
-    );
-    listViews.add(
-      TitleView(
-        titleTxt: 'Water',
-        subTxt: 'Aqua SmartBottle',
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController!,
-            curve:
-                Interval((1 / count) * 6, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController!,
-      ),
-    );
-
-    listViews.add(
-      WaterView(
-        
-        mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(
-                parent: widget.animationController!,
-                curve: Interval((1 / count) * 7, 1.0,
-                    curve: Curves.fastOutSlowIn))),
-        mainScreenAnimationController: widget.animationController!,
-      ),
+      GlassView(
+          date: Member.birthDate.day.toString() +
+              "-" +
+              Member.birthDate.month.toString() +
+              "-" +
+              Member.birthDate.year.toString(),
+          text: "Birth Date : ",
+          photo: "birthdate.png",
+          animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+              CurvedAnimation(
+                  parent: widget.animationController!,
+                  curve: Interval((1 / count) * 7, 1.0,
+                      curve: Curves.fastOutSlowIn))),
+          animationController: widget.animationController!),
     );
     listViews.add(
       GlassView(
+          date: (DateTime.now().year-Member.entryYear.year).toString()+
+              " Years",
+          text: "Experience : ",
+          photo: "aerDate.png",
           animation: Tween<double>(begin: 0.0, end: 1.0).animate(
               CurvedAnimation(
                   parent: widget.animationController!,
@@ -232,83 +315,13 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                   24,
               bottom: 62 + MediaQuery.of(context).padding.bottom,
             ),
-            itemCount: listViews.length + 1,
+            shrinkWrap: true,
+            itemCount: listViews.length,
             scrollDirection: Axis.vertical,
             itemBuilder: (BuildContext context, int index) {
               widget.animationController?.forward();
-              if (index == 0) {
-                return AvatarGlow(
-                    glowColor: Colors.blue,
-                    endRadius:  MediaQuery.of(context).size.width/4,
-                    duration: Duration(milliseconds: 2000),
-                    repeat: true,
-                    showTwoGlows: true,
-                    repeatPauseDuration: Duration(milliseconds: 100),
-                    child:
-               
-            
-              AdvancedAvatar(
-                size: 150,
-                statusSize: 40,
-              //  statusColor: Colors.green,
 
-                image: AssetImage('assets/images/gadget2.jpg'),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black54,
-                      blurRadius: 16.0,
-                    ),
-                  ],
-                ),
-                children: [
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Container(
-                      width:  MediaQuery.of(context).size.width/10,
-                      height:  MediaQuery.of(context).size.width/10,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 0.5,
-                        ),
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(onPressed: (){print("waaaaa");}, icon: Icon(Icons.edit))
-                    ),
-                  ),
-                ],
-              )
-                    // Stack(
-                    //   children: [
-                        
-                    //     Container(
-                    //       height: MediaQuery.of(context).size.width/3,
-                    //       width:  MediaQuery.of(context).size.width/3,
-                    //       decoration: BoxDecoration(
-                    //           shape: BoxShape.circle,
-                    //           image: DecorationImage(
-                    //               image: AssetImage(
-                    //                 'assets/images/gadget2.jpg',
-                    //               ),
-                    //               fit: BoxFit.fill)),
-                    //     )
-                    //     , Positioned(
-                          
-                    //       child: IconButton(onPressed: (){
-                    //         print("configgg");
-                    //       }, icon: Icon(Icons.edit,color: Colors.red,)),
-                    //     ),
-                       
-                    //   ],
-                    // )
-                    );
-              }
-
-              return listViews[index - 1];
+              return listViews[index];
             },
           );
         }
@@ -371,22 +384,6 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: 38,
-                              width: 38,
-                              child: InkWell(
-                                highlightColor: Colors.transparent,
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(32.0)),
-                                onTap: () {},
-                                child: Center(
-                                  child: Icon(
-                                    Icons.keyboard_arrow_left,
-                                    color: AerobotixAppTheme.grey,
-                                  ),
-                                ),
-                              ),
-                            ),
                             Padding(
                               padding: const EdgeInsets.only(
                                 left: 8,
@@ -395,41 +392,19 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                               child: Row(
                                 children: <Widget>[
                                   Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: Icon(
-                                      Icons.calendar_today,
-                                      color: AerobotixAppTheme.grey,
-                                      size: 18,
-                                    ),
-                                  ),
-                                  Text(
-                                    '15 May',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontFamily: AerobotixAppTheme.fontName,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 18,
-                                      letterSpacing: -0.2,
-                                      color: AerobotixAppTheme.darkerText,
-                                    ),
-                                  ),
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: IconButton(
+                                        onPressed: () {
+                                          FirestoreService.disconnect(
+                                              Member.phone, context);
+                                        },
+                                        icon: Icon(
+                                          Icons.logout_rounded,
+                                          color: AerobotixAppTheme.grey,
+                                          size: 30,
+                                        ),
+                                      )),
                                 ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 38,
-                              width: 38,
-                              child: InkWell(
-                                highlightColor: Colors.transparent,
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(32.0)),
-                                onTap: () {},
-                                child: Center(
-                                  child: Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: AerobotixAppTheme.grey,
-                                  ),
-                                ),
                               ),
                             ),
                           ],

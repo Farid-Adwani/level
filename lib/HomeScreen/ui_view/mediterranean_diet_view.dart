@@ -1,184 +1,234 @@
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/wave_view.dart';
 import 'package:Aerobotix/ui/HexColor.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-class MediterranesnDietView extends StatelessWidget {
+
+
+class MediterranesnDietView extends StatefulWidget {
   final AnimationController? animationController;
   final Animation<double>? animation;
 
-  const MediterranesnDietView(
+   MediterranesnDietView(
       {Key? key, this.animationController, this.animation})
       : super(key: key);
+
+
+  @override
+  State<MediterranesnDietView> createState() => _MediterranesnDietViewState();
+}
+
+class _MediterranesnDietViewState extends State<MediterranesnDietView> {
+
+String song="";
+bool playing=false;
+AudioPlayer player = AudioPlayer();
+void playAudio() async{
+  song="audio/aot2.mp3";
+await player.setVolume(1);
+await player.setSourceAsset(song);
+
+}
+
+  
+
+ void initState() {
+playAudio();
+super.initState();
+ }
+
+
+
+@override
+  void dispose() async{
+    super.dispose();
+    await player.stop();
+    
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animationController!,
+      animation: widget.animationController!,
       builder: (BuildContext context, Widget? child) {
         return FadeTransition(
-          opacity: animation!,
+          opacity: widget.animation!,
           child: new Transform(
             transform: new Matrix4.translationValues(
-                0.0, 30 * (1.0 - animation!.value), 0.0),
+                0.0, 30 * (1.0 - widget.animation!.value), 0.0),
             child: Padding(
               padding: const EdgeInsets.only(
-                  left: 24, right: 24, top: 16, bottom: 18),
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/HomeScreen/r3ad4.gif"),
-                    fit: BoxFit.fill,
-                  ),
-                  color: AerobotixAppTheme.white,
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(8.0),
-                      bottomLeft: Radius.circular(8.0),
-                      bottomRight: Radius.circular(8.0),
-                      topRight: Radius.circular(58.0)),
-                      
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
+                  left: 24, right: 24, top: 0, bottom: 18),
+              child: GestureDetector(
+                onTap: () async {
+                 if(playing==false)  {
+                  playing=true;
+                  await player.play(AssetSource(song));
                   
-                    Column(
-                      children: [
-                            Text(
-                              'R3ad ⚡',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: AerobotixAppTheme.fontName,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 32,
-                                color: Colors.white,
-                              ),
-                            ),
-                                 Padding(
-                      padding:
-                          const EdgeInsets.only(top: 16, left: 16, right: 16),
-                      child: Row(
-                        children: <Widget>[
-                      Padding(
-                            padding: const EdgeInsets.only(right: 16),
-                            child: Center(
-                              child: Stack(
-                                clipBehavior: Clip.none,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      width: 100,
-                                      height: 100,
-                                      decoration: BoxDecoration(
-                                        color: AerobotixAppTheme.white,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(100.0),
-                                        ),
-                                        border: new Border.all(
-                                            width: 4,
-                                            color: AerobotixAppTheme
-                                                .nearlyDarkBlue
-                                                .withOpacity(0.2)),
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            '${(5478 * animation!.value).toInt()}',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontFamily:
-                                                  AerobotixAppTheme.fontName,
-                                              fontWeight: FontWeight.normal,
-                                              fontSize: 24,
-                                              letterSpacing: 0.0,
-                                              color: AerobotixAppTheme
-                                                  .nearlyDarkBlue,
-                                            ),
-                                          ),
-                                          Text(
-                                            'XP',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontFamily:
-                                                  AerobotixAppTheme.fontName,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                              letterSpacing: 0.0,
-                                              color: AerobotixAppTheme.grey
-                                                  .withOpacity(0.5),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: CustomPaint(
-                                      painter: CurvePainter(
-                                          colors: [
-                                            AerobotixAppTheme.nearlyDarkBlue,
-                                            HexColor("#8A98E8"),
-                                            HexColor("#8A98E8")
-                                          ],
-                                          angle: 180 +
-                                              (360 - 140) *
-                                                  (1.0 - animation!.value)),
-                                      child: SizedBox(
-                                        width: 108,
-                                        height: 108,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+                 }else{
+                  playing=false;
+                  await player.stop();
+                  
+                  }
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/HomeScreen/eren1.gif"),
+                      fit: BoxFit.fill,
                     ),
-                  
-                          
-                           
-                      ],
-                    )
-                  , 
-                    Padding(
+                    color: AerobotixAppTheme.white,
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        bottomLeft: Radius.circular(20.0),
+                        bottomRight: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0)),
+                        
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                    
+                      Column(
+                        children: [
+                              Text(
+                                'R3ad ⚡',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: AerobotixAppTheme.fontName,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 32,
+                                  color: Colors.white,
+                                ),
+                              ),
+                                   Padding(
                         padding:
-                            const EdgeInsets.only(left: 16, right: 8, top: 16),
-                        child: Container(
-                          width: 60,
-                          height: 160,
-                          decoration: BoxDecoration(
-                            color: HexColor('#E8EDFE'),
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(80.0),
-                                bottomLeft: Radius.circular(80.0),
-                                bottomRight: Radius.circular(80.0),
-                                topRight: Radius.circular(80.0)),
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: AerobotixAppTheme.grey.withOpacity(0.4),
-                                  offset: const Offset(2, 2),
-                                  blurRadius: 4),
-                            ],
-                          ),
-                          child: WaveView(
-                            percentageValue: 99,
-
-                          ),
+                            const EdgeInsets.only(top: 16, left: 16, right: 16),
+                        child: Row(
+                          children: <Widget>[
+                        Padding(
+                              padding: const EdgeInsets.only(right: 16),
+                              child: Center(
+                                child: Stack(
+                                  clipBehavior: Clip.none,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        width: 100,
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          color: AerobotixAppTheme.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(100.0),
+                                          ),
+                                          border: new Border.all(
+                                              width: 4,
+                                              color: AerobotixAppTheme
+                                                  .nearlyDarkBlue
+                                                  .withOpacity(0.2)),
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              '${(5478 * widget.animation!.value).toInt()}',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontFamily:
+                                                    AerobotixAppTheme.fontName,
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: 24,
+                                                letterSpacing: 0.0,
+                                                color: AerobotixAppTheme
+                                                    .nearlyDarkBlue,
+                                              ),
+                                            ),
+                                            Text(
+                                              'XP',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontFamily:
+                                                    AerobotixAppTheme.fontName,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12,
+                                                letterSpacing: 0.0,
+                                                color: AerobotixAppTheme.grey
+                                                    .withOpacity(0.5),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: CustomPaint(
+                                        painter: CurvePainter(
+                                            colors: [
+                                              AerobotixAppTheme.nearlyDarkBlue,
+                                              HexColor("#8A98E8"),
+                                              HexColor("#8A98E8")
+                                            ],
+                                            angle: 180 +
+                                                (360 - 140) *
+                                                    (1.0 - widget.animation!.value)),
+                                        child: SizedBox(
+                                          width: 108,
+                                          height: 108,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
                         ),
+                      ),
+                    
+                            
+                             
+                        ],
                       )
-
-                  
-                    ,
-                  ],
+                    , 
+                      Padding(
+                          padding:
+                              const EdgeInsets.only(left: 16, right: 8, top: 16),
+                          child: Container(
+                            width: 60,
+                            height: 160,
+                            decoration: BoxDecoration(
+                              color: HexColor('#E8EDFE'),
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(80.0),
+                                  bottomLeft: Radius.circular(80.0),
+                                  bottomRight: Radius.circular(80.0),
+                                  topRight: Radius.circular(80.0)),
+                              boxShadow: <BoxShadow>[
+                                BoxShadow(
+                                    color: AerobotixAppTheme.grey.withOpacity(0.4),
+                                    offset: const Offset(2, 2),
+                                    blurRadius: 4),
+                              ],
+                            ),
+                            child: WaveView(
+                              percentageValue: 99,
+              
+                            ),
+                          ),
+                        )
+              
+                    
+                      ,
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -187,6 +237,7 @@ class MediterranesnDietView extends StatelessWidget {
       },
     );
   }
+
 }
 
 class CurvePainter extends CustomPainter {

@@ -17,4 +17,5 @@ class Member {
   static bool verified = false;
   static DateTime online = DateTime.now();
   static String device = "";
+  static DateTime entryYear=DateTime.now();
 }
