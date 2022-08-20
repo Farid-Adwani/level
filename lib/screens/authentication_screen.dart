@@ -1,4 +1,3 @@
-import 'package:Aerobotix/screens/profile_screen.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:easy_container/easy_container.dart';
 import 'package:flutter/material.dart';

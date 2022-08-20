@@ -1,6 +1,6 @@
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_home_screen.dart';
 import 'package:Aerobotix/model/member.dart';
-import 'package:Aerobotix/screens/profile_screen.dart';
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:Aerobotix/services/firebase_service.dart';
@@ -89,57 +89,49 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
           padding: const EdgeInsets.all(20),
           controller: scrollController,
           children: [
-            Container(
-                width: MediaQuery.of(context).size.width / 1.2,
-                height: MediaQuery.of(context).size.width / 1.2,
-                decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Member.gender == Gender.Female
-                            ? Colors.pinkAccent
-                            : Colors.blue,
-                        width: 5),
-                    shape: BoxShape.circle,
-                    image: (netIm.isNotEmpty && netIm != "wait")
-                        ? DecorationImage(
-                            image: NetworkImage(
-                              netIm,
-                            ),
-                            fit: BoxFit.fill)
-                        : Member.gender == Gender.Female
-                            ? DecorationImage(
-                                image: AssetImage(
-                                  "assets/images/gadget2.jpg",
-                                ),
-                                fit: BoxFit.fill)
-                            : DecorationImage(
-                                image: AssetImage(
-                                  "assets/images/gadget4.jpg",
-                                ),
-                                fit: BoxFit.fill)),
-                child: netIm == "wait"
-                    ? Center(child: CircularProgressIndicator())
-                    : Container()),
-            // CircleAvatar(
-            //     radius: MediaQuery.of(context).size.width / 2.5,
-            //     backgroundColor: Colors.white,
-            //     child: ClipRRect(
-            //       borderRadius: BorderRadius.circular(200),
-            //       child: netIm != "wait"
-            //           ? netIm.isNotEmpty
-            //               ? Image.network(netIm,
-            //                   width: MediaQuery.of(context).size.width,
-            //                   height: MediaQuery.of(context).size.width,
-            //                   fit: BoxFit.fill)
-            //               : Member.gender == Gender.Female
-            //                   ? Image.asset(
-            //                       "assets/images/gadget2.jpg",
-            //                     )
-            //                   : Image.asset(
-            //                       "assets/images/gadget4.jpg",
-            //                     )
-            //           : CircularProgressIndicator(),
-            //     ))
-            // ,
+           
+AvatarGlow(
+                    glowColor: Colors.blue,
+                    endRadius: MediaQuery.of(context).size.width/2,
+                    duration: Duration(milliseconds: 2000),
+                    repeat: true,
+                    showTwoGlows: true,
+                    repeatPauseDuration: Duration(milliseconds: 100),
+                    
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 1.2,
+                        height: MediaQuery.of(context).size.width / 1.2,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Member.gender == Gender.Female
+                                  ? Colors.pinkAccent
+                                  : Colors.blue,
+                              width: 5),
+                          shape: BoxShape.circle,
+                          image: (netIm.isNotEmpty && netIm != "wait")
+                              ? DecorationImage(
+                                  image: NetworkImage(
+                                    netIm,
+                                  ),
+                                  fit: BoxFit.fill)
+                              : netIm.isEmpty
+                                  ? Member.gender == Gender.Female
+                                      ? DecorationImage(
+                                          image: AssetImage(
+                                            "assets/images/gadget2.jpg",
+                                          ),
+                                          fit: BoxFit.fill)
+                                      : DecorationImage(
+                                          image: AssetImage(
+                                            "assets/images/gadget4.jpg",
+                                          ),
+                                          fit: BoxFit.fill)
+                                  : null,
+                        ),
+                      ),
+                    
+                  ),
+     
             const SizedBox(height: 10),
             Center(
               child: Text(Member.first_name + " " + Member.last_name,
@@ -181,7 +173,6 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
                   Navigator.pushNamedAndRemoveUntil(
                     context,
                     AerobotixAppHomeScreen.id,
-                    //ProfileScreen.id,
                     (route) => false,
                   );
                 } else {

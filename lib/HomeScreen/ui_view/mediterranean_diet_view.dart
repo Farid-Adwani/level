@@ -1,5 +1,6 @@
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/wave_view.dart';
+import 'package:Aerobotix/model/member.dart';
 import 'package:Aerobotix/ui/HexColor.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +25,57 @@ class _MediterranesnDietViewState extends State<MediterranesnDietView> {
 
 String song="";
 bool playing=false;
+String levelText="";
+String gif="";
+void setGameLevel(){
+  switch (Member.gameLevel) {
+    case "wlidha":
+      print("wlidha");
+      song="audio/aot2.mp3";
+      levelText='Wlidha 💙';
+      gif="assets/HomeScreen/ds1.gif";
+      break;
+      case "kassa7":
+      print("kassa7");
+      song="audio/aot2.mp3";
+      levelText='Kassa7 💪';
+      gif="assets/HomeScreen/gogo1.gif";
+
+      break;
+      case "r3ad":
+      print("r3ad");
+      song="audio/aot2.mp3";
+      levelText='R3ad ⚡';
+      gif="assets/HomeScreen/eren1.gif";
+
+
+      break;
+      case "jen":
+      print("jen");
+      song="audio/aot2.mp3";
+      levelText='Jen 👻';
+      gif="assets/HomeScreen/ds2.gif";
+
+
+      break;
+      case "3orsa":
+      print("r3ad");
+      song="audio/aot2.mp3";
+      levelText='3orsa 🏁';
+      gif="assets/HomeScreen/mk1.gif";
+
+
+      break;
+    default:
+    print("3asfour");
+      song="audio/ziouziou.mp3";
+      levelText='3asfour 🐦';
+      gif="assets/HomeScreen/ziw3.gif";
+  }
+}
 AudioPlayer player = AudioPlayer();
 void playAudio() async{
-  song="audio/aot2.mp3";
+  
 await player.setVolume(1);
 await player.setSourceAsset(song);
 
@@ -35,6 +84,7 @@ await player.setSourceAsset(song);
   
 
  void initState() {
+  
 playAudio();
 super.initState();
  }
@@ -51,6 +101,7 @@ super.initState();
 
   @override
   Widget build(BuildContext context) {
+    setGameLevel();
     return AnimatedBuilder(
       animation: widget.animationController!,
       builder: (BuildContext context, Widget? child) {
@@ -77,7 +128,7 @@ super.initState();
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/HomeScreen/eren1.gif"),
+                      image: AssetImage(gif),
                       fit: BoxFit.fill,
                     ),
                     color: AerobotixAppTheme.white,
@@ -95,7 +146,7 @@ super.initState();
                       Column(
                         children: [
                               Text(
-                                'R3ad ⚡',
+                                levelText,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: AerobotixAppTheme.fontName,
@@ -138,7 +189,7 @@ super.initState();
                                               CrossAxisAlignment.center,
                                           children: <Widget>[
                                             Text(
-                                              '${(5478 * widget.animation!.value).toInt()}',
+                                              (Member.xp*widget.animation!.value).toInt().toString(),
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontFamily:
@@ -219,7 +270,7 @@ super.initState();
                               ],
                             ),
                             child: WaveView(
-                              percentageValue: 99,
+                              percentageValue: Member.xp*100/5000,
               
                             ),
                           ),

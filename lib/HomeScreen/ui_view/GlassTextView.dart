@@ -35,6 +35,7 @@ class GlassTextView extends StatefulWidget {
 }
 
 class _GlassTextViewState extends State<GlassTextView> {
+  bool edited=false;
     int level = 0;
   String filiere = "";
    List<bool> _isSelected = [false, false, false, false, false, false];
@@ -52,7 +53,13 @@ class _GlassTextViewState extends State<GlassTextView> {
   final _popKey = GlobalKey<FormState>();
   String fieldReset = "";
   @override
-  void popUp(context) {
+  bool popUp(context) {
+    if(widget.field=="branch" || widget.field=="level"){
+      setState(() {
+        edited=true;
+      });
+      return true;
+    }
     level=0;
     AwesomeDialog ad = AwesomeDialog(
         context: context,
@@ -73,172 +80,10 @@ class _GlassTextViewState extends State<GlassTextView> {
                 borderRadius: 10,
                 color: Colors.transparent,
                 child: Form(
-                  child: widget.field=="branch"?
-                 ToggleButtons(
-                  constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width / 13,
-                      minWidth: MediaQuery.of(context).size.width / 13,
-                      maxHeight: MediaQuery.of(context).size.width / 10,
-                      minHeight: MediaQuery.of(context).size.width / 10),
-
-                  children: <Widget>[
-                    Text("MPI"),
-                    Text("CBA"),
-                    Text("IIA"),
-                    Text("IMI"),
-                    Text("GL"),
-                    Text("RT"),
-                    Text("BIO"),
-                    Text("CH"),
-                  ],
-
-                  isSelected: _isSelected2,
-
-                  onPressed: (int index) {
-                    setState(() {
-                      _isSelected2 = [
-                        false,
-                        false,
-                        false,
-                        false,
-                        false,
-                        false,
-                        false,
-                        false
-                      ];
-                      _isSelected2[index] = !_isSelected2[index];
-                      switch (index) {
-                        case 0:
-                          filiere = "MPI";
-                          break;
-                        case 1:
-                          filiere = "CBA";
-                          break;
-                        case 2:
-                          filiere = "IIA";
-                          break;
-                        case 3:
-                          filiere = "IMI";
-                          break;
-                        case 4:
-                          filiere = "GL";
-                          break;
-                        case 5:
-                          filiere = "RT";
-                          break;
-                        case 6:
-                          filiere = "BIO";
-                          break;
-                        case 7:
-                          filiere = "CH";
-                          break;
-
-                        default:
-                      }
-                    });
-                  },
-
-                  // region example 1
-
-                  color: Colors.grey,
-
-                  selectedColor: Colors.red,
-
-                  fillColor: Colors.lightBlueAccent,
-
-                  // endregion
-
-                  // region example 2
-
-                  borderColor: Colors.lightBlueAccent,
-
-                  selectedBorderColor: Colors.red,
-
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-
-                  // endregion
-                )
-             
-
-                  : widget.field=="level"?
-
-                    Center(
-                child: ToggleButtons(
-                  constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width / 10,
-                      minWidth: MediaQuery.of(context).size.width / 10,
-                      maxHeight: MediaQuery.of(context).size.width / 10,
-                      minHeight: MediaQuery.of(context).size.width / 10),
-                  children: <Widget>[
-                    Text("1"),
-                    Text("2"),
-                    Text("3"),
-                    Text("4"),
-                    Text("5"),
-                    Text("5+"),
-                  ],
-
-                  isSelected: _isSelected,
-
-                  onPressed: (int index) {
-                    setState(() {
-                      _isSelected = [
-                        false,
-                        false,
-                        false,
-                        false,
-                        false,
-                        false,
-                      ];
-                      _isSelected[index] = !_isSelected[index];
-                      switch (index) {
-                        case 0:
-                          level = 1;
-                          break;
-                        case 1:
-                          level = 2;
-                          break;
-                        case 2:
-                          level = 3;
-                          break;
-                        case 3:
-                          level = 4;
-                          break;
-                        case 4:
-                          level = 5;
-                          break;
-                        case 5:
-                          level = 6;
-                          break;
-                        default:
-                      }
-                    });
-                  },
-
-                  // region example 1
-
-                  color: Colors.grey,
-
-                  selectedColor: Colors.red,
-
-                  fillColor: Colors.lightBlueAccent,
-
-                  // endregion
-
-                  // region example 2
-
-                  borderColor: Colors.lightBlueAccent,
-
-                  selectedBorderColor: Colors.red,
-
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-
-                  // endregion
-                ),
-              )
+                  child: 
           
 
-                  :
+                 
                   
                   
                   TextField(
@@ -279,27 +124,7 @@ class _GlassTextViewState extends State<GlassTextView> {
           iconSize: 50,
           onPressed: () async {
             //print(filedReset);
-           if (widget.field=="level"){
-            await FirestoreService.setlevel(widget.field, level)
-                .then((value) {
-              FirestoreService.fetchUser(Member.phone).then((value) {
-                setState(() {
-                  print("waaaaa");
-                });
-               
-              });
-            });
-          }else  if (widget.field=="branch"){
-            await FirestoreService.setString(widget.field, filiere)
-                .then((value) {
-              FirestoreService.fetchUser(Member.phone).then((value) {
-                setState(() {
-                  print("waaaaa");
-                });
-               
-              });
-            });
-          }
+           
 
             await FirestoreService.setString(widget.field, fieldReset)
                 .then((value) {
@@ -315,6 +140,7 @@ class _GlassTextViewState extends State<GlassTextView> {
         ));
     fieldReset = "";
     ad..show();
+    return true;
   }
 
   @override
@@ -350,6 +176,212 @@ class _GlassTextViewState extends State<GlassTextView> {
                     left: 24, right: 24, top: 0, bottom: 0),
                 child: Column(
                   children: [
+                      edited==true?
+                      widget.field=="branch"?
+                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                   children: [
+                     ToggleButtons(
+                      constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width / 13,
+                          minWidth: MediaQuery.of(context).size.width / 13,
+                          maxHeight: MediaQuery.of(context).size.width / 10,
+                          minHeight: MediaQuery.of(context).size.width / 10),
+
+                      children: <Widget>[
+                        Text("MPI"),
+                        Text("CBA"),
+                        Text("IIA"),
+                        Text("IMI"),
+                        Text("GL"),
+                        Text("RT"),
+                        Text("BIO"),
+                        Text("CH"),
+                      ],
+
+                      isSelected: _isSelected2,
+
+                      onPressed: (int index) {
+                        setState(() {
+                          _isSelected2 = [
+                            false,
+                            false,
+                            false,
+                            false,
+                            false,
+                            false,
+                            false,
+                            false
+                          ];
+                          _isSelected2[index] = !_isSelected2[index];
+                          switch (index) {
+                            case 0:
+                              filiere = "MPI";
+                              break;
+                            case 1:
+                              filiere = "CBA";
+                              break;
+                            case 2:
+                              filiere = "IIA";
+                              break;
+                            case 3:
+                              filiere = "IMI";
+                              break;
+                            case 4:
+                              filiere = "GL";
+                              break;
+                            case 5:
+                              filiere = "RT";
+                              break;
+                            case 6:
+                              filiere = "BIO";
+                              break;
+                            case 7:
+                              filiere = "CH";
+                              break;
+
+                            default:
+                          }
+                        });
+                      },
+
+                      // region example 1
+
+                      color: Colors.grey,
+
+                      selectedColor: Colors.red,
+
+                      fillColor: Colors.lightBlueAccent,
+
+                      // endregion
+
+                      // region example 2
+
+                      borderColor: Colors.lightBlueAccent,
+
+                      selectedBorderColor: Colors.red,
+
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+
+                      // endregion
+                ),
+                    IconButton(onPressed: ()async{
+                setState(() {
+                  edited=false;
+                });
+            await FirestoreService.setString(widget.field, filiere)
+                .then((value) {
+              FirestoreService.fetchUser(Member.phone).then((value) {
+                setState(() {
+                  print("waaaaa");
+                });
+               
+              });
+            });
+          
+                  }, icon: Icon(Icons.send))
+                   ],
+                 )
+                  : 
+
+                    Center(
+                child: 
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+
+                  children: [
+                    ToggleButtons(
+                      constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width / 10,
+                          minWidth: MediaQuery.of(context).size.width / 10,
+                          maxHeight: MediaQuery.of(context).size.width / 10,
+                          minHeight: MediaQuery.of(context).size.width / 10),
+                      children: <Widget>[
+                        Text("1"),
+                        Text("2"),
+                        Text("3"),
+                        Text("4"),
+                        Text("5"),
+                        Text("5+"),
+                      ],
+
+                      isSelected: _isSelected,
+
+                      onPressed: (int index) {
+                        setState(() {
+                          _isSelected = [
+                            false,
+                            false,
+                            false,
+                            false,
+                            false,
+                            false,
+                          ];
+                          _isSelected[index] = !_isSelected[index];
+                          switch (index) {
+                            case 0:
+                              level = 1;
+                              break;
+                            case 1:
+                              level = 2;
+                              break;
+                            case 2:
+                              level = 3;
+                              break;
+                            case 3:
+                              level = 4;
+                              break;
+                            case 4:
+                              level = 5;
+                              break;
+                            case 5:
+                              level = 6;
+                              break;
+                            default:
+                          }
+                        });
+                      },
+
+                      // region example 1
+
+                      color: Colors.grey,
+
+                      selectedColor: Colors.red,
+
+                      fillColor: Colors.lightBlueAccent,
+
+                      // endregion
+
+                      // region example 2
+
+                      borderColor: Colors.lightBlueAccent,
+
+                      selectedBorderColor: Colors.red,
+
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+
+                      // endregion
+                    ),
+                  
+                  IconButton(onPressed: ()async{
+                    setState(() {
+                      edited=false;
+                    });
+            await FirestoreService.setlevel(widget.field, level)
+                .then((value) {
+              FirestoreService.fetchUser(Member.phone).then((value) {
+                setState(() {
+                  print("waaaaa");
+                });
+               
+              });
+            });
+          
+                  }, icon: Icon(Icons.send))
+                  ],
+                ),
+              )
+                  :
                     GlassmorphicContainer(
                       width: MediaQuery.of(context).size.width / widget.ratio,
                       height: MediaQuery.of(context).size.width / 9,
@@ -376,7 +408,9 @@ class _GlassTextViewState extends State<GlassTextView> {
                           Color((0xFFFFFFFF)).withOpacity(0.5),
                         ],
                       ),
-                      child: Row(
+                      child: 
+                      
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(child: Center(child: 

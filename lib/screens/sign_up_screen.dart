@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_home_screen.dart';
 import 'package:Aerobotix/model/member.dart';
-import 'package:Aerobotix/screens/profile_screen.dart';
 import 'package:Aerobotix/ui/text_style.dart' as textStyle;
 import 'package:easy_container/easy_container.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +35,7 @@ class _SignUpScreenState extends State<SignUpScreen>
 
   @override
   void initState() {
+    print("waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     scrollController = ScrollController();
     WidgetsBinding.instance.addObserver(this);
     super.initState();
@@ -259,23 +259,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                                     "assets/images/gadget4.jpg",
                                   )))),
 
-            // radius:  MediaQuery.of(context).size.width/2.5,
-            // backgroundColor: Color(0xffFDCF09),
-            // child:
-            //     _photo!=null?
-
-            //         Image.file(
-            //       _photo!,
-            //       fit: BoxFit.cover,
-
-            //     ):
-            // gender==Gender.Female?
-            // Image.asset(
-            //     "assets/images/gadget2.jpg",
-            //   ):
-            //   Image.asset(
-            //     "assets/images/gadget4.jpg",
-            //   )
+            
 
             if (step == 4)
               Container(
@@ -703,8 +687,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                   if (!uploading) {
                     Navigator.pushNamedAndRemoveUntil(
                       context,
-                      ProfileScreen.id,
-                     //AerobotixAppHomeScreen.id,
+                      AerobotixAppHomeScreen.id,
                       (route) => false,
                     );
                   }
@@ -801,6 +784,8 @@ class _SignUpScreenState extends State<SignUpScreen>
           ],
         ),
       ),
+    
+    
     );
   }
 }
