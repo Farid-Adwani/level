@@ -39,7 +39,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   double topBarOpacity = 0.0;
 
   void initState() {
-                 
+           
 
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
@@ -238,7 +238,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
     );
     listViews.add(
       GlassView(
-          date: (DateTime.now().year-Member.entryYear.year).toString()+
+          date: (DateTime.now().year-Member.entryYear).toString()+
               " Years",
           text: "Experience : ",
           photo: "aerDate.png",
@@ -342,7 +342,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                     0.0, 30 * (1.0 - topBarAnimation!.value), 0.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AerobotixAppTheme.white.withOpacity(topBarOpacity),
+                    color: AerobotixAppTheme.background,
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(32.0),
                     ),

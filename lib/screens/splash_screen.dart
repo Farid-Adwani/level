@@ -1,4 +1,4 @@
-import 'package:Aerobotix/screens/profile_screen.dart';
+import 'package:Aerobotix/HomeScreen/Aerobotix_app_home_screen.dart';
 import 'package:Aerobotix/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:Aerobotix/screens/authentication_screen.dart';
@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (isLoggedIn) {return
       Navigator.pushReplacementNamed(
         context,
-        ProfileScreen.id ,
+        AerobotixAppHomeScreen.id ,
       );}else{
 Navigator.pushReplacementNamed(
         context,

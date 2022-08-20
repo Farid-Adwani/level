@@ -10,14 +10,11 @@ import 'package:Aerobotix/utils/helpers.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 
-
-
 class PhotoView extends StatefulWidget {
   final AnimationController? animationController;
   final Animation<double>? animation;
-  
-   PhotoView(
-      {Key? key, this.animationController, this.animation})
+
+  PhotoView({Key? key, this.animationController, this.animation})
       : super(key: key);
 
   @override
@@ -25,22 +22,25 @@ class PhotoView extends StatefulWidget {
 }
 
 class _PhotoViewState extends State<PhotoView> {
-String netIm = "wait";
+  String netIm = "wait";
   void getIm() async {
-    print("pppppppp");
-    print(Member.photo);
-    netIm = await FirestoreService.getImage(
-        "profiles/" + Member.phone + "/profile/", Member.photo);
-    print(Member.photo);
-
-    setState(() {});
+    try {
+      netIm = await FirestoreService.getImage(
+          "profiles/" + Member.phone + "/profile/", Member.photo);
+      print("profiles/" + Member.phone + "/profile/" + Member.photo);
+      print("ffffffffffffffffffff");
+      print(Member.photo);
+      setState(() {});
+    } catch (e) {}
   }
+
   @override
   void initState() {
     getIm();
     super.initState();
   }
-File? _photo;
+
+  File? _photo;
   final ImagePicker _picker = ImagePicker();
   bool uploading = false;
   Future uploadFile() async {
@@ -57,11 +57,12 @@ File? _photo;
       final ref = FirebaseStorage.instance.ref(destination).child(name);
 
       await ref.putFile(_photo!).timeout(Duration(seconds: 7));
-      await FirestoreService.addProfilePhoto(name, Member.phone)
-          .timeout(Duration(seconds: 7)).then((value) {
-            showSnackBar("Your photo is updated successfully !");
-             getIm();
-          });
+      await FirestoreService.addMaterialPhoto(name, Member.phone)
+          .timeout(Duration(seconds: 7))
+          .then((value) {
+        showSnackBar("Your photo is updated successfully !");
+        getIm();
+      });
     } on TimeoutException {
       showSnackBar("Please check your internet connection and retry !",
           col: Colors.red);
@@ -109,7 +110,8 @@ File? _photo;
       }
     });
   }
-   void _showPicker(context) {
+
+  void _showPicker(context) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -123,9 +125,6 @@ File? _photo;
                       onTap: () {
                         imgFromGallery();
                         Navigator.of(context).pop();
-                        
-                
-                
                       }),
                   new ListTile(
                     leading: new Icon(Icons.photo_camera),
@@ -133,9 +132,6 @@ File? _photo;
                     onTap: () {
                       imgFromCamera();
                       Navigator.of(context).pop();
-                     
-                 
-                
                     },
                   ),
                 ],
@@ -145,74 +141,85 @@ File? _photo;
         });
   }
 
-
-   @override
+  @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: widget.animationController!,
       builder: (BuildContext context, Widget? child) {
         return FadeTransition(
-          opacity: widget.animation!,
-          child: new Transform(
-            transform: new Matrix4.translationValues(
-                0.0, 30 * (1.0 - widget.animation!.value), 0.0),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 24, right: 24, top: 0, bottom: 0),
-              child:  
-            AvatarGlow(
+            opacity: widget.animation!,
+            child: new Transform(
+                transform: new Matrix4.translationValues(
+                    0.0, 30 * (1.0 - widget.animation!.value), 0.0),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 24, right: 24, top: 0, bottom: 0),
+                  child: AvatarGlow(
                     glowColor: Colors.blue,
                     endRadius: MediaQuery.of(context).size.width / 4,
                     duration: Duration(milliseconds: 2000),
                     repeat: true,
                     showTwoGlows: true,
                     repeatPauseDuration: Duration(milliseconds: 100),
-
-                    child: 
-                     GestureDetector(
-                      onTap: (){
-                    
-                    _showPicker(context);
-                   
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2.5,
+                          height: MediaQuery.of(context).size.width / 2.5,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Member.gender == Gender.Female
+                                    ? Colors.pinkAccent
+                                    : Colors.blue,
+                                width: 5),
+                            shape: BoxShape.circle,
+                            image: (netIm.isNotEmpty && netIm != "wait")
+                                ? DecorationImage(
+                                    image: NetworkImage(
+                                      netIm,
+                                    ),
+                                    fit: BoxFit.fill)
+                                : netIm.isEmpty
+                                    ? Member.gender == Gender.Female
+                                        ? DecorationImage(
+                                            image: AssetImage(
+                                              "assets/images/gadget2.jpg",
+                                            ),
+                                            fit: BoxFit.fill)
+                                        : DecorationImage(
+                                            image: AssetImage(
+                                              "assets/images/gadget4.jpg",
+                                            ),
+                                            fit: BoxFit.fill)
+                                    : null,
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / 10,
+                            height: MediaQuery.of(context).size.width / 8,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                                onPressed:  () {
+                        _showPicker(context);
                       },
-                       child: Container(
-                                     width: MediaQuery.of(context).size.width / 2.5,
-                                     height: MediaQuery.of(context).size.width / 2.5,
-                                     decoration: BoxDecoration(
-                                         border: Border.all(
-                          color: Member.gender == Gender.Female
-                              ? Colors.pinkAccent
-                              : Colors.blue,
-                          width: 5),
-                                         shape: BoxShape.circle,
-                                         image: (netIm.isNotEmpty && netIm != "wait")
-                          ? DecorationImage(
-                              image: NetworkImage(
-                                netIm,
-                              ),
-                              fit: BoxFit.fill)
-                          : Member.gender == Gender.Female
-                              ? DecorationImage(
-                                  image: AssetImage(
-                                    "assets/images/gadget2.jpg",
-                                  ),
-                                  fit: BoxFit.fill)
-                              : DecorationImage(
-                                  image: AssetImage(
-                                    "assets/images/gadget4.jpg",
-                                  ),
-                                  fit: BoxFit.fill)),
-                                     child: netIm == "wait"
-                                         ? Center(child: CircularProgressIndicator())
-                                         : Container()),
-                     ),
+                                icon: Icon(
+                                  Icons.edit,
+                                  color: Member.gender==Gender.Female? Colors.pink:Colors.blue,
+
+                                )),
+                          ),
+                        )
+                      ],
                     ),
-              ),
-          ),
-        );
+                  ),
+                )));
       },
     );
   }
-
-  }
-
+}

@@ -9,6 +9,7 @@ class Member {
   static String password = "";
   static Gender gender = Gender.Others;
   static int level = 0;
+
   static String branch = "";
   static String photo = "";
   static List<dynamic> profilePhotos = [];
@@ -17,5 +18,7 @@ class Member {
   static bool verified = false;
   static DateTime online = DateTime.now();
   static String device = "";
-  static DateTime entryYear=DateTime.now();
+  static int entryYear=DateTime.now().year;
+  static int xp = 4500;
+  static String gameLevel = "jen";
 }

@@ -42,6 +42,20 @@ print("11111111111111111");
     } catch (e) {}
   }
 
+  static Future<void> addMaterialPhoto(String photo, String name) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentReference memberRef = db.collection('materials').doc(name);
+    try {
+      memberRef.set({
+        "photo": photo,
+       
+      }, SetOptions(merge: true));
+print("11111111111111111");
+
+    } catch (e) {}
+  }
+
+
   static Future<bool> addUser(
       String first_name,
       String last_name,
@@ -90,6 +104,12 @@ print("11111111111111111");
           "verified": false,
           'device': deviceId,
           "online": DateTime.now(),
+          "entryYear": DateTime.now().year,
+          "xp":0,
+          "gameLevel": "3asfour",
+
+
+
         });
         Member.phone = phone;
         Member.first_name = first_name;
@@ -102,6 +122,12 @@ print("11111111111111111");
         Member.password = password;
         Member.auth = true;
         Member.verified = false;
+        Member.entryYear = DateTime.now().year;
+        Member.xp = 0;
+        Member.gameLevel = "3asfour";
+   
+
+        
 
         Member.online = DateTime.now();
         Member.device = deviceId!;
@@ -109,6 +135,55 @@ print("11111111111111111");
     }
     return exist;
   }
+
+
+
+ static Future<bool> addMaterial(name,description
+     ) async {
+      bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentReference matRef = db.collection('materials').doc(name);
+    bool exist = false;
+    try {
+      await matRef.get().then((doc) {
+        exist = doc.exists;
+      });
+    } catch (e) {
+      // If any error
+      return false;
+    }
+    if (exist == false) {
+      try {
+        matRef.set({
+          "name": name,
+          "description": description,
+          "photo": "",
+        
+        });
+         showSnackBar('Your component is added successfully');
+            return true;
+    
+      } catch (e) {
+showSnackBar('Error',
+          col: Colors.redAccent[700]);
+            return false;
+
+
+      }
+    }else{
+       showSnackBar('There is a component with the same name!',
+          col: Colors.redAccent[700]);
+            return false;
+    }
+  
+  }
+
 
   static Future<bool> isConnected() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
@@ -371,6 +446,19 @@ print("11111111111111111");
       Member.verified = user.get("verified");
       Member.password = user.get("password");
       Member.profilePhotos = user.get("profile_photos");
+      print("lllllllllllllllllllllllllllllllll");
+     
+
+       Member.entryYear = user.get("entryYear");
+      print("lllllllllllllllllllllllllllllllll");
+
+        Member.xp = user.get("xp");
+      print("lllllllllllllllllllllllllllllllll");
+
+        Member.gameLevel = user.get("gameLevel");
+         print(user.get("gameLevel"));
+      print("lllllllllllllllllllllllllllllllll");
+
     } catch (e) {}
   }
 
@@ -425,9 +513,31 @@ print("11111111111111111");
     } catch (e) {
       return "";
     }
-    Member.photo=downloadURL;
     return downloadURL;
   }
+
+
+  static Future<String> getMaterialImage(path, image) async {
+    print(path);
+    print("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrgg");
+    String downloadURL = "";
+    if (image == "") {
+      return "";
+    }
+    try {
+      downloadURL = await FirebaseStorage.instance
+          .ref()
+          .child(path + image)
+          .getDownloadURL()
+          .onError((error, stackTrace) => "")
+          .timeout(Duration(seconds: 5), onTimeout: () => "");
+      print(downloadURL);
+    } catch (e) {
+      return "";
+    }
+    return downloadURL;
+  }
+
 
   static Future<bool> setString(String key, String value) async {
      
