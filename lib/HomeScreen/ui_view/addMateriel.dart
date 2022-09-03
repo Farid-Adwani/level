@@ -154,7 +154,8 @@ class _AddMaterialState extends State<AddMaterial> {
                  Padding(
                   padding: const EdgeInsets.only(
                       left: 24, right: 24, top: 0, bottom: 0),
-                  child: Column(
+                  child: ListView(
+                    
                     children: [
                       Padding(
                           padding: const EdgeInsets.all(30.0),

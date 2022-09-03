@@ -1,4 +1,5 @@
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
+import 'package:Aerobotix/HomeScreen/ui_view/MaterialApproval.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/addMateriel.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/materialList.dart';
 import 'package:flutter/material.dart';
@@ -96,7 +97,7 @@ class _TrainingScreenState extends State<TrainingScreen>
               ),
               body: TabBarView(
                 children: [
-                  Icon(Icons.directions_transit),
+                  MaterialApproval(),
                   MaterialList(),
                   AddMaterial(),
                 ],

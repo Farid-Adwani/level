@@ -13,8 +13,12 @@ import 'package:path/path.dart';
 class PhotoView extends StatefulWidget {
   final AnimationController? animationController;
   final Animation<double>? animation;
-
-  PhotoView({Key? key, this.animationController, this.animation})
+  Map<String, String> other;
+  PhotoView(
+      {Key? key,
+      this.animationController,
+      this.animation,
+      this.other = const {}})
       : super(key: key);
 
   @override
@@ -25,11 +29,12 @@ class _PhotoViewState extends State<PhotoView> {
   String netIm = "wait";
   void getIm() async {
     try {
-      netIm = await FirestoreService.getImage(
-          "profiles/" + Member.phone + "/profile/", Member.photo);
-      print("profiles/" + Member.phone + "/profile/" + Member.photo);
-      print("ffffffffffffffffffff");
-      print(Member.photo);
+      widget.other.isEmpty
+          ? netIm = await FirestoreService.getImage(
+              "profiles/" + Member.phone + "/profile/", Member.photo)
+          : netIm = await FirestoreService.getImage(
+              "profiles/" + widget.other["phone"]! + "/profile/",
+              widget.other["photo"]!);
       setState(() {});
     } catch (e) {}
   }
@@ -154,7 +159,8 @@ class _PhotoViewState extends State<PhotoView> {
                 child: Padding(
                   padding: const EdgeInsets.only(
                       left: 24, right: 24, top: 0, bottom: 0),
-                  child: AvatarGlow(
+                  child:
+                   AvatarGlow(
                     glowColor: Colors.blue,
                     endRadius: MediaQuery.of(context).size.width / 4,
                     duration: Duration(milliseconds: 2000),
@@ -194,27 +200,29 @@ class _PhotoViewState extends State<PhotoView> {
                                     : null,
                           ),
                         ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width / 10,
-                            height: MediaQuery.of(context).size.width / 8,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
+                        if (widget.other.isEmpty)
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width / 10,
+                              height: MediaQuery.of(context).size.width / 8,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                  onPressed: () {
+                                    _showPicker(context);
+                                  },
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color: Member.gender == Gender.Female
+                                        ? Colors.pink
+                                        : Colors.blue,
+                                  )),
                             ),
-                            child: IconButton(
-                                onPressed:  () {
-                        _showPicker(context);
-                      },
-                                icon: Icon(
-                                  Icons.edit,
-                                  color: Member.gender==Gender.Female? Colors.pink:Colors.blue,
-
-                                )),
-                          ),
-                        )
+                          )
                       ],
                     ),
                   ),

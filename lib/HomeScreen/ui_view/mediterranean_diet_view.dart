@@ -12,9 +12,10 @@ import 'dart:math' as math;
 class MediterranesnDietView extends StatefulWidget {
   final AnimationController? animationController;
   final Animation<double>? animation;
-
+Map<String,String> other;
+int xp=0;
    MediterranesnDietView(
-      {Key? key, this.animationController, this.animation})
+      {Key? key, this.animationController, this.animation,this.other=const {},required this.xp})
       : super(key: key);
 
 
@@ -28,50 +29,59 @@ String song="";
 bool playing=false;
 String levelText="";
 String gif="";
+Color colorLevel=Color.fromARGB(255,255,0,255);
 void setGameLevel(){
-  switch (Member.gameLevel) {
+  String toSwitch="";
+  if(widget.other.isNotEmpty){
+    toSwitch=widget.other["gameLevel"]!;
+  }else{
+    toSwitch=Member.gameLevel;
+  }
+  switch (toSwitch) {
     case "wlidha":
       print("wlidha");
-      song="audio/aot2.mp3";
-      levelText='Wlidha 💙';
-      gif="assets/HomeScreen/ds1.gif";
+      song="audio/wlidha.mp3";
+      levelText='Wlidha';
+      gif="assets/HomeScreen/wlidha.gif";
+      colorLevel=HexColor("973747");
       break;
       case "kassa7":
-      print("kassa7");
-      song="audio/aot2.mp3";
-      levelText='Kassa7 💪';
-      gif="assets/HomeScreen/gogo1.gif";
 
+      song="audio/kassa7.mp3";
+      levelText='Kassa7';
+      gif="assets/HomeScreen/kassa7.gif";
+colorLevel=HexColor("911E0E");
       break;
       case "r3ad":
       print("r3ad");
-      song="audio/aot2.mp3";
-      levelText='R3ad ⚡';
-      gif="assets/HomeScreen/eren1.gif";
-
+      song="audio/r3ad.mp3";
+      levelText='R3ad';
+      gif="assets/HomeScreen/r3ad.gif";
+colorLevel=HexColor("E1CB53");
 
       break;
       case "jen":
       print("jen");
-      song="audio/aot2.mp3";
-      levelText='Jen 👻';
-      gif="assets/HomeScreen/ds2.gif";
-
+      song="audio/jen.mp3";
+      levelText='Jen';
+      gif="assets/HomeScreen/jen.gif";
+colorLevel=HexColor("CA9FC8");
 
       break;
       case "3orsa":
-      print("r3ad");
-      song="audio/aot2.mp3";
-      levelText='3orsa 🏁';
-      gif="assets/HomeScreen/mk1.gif";
-
+      print("3orsa");
+      song="audio/3orsa.mp3";
+      levelText='3orsa';
+      gif="assets/HomeScreen/3orsa.gif";
+colorLevel=HexColor("#90F1FB");
 
       break;
     default:
     print("3asfour");
-      song="audio/ziouziou.mp3";
-      levelText='3asfour 🐦';
-      gif="assets/HomeScreen/ziw3.gif";
+    	colorLevel=HexColor("BD8484");
+      song="audio/3asfour.mp3";
+      levelText='3asfour';
+      gif="assets/HomeScreen/3asfour.gif";
   }
 }
 AudioPlayer player = AudioPlayer();
@@ -152,16 +162,41 @@ super.initState();
                     
                       Column(
                         children: [
-                              Text(
-                                levelText,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: AerobotixAppTheme.fontName,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 32,
-                                  color: Colors.white,
-                                ),
-                              ),
+                          Stack(
+  children: <Widget>[
+    // Stroked text as border.
+    Text(
+      levelText,
+      style: TextStyle(
+        fontSize: 40,
+        foreground: Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 6
+          ..color = colorLevel,
+      ),
+    ),
+    // Solid text as fill.
+    Text(
+      levelText,
+      style: TextStyle(
+        fontSize: 40,
+        color: Colors.grey[300],
+      ),
+    ),
+  ],
+),
+                              // Text(
+                              //   levelText,
+                              //   textAlign: TextAlign.center,
+
+                              //   style: TextStyle(
+                              //     fontFamily: AerobotixAppTheme.fontName,
+                              //     fontWeight: FontWeight.w600,
+                              //     fontSize: 32,
+                              //     color: colorLevel,
+
+                              //   ),
+                              // ),
                                    Padding(
                         padding:
                             const EdgeInsets.only(top: 16, left: 16, right: 16),
@@ -196,7 +231,7 @@ super.initState();
                                               CrossAxisAlignment.center,
                                           children: <Widget>[
                                             Text(
-                                              (Member.xp*widget.animation!.value).toInt().toString(),
+                                             widget.other.isNotEmpty? (widget.xp*widget.animation!.value.toInt()).toString() : (widget.xp*widget.animation!.value).toInt().toString(),
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontFamily:
@@ -204,8 +239,7 @@ super.initState();
                                                 fontWeight: FontWeight.normal,
                                                 fontSize: 24,
                                                 letterSpacing: 0.0,
-                                                color: AerobotixAppTheme
-                                                    .nearlyDarkBlue,
+                                                color:Colors.purple[900],
                                               ),
                                             ),
                                             Text(
@@ -230,11 +264,11 @@ super.initState();
                                       child: CustomPaint(
                                         painter: CurvePainter(
                                             colors: [
-                                              AerobotixAppTheme.nearlyDarkBlue,
+                                              colorLevel,
                                               HexColor("#8A98E8"),
-                                              HexColor("#8A98E8")
+                                              colorLevel
                                             ],
-                                            angle: Member.xp*360/5000 +
+                                            angle: widget.xp*360/5000 +
                                                 (360 - 140) *
                                                     (1.0 - widget.animation!.value)),
                                         child: SizedBox(
@@ -277,7 +311,8 @@ super.initState();
                               ],
                             ),
                             child: WaveView(
-                              percentageValue: Member.xp*100/5000,
+                              couleur: colorLevel,
+                              percentageValue: widget.xp*100/5000,
               
                             ),
                           ),

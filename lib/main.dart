@@ -1,4 +1,5 @@
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_home_screen.dart';
+import 'package:Aerobotix/HomeScreen/my_diary/otherProfile.dart';
 import 'package:Aerobotix/screens/authentication_screen.dart';
 import 'package:Aerobotix/screens/sign_up_screen.dart';
 import 'package:Aerobotix/screens/verify_phone_number_screen.dart';
@@ -34,6 +35,8 @@ class levelsApp extends StatelessWidget {
       routes: {
         "/sign_in": (context) => SignUpScreen(),
          AerobotixAppHomeScreen.id: (context) => AerobotixAppHomeScreen(),
+         "/otherProfile": (context) => OtherProfile(),
+
         VerifyPhoneNumberScreen.id: (context) => VerifyPhoneNumberScreen(),
        
         

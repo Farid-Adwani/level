@@ -19,6 +19,11 @@ class Member {
   static DateTime online = DateTime.now();
   static String device = "";
   static int entryYear=DateTime.now().year;
-  static int xp = 4500;
-  static String gameLevel = "jen";
+  static int xp = 10;
+  static String gameLevel = "3asfour";
+  static bool isNew = true;
+
+
+
+  static String otherPhone="";
 }

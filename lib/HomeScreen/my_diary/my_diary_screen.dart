@@ -39,7 +39,6 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   double topBarOpacity = 0.0;
 
   void initState() {
-           
 
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
@@ -157,6 +156,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
     );
     listViews.add(
       MediterranesnDietView(
+        xp:Member.xp,
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
             curve:

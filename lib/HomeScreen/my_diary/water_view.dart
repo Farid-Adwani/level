@@ -4,8 +4,9 @@ import 'package:Aerobotix/ui/HexColor.dart';
 import 'package:flutter/material.dart';
 
 class WaterView extends StatefulWidget {
-  const WaterView(
-      {Key? key, this.mainScreenAnimationController, this.mainScreenAnimation})
+  Color couleur;
+   WaterView(
+      {Key? key, this.mainScreenAnimationController, this.mainScreenAnimation,required this.couleur})
       : super(key: key);
 
   final AnimationController? mainScreenAnimationController;
@@ -204,6 +205,7 @@ class _WaterViewState extends State<WaterView> with TickerProviderStateMixin {
                             ],
                           ),
                           child: WaveView(
+                            couleur: widget.couleur,
                             percentageValue: 99,
                             
                           ),

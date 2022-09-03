@@ -20,7 +20,9 @@ class GlassTextView extends StatefulWidget {
       this.animation,
       required this.text,
       required this.ratio,
-      required this.field})
+      required this.field,
+      this.other=const {}
+      })
       : super(key: key);
 
   final AnimationController? animationController;
@@ -28,6 +30,7 @@ class GlassTextView extends StatefulWidget {
   String text;
   double ratio;
   String field;
+  Map<String,String> other;
 
   String? filedReset;
   @override
@@ -49,11 +52,10 @@ class _GlassTextViewState extends State<GlassTextView> {
     false,
     false
   ];
-
+late AwesomeDialog ad ;
   final _popKey = GlobalKey<FormState>();
   String fieldReset = "";
-  @override
-  bool popUp(context) {
+    bool popUp(context) {
     if(widget.field=="branch" || widget.field=="level"){
       setState(() {
         edited=true;
@@ -61,7 +63,7 @@ class _GlassTextViewState extends State<GlassTextView> {
       return true;
     }
     level=0;
-    AwesomeDialog ad = AwesomeDialog(
+     ad = AwesomeDialog(
         context: context,
         animType: AnimType.SCALE,
         dialogType: DialogType.INFO,
@@ -132,6 +134,7 @@ class _GlassTextViewState extends State<GlassTextView> {
                 setState(() {
                   print("waaaaa");
                 });
+                ad..dismiss();
                
               });
             });
@@ -143,10 +146,30 @@ class _GlassTextViewState extends State<GlassTextView> {
     return true;
   }
 
+
   @override
   Widget build(BuildContext context) {
     String interpretedText="";
-    switch (widget.field) {
+    print("wwwwwwwwwwwwwwwwwwwwwwww");
+    print(widget.other);
+    if(widget.other.isNotEmpty){
+      switch (widget.field) {
+      case "last_name":
+        interpretedText=widget.other["last_name"]!;
+        break;
+        case "first_name":
+        interpretedText=widget.other["first_name"]!;
+        break;
+        case "branch":
+        interpretedText=widget.other["branch"]!;
+        break;
+        case "level":
+        interpretedText=widget.other["level"]!;
+        break;
+      default:
+    }
+    }else{
+      switch (widget.field) {
       case "last_name":
         interpretedText=Member.last_name;
         break;
@@ -160,6 +183,7 @@ class _GlassTextViewState extends State<GlassTextView> {
         interpretedText=Member.level.toString();
         break;
       default:
+    }
     }
     
                          
@@ -421,7 +445,7 @@ class _GlassTextViewState extends State<GlassTextView> {
                         
                           
                           )),
-                          IconButton(
+                          if(widget.other.isEmpty) IconButton(
                               onPressed: () {
                                 popUp(context);
                               },

@@ -5,8 +5,9 @@ import 'package:vector_math/vector_math.dart' as vector;
 
 class WaveView extends StatefulWidget {
   final double percentageValue;
+  Color couleur;
 
-  const WaveView({Key? key, this.percentageValue = 100.0}) : super(key: key);
+   WaveView({Key? key, this.percentageValue = 100.0,required this.couleur}) : super(key: key);
   @override
   _WaveViewState createState() => _WaveViewState();
 }
@@ -108,11 +109,10 @@ class _WaveViewState extends State<WaveView> with TickerProviderStateMixin {
             new ClipPath(
               child: new Container(
                 decoration: BoxDecoration(
-                  color: AerobotixAppTheme.nearlyDarkBlue,
+                  color:widget.couleur,
                   gradient: LinearGradient(
-                    colors: [
-                      AerobotixAppTheme.nearlyDarkBlue.withOpacity(0.4),
-                      AerobotixAppTheme.nearlyDarkBlue
+                    colors: [widget.couleur,
+                    widget.couleur.withOpacity(0.2)
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,

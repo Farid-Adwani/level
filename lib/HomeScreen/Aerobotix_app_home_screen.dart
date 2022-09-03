@@ -1,6 +1,8 @@
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
 import 'package:Aerobotix/HomeScreen/models/tabIcon_data.dart';
 import 'package:Aerobotix/HomeScreen/training/training_screen.dart';
+import 'package:Aerobotix/screens/AllMembers.dart';
+import 'package:Aerobotix/screens/musicScreen.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigation_view/bottom_bar_view.dart';
 
@@ -81,7 +83,7 @@ class _AerobotixAppHomeScreenState extends State<AerobotixAppHomeScreen>
           tabIconsList: tabIconsList,
           addClick: () {},
           changeIndex: (int index) {
-            if (index == 0 || index == 2) {
+            if (index == 0  ) {
               animationController?.reverse().then<dynamic>((data) {
                 if (!mounted) {
                   return;
@@ -91,7 +93,28 @@ class _AerobotixAppHomeScreenState extends State<AerobotixAppHomeScreen>
                       TrainingScreen(animationController: animationController);
                 });
               });
-            } else if (index == 1 || index == 3) {
+            } else  if (index == 1  ) {
+              animationController?.reverse().then<dynamic>((data) {
+                if (!mounted) {
+                  return;
+                }
+                setState(() {
+                  tabBody =
+                      AllMembersScreen(animationController: animationController);
+                });
+              });
+            }  else  if (index == 2  ) {
+              animationController?.reverse().then<dynamic>((data) {
+                if (!mounted) {
+                  return;
+                }
+                setState(() {
+                  tabBody =
+                      MusicScreen(animationController: animationController);
+                });
+              });
+            } 
+            else if (index == 3) {
               animationController?.reverse().then<dynamic>((data) {
                 if (!mounted) {
                   return;
