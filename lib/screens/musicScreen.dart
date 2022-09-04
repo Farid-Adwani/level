@@ -15,6 +15,7 @@ import 'package:easy_container/easy_container.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:youtube_api/youtube_api.dart';
+import 'package:html/parser.dart' as html;
 
 class MusicScreen extends StatefulWidget {
   const MusicScreen({Key? key, this.animationController}) : super(key: key);
@@ -234,7 +235,29 @@ class _MusicScreenState extends State<MusicScreen>
                                     setState(() {
                                       searching = true;
                                     });
+                                    
+                                    // search=search.trim();
+                                    // search=search.replaceAll(" ", "+");
+                                    // search=search.replaceAll("+", "%2B");
+
+                                    // http.Response res= await http.get(Uri.parse('https://www.youtube.com/results?search_query=gabi')).then((value) {
+                                    //   print(value.body.indexOf('watch?v=mX'));
+                                    // print(value.body.split(" "));
+                                    // print("eee"); 
+ 
+ 
+                                    // print(html.parse(value.body).getElementsByTagName("body"));
+                                    // for (var element in html.parse(value.body).querySelectorAll("a")) {
+                                    //   print(element.text);
+                                    // }
+                                    // return value;
+                                    // });
+                                    try{
                                     videoResult = await ytApi.search(search);
+
+                                    }catch(e){
+                                          showSnackBar("No Result !" ,col: Colors.redAccent);
+                                    }
                                     setState(() {
                                       searching = false;
                                     });

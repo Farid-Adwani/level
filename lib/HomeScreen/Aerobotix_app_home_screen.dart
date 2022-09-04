@@ -2,6 +2,7 @@ import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
 import 'package:Aerobotix/HomeScreen/models/tabIcon_data.dart';
 import 'package:Aerobotix/HomeScreen/training/training_screen.dart';
 import 'package:Aerobotix/screens/AllMembers.dart';
+import 'package:Aerobotix/screens/leaderboard.dart';
 import 'package:Aerobotix/screens/musicScreen.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigation_view/bottom_bar_view.dart';
@@ -81,7 +82,13 @@ class _AerobotixAppHomeScreenState extends State<AerobotixAppHomeScreen>
         ),
         BottomBarView(
           tabIconsList: tabIconsList,
-          addClick: () {},
+          addClick: () {
+            print("aaaa");
+            setState(() {
+                  tabBody =
+                      leaderboardScreen(animationController: animationController);
+                });
+          },
           changeIndex: (int index) {
             if (index == 0  ) {
               animationController?.reverse().then<dynamic>((data) {
