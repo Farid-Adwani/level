@@ -71,6 +71,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/profiles/
+    - assets/images/badges/
     - assets/HomeScreen/
     - assets/audio/
   #   - images/a_dot_ham.jpeg

@@ -1,5 +1,7 @@
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_home_screen.dart';
 import 'package:Aerobotix/HomeScreen/my_diary/otherProfile.dart';
+import 'package:Aerobotix/HomeScreen/ui_view/AllBadges.dart';
+import 'package:Aerobotix/HomeScreen/ui_view/badges.dart';
 import 'package:Aerobotix/screens/authentication_screen.dart';
 import 'package:Aerobotix/screens/sign_up_screen.dart';
 import 'package:Aerobotix/screens/verify_phone_number_screen.dart';
@@ -24,6 +26,7 @@ class levelsApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Aerobotix',
@@ -33,6 +36,8 @@ class levelsApp extends StatelessWidget {
 
       //onGenerateRoute: RouteGenerator.generateRoute,
       routes: {
+        
+        "/badges": (context) => AllBadgesScreen(),
         "/sign_in": (context) => SignUpScreen(),
          AerobotixAppHomeScreen.id: (context) => AerobotixAppHomeScreen(),
          "/otherProfile": (context) => OtherProfile(),

@@ -22,6 +22,9 @@ class Member {
   static int xp = 10;
   static String gameLevel = "3asfour";
   static bool isNew = true;
+  static List<dynamic> badges=[];
+  static List<dynamic> otherBadges=[];
+
 
 
 

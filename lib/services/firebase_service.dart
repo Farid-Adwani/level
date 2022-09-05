@@ -105,6 +105,7 @@ class FirestoreService {
           "xp": 0,
           "gameLevel": "3asfour",
           "new": true,
+          "badges":[],
 
         });
         Member.phone = phone;
@@ -125,6 +126,7 @@ class FirestoreService {
         Member.online = DateTime.now();
         Member.device = deviceId!;
         Member.isNew = true;
+        Member.badges=[];
 
       } catch (e) {}
     }
@@ -437,7 +439,7 @@ class FirestoreService {
     }
   }
 
-  static void allocateData(user) {
+  static void allocateData(DocumentSnapshot user) {
     try {
       Member.birthDate = user.get("birth_date").toDate();
       Member.first_name = user.get("first_name");
@@ -457,6 +459,9 @@ class FirestoreService {
       Member.xp = user.get("xp");
       Member.gameLevel = user.get("gameLevel");
       Member.isNew = user.get("new");
+      if(user.get("badges")!=null){
+        Member.badges=user.get("badges");
+      }
     } catch (e) {}
   }
 
@@ -525,6 +530,9 @@ class FirestoreService {
             doc.get("birth_date").toDate().month.toString() +
             "-" +
             doc.get("birth_date").toDate().year.toString();
+          if(doc.get("badges")!=null){
+            user["badges"]=Member.otherBadges=doc.get("badges");
+          }
         print(user);
       }).timeout(Duration(seconds: 5));
     } on TimeoutException catch (e) {
