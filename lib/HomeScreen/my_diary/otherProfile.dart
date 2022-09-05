@@ -349,6 +349,61 @@ class _OtherProfileState extends State<OtherProfile>
                           );
                         },
                       )
+                   ,
+                      AnimatedBuilder(
+                        animation: animationController!,
+                        builder: (BuildContext context, Widget? child) {
+                          return FadeTransition(
+                            opacity: Tween<double>(begin: 0.0, end: 1.0)
+                                .animate(CurvedAnimation(
+                                    parent: animationController!,
+                                    curve: Interval((1 / 9) * 8, 1.0,
+                                        curve: Curves.fastOutSlowIn))),
+                            child: new Transform(
+                                transform: new Matrix4.translationValues(
+                                    0.0,
+                                    30 *
+                                        (1.0 -
+                                            Tween<double>(begin: 0.0, end: 1.0)
+                                                .animate(CurvedAnimation(
+                                                    parent:
+                                                        animationController!,
+                                                    curve: Interval(
+                                                        (1 / 9) * 8, 1.0,
+                                                        curve: Curves
+                                                            .fastOutSlowIn)))
+                                                .value),
+                                    0.0),
+                                child: loading == false
+                                    ? IconButton(
+                                        iconSize: 40,
+                                        onPressed: () async {
+                                          setState(() {
+                                            loading = true;
+                                          });
+                                          await FirestoreService.setXp(
+                                                  user, toAdd)
+                                              .timeout(Duration(seconds: 6))
+                                              .then((value) {
+                                            setState(() {
+                                              loading = false;
+                                            });
+                                            if (value) {
+                                              Navigator
+                                                  .pushReplacementNamed(
+                                                context,
+                                                "/otherProfile",
+                                              );
+                                            }
+                                            // Navigator.push(context, "/otherProfile");
+                                          });
+                                        },
+                                        icon: Icon(Icons.send))
+                                    : CircularProgressIndicator()),
+                          );
+                        },
+                      )
+                   
                     ],
                   ),
             SizedBox(

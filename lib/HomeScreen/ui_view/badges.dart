@@ -19,8 +19,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 
 class BadgesScreen extends StatefulWidget {
-  BadgesScreen({Key? key, required this.type}) : super(key: key);
+  BadgesScreen({Key? key, required this.type,required this.phone}) : super(key: key);
   String type;
+  String phone;
+
 
   @override
   State<BadgesScreen> createState() => _BadgesScreenState();
@@ -47,7 +49,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
                     await FirestoreService.addBadge(Member.phone, title, description, date, type);
                   },
        child: StreamBuilder<QuerySnapshot>(
-                stream: db.collection('members').doc(Member.phone).collection("badges").snapshots(),
+                stream: db.collection('members').doc(widget.phone).collection("badges").snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                    

@@ -95,10 +95,10 @@ class _AllBadgesScreenState extends State<AllBadgesScreen>
               ),
               body: TabBarView(
                 children: [
-                  BadgesScreen(type:"badges"),
-                  BadgesScreen(type:"awards"),
-                  BadgesScreen(type:"events"),
-                  BadgesScreen(type:"workshops"),
+                  BadgesScreen(type:"badges",phone: widget.phone,),
+                  BadgesScreen(type:"awards",phone: widget.phone),
+                  BadgesScreen(type:"events",phone: widget.phone),
+                  BadgesScreen(type:"workshops",phone: widget.phone),
 
                 ],
               ),
