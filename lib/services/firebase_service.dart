@@ -105,7 +105,6 @@ class FirestoreService {
           "xp": 0,
           "gameLevel": "3asfour",
           "new": true,
-          "badges":[],
 
         });
         Member.phone = phone;
@@ -126,7 +125,6 @@ class FirestoreService {
         Member.online = DateTime.now();
         Member.device = deviceId!;
         Member.isNew = true;
-        Member.badges=[];
 
       } catch (e) {}
     }
@@ -459,9 +457,7 @@ class FirestoreService {
       Member.xp = user.get("xp");
       Member.gameLevel = user.get("gameLevel");
       Member.isNew = user.get("new");
-      if(user.get("badges")!=null){
-        Member.badges=user.get("badges");
-      }
+     
     } catch (e) {}
   }
 
@@ -530,9 +526,7 @@ class FirestoreService {
             doc.get("birth_date").toDate().month.toString() +
             "-" +
             doc.get("birth_date").toDate().year.toString();
-          if(doc.get("badges")!=null){
-            user["badges"]=Member.otherBadges=doc.get("badges");
-          }
+          
         print(user);
       }).timeout(Duration(seconds: 5));
     } on TimeoutException catch (e) {
@@ -947,5 +941,42 @@ class FirestoreService {
       return false;
     }
   }
+
+
+  static Future<bool> addBadge(String phone,String title, String description , String date, String type) async {
+   bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+
+    try {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      DocumentReference userRef = db.collection('members').doc(phone).collection("badges").doc(title+DateTime.now().toString());
+
+    print("rrrrrrrrrrrr");
+     
+        
+      userRef.set({"title" : title,
+        "description": description,
+        "date":date,
+        "type":type
+              }, SetOptions(merge: true));
+        showSnackBar("Your badge is  added");
+        
+        return true;
+      
+    } on TimeoutException catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    } catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+  }
+
 
 }
