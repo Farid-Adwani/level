@@ -6,8 +6,8 @@ import 'package:Aerobotix/HomeScreen/ui_view/materialList.dart';
 import 'package:flutter/material.dart';
 
 class AllBadgesScreen extends StatefulWidget {
-  const AllBadgesScreen({Key? key}) : super(key: key);
-
+   AllBadgesScreen({Key? key,required this.phone}) : super(key: key);
+String phone="";
   
   @override
   _AllBadgesScreenState createState() => _AllBadgesScreenState();

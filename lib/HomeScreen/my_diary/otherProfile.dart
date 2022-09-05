@@ -174,6 +174,20 @@ class _OtherProfileState extends State<OtherProfile>
       ),
     );
 
+  listViews.add(
+      GlassView(
+          date: "16",
+          text: "Total Badges: ",
+          photo: "badge2.png",
+          phone: user["phone"]!,
+          animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+              CurvedAnimation(
+                  parent: animationController!,
+                  curve: Interval((1 / count) * 7, 1.0,
+                      curve: Curves.fastOutSlowIn))),
+          animationController: animationController!),
+    );
+
     listViews.add(
       GlassView(
           date: user["birth_date"]!,

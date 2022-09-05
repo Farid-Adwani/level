@@ -1,4 +1,6 @@
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
+import 'package:Aerobotix/HomeScreen/ui_view/AllBadges.dart';
+import 'package:Aerobotix/HomeScreen/ui_view/badges.dart';
 import 'package:Aerobotix/ui/HexColor.dart';
 import 'package:flutter/material.dart';
 
@@ -9,8 +11,9 @@ class GlassView extends StatelessWidget {
   String text;
   String date;
   String photo;
+  String phone="";
 
-   GlassView({Key? key, this.animationController, this.animation,required this.date,required this.photo,required this.text})
+   GlassView({Key? key, this.animationController, this.animation,required this.date,required this.photo,required this.text,this.phone=""})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,10 @@ class GlassView extends StatelessWidget {
                 print("waaaaaaaa");
                 print(text);
                 if(text.toUpperCase().contains("BADGE")){
-                  Navigator.pushNamed(context,"/badges");
+                  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) =>  AllBadgesScreen(phone:phone)),
+  );
                 }
               },
               child: Column(

@@ -37,7 +37,6 @@ class levelsApp extends StatelessWidget {
       //onGenerateRoute: RouteGenerator.generateRoute,
       routes: {
         
-        "/badges": (context) => AllBadgesScreen(),
         "/sign_in": (context) => SignUpScreen(),
          AerobotixAppHomeScreen.id: (context) => AerobotixAppHomeScreen(),
          "/otherProfile": (context) => OtherProfile(),

@@ -170,6 +170,8 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
           date: "16",
           text: "Total Badges: ",
           photo: "badge2.png",
+          phone: Member.phone,
+
           animation: Tween<double>(begin: 0.0, end: 1.0).animate(
               CurvedAnimation(
                   parent: widget.animationController!,
