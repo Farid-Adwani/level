@@ -6,7 +6,6 @@ import 'package:Aerobotix/HomeScreen/ui_view/mediterranean_diet_view.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/detailsView.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/photoView.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/title_view.dart';
-import 'package:Aerobotix/HomeScreen/my_diary/meals_list_view.dart';
 import 'package:Aerobotix/HomeScreen/my_diary/water_view.dart';
 import 'package:Aerobotix/model/member.dart';
 import 'package:Aerobotix/services/firebase_service.dart';
@@ -167,8 +166,8 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
 
       listViews.add(
       GlassView(
-          date: "16",
-          text: "Total Badges: ",
+          date: "",
+          text: "Badges",
           photo: "badge2.png",
           phone: Member.phone,
 

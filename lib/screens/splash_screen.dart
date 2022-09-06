@@ -7,7 +7,6 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:Aerobotix/screens/authentication_screen.dart';
-import 'package:Aerobotix/utils/globals.dart';
 import 'package:Aerobotix/widgets/custom_loader.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';

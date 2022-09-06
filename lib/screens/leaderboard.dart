@@ -264,7 +264,7 @@ Column getPoduim(DocumentSnapshot pod,Color col , double size){
                             colorLevel = HexColor("BD8484");
                             gif = "assets/HomeScreen/3asfour.gif";
                         }
-                        if (imMap.containsKey(doc.get("phone")) == false) {
+                        if (imMap.containsKey(doc.get("phone")) == true) {
                           getIm(doc.get("phone"), doc.get("photo"));
                         }
                         if ((categories == "all" ||

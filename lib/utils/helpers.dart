@@ -1,8 +1,8 @@
 import 'dart:developer' as devtools show log;
 import 'dart:ui';
 
+import 'package:Aerobotix/screens/utils/globals.dart';
 import 'package:flutter/material.dart';
-import 'package:Aerobotix/utils/globals.dart';
 
 void showSnackBar(
   String text, {

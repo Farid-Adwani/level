@@ -4,13 +4,13 @@ import 'package:Aerobotix/HomeScreen/ui_view/AllBadges.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/badges.dart';
 import 'package:Aerobotix/screens/authentication_screen.dart';
 import 'package:Aerobotix/screens/sign_up_screen.dart';
+import 'package:Aerobotix/screens/utils/globals.dart';
 import 'package:Aerobotix/screens/verify_phone_number_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:Aerobotix/screens/splash_screen.dart';
 import 'package:Aerobotix/utils/app_theme.dart';
-import 'package:Aerobotix/utils/globals.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

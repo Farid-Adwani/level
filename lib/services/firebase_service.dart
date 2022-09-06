@@ -554,7 +554,7 @@ class FirestoreService {
           .child(path + image)
           .getDownloadURL()
           .onError((error, stackTrace) => "")
-          .timeout(Duration(seconds: 5), onTimeout: () => "");
+          .timeout(Duration(seconds: 10), onTimeout: () => "");
       print(downloadURL);
     } catch (e) {
       return "";

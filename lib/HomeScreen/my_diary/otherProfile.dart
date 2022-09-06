@@ -1,22 +1,16 @@
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/GlassTextView.dart';
-import 'package:Aerobotix/HomeScreen/ui_view/body_measurement.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/glass_view.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/mediterranean_diet_view.dart';
-import 'package:Aerobotix/HomeScreen/ui_view/detailsView.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/photoView.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/title_view.dart';
-import 'package:Aerobotix/HomeScreen/my_diary/meals_list_view.dart';
-import 'package:Aerobotix/HomeScreen/my_diary/water_view.dart';
 import 'package:Aerobotix/model/member.dart';
 import 'package:Aerobotix/services/firebase_service.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:avatar_glow/avatar_glow.dart';
+import 'package:Aerobotix/utils/helpers.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:confetti/confetti.dart';
+import 'package:easy_container/easy_container.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
-import 'package:glassmorphism/glassmorphism.dart';
-import 'package:status_view/status_view.dart';
 
 class OtherProfile extends StatefulWidget {
   const OtherProfile({Key? key}) : super(key: key);
@@ -176,8 +170,8 @@ class _OtherProfileState extends State<OtherProfile>
 
   listViews.add(
       GlassView(
-          date: "16",
-          text: "Total Badges: ",
+          date: "",
+          text: "Badges",
           photo: "badge2.png",
           phone: user["phone"]!,
           animation: Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -220,7 +214,153 @@ class _OtherProfileState extends State<OtherProfile>
   }
 
   bool loading = false;
+  bool loadingBadge =false;
   int toAdd = 0;
+
+String day="",month="",year="";
+String title="";
+String entryYear=DateTime.now().year.toString();
+late AwesomeDialog ad;
+ bool popUp(context,String id) {
+    title = "";
+    entryYear="";
+
+     ad = AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.INFO,
+        body: Center(
+          child: Column(
+            children: [
+              EasyContainer(
+                elevation: 0,
+                borderRadius: 10,
+                color: Colors.transparent,
+                child: Form(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                          Text(
+                            "Enter the data",
+                            style: TextStyle(
+                              
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          Divider(),
+                        ] +
+                        
+                        [
+                          TextField(
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.title),
+                              border: OutlineInputBorder(),
+                              hintText: 'Write a title',
+                            ),
+                            textAlign: TextAlign.center,
+                            autofocus: true,
+                            textAlignVertical: TextAlignVertical.center,
+                            onChanged: (text) => title = text,
+                            keyboardType: TextInputType.text,
+                          ),
+                          Divider(),
+                          Column(
+                            children: [
+                               TextField(
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.numbers_outlined),
+                              border: OutlineInputBorder(),
+                              hintText: 'Day',
+                            ),
+                            textAlign: TextAlign.center,
+                            autofocus: true,
+                            textAlignVertical: TextAlignVertical.center,
+                            onChanged: (text) => day = text,
+                            keyboardType: TextInputType.numberWithOptions(decimal: true,signed: false),
+                          ),
+                              TextField(
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.numbers_outlined),
+                              border: OutlineInputBorder(),
+                              hintText: 'Month',
+                            ),
+                            textAlign: TextAlign.center,
+                            autofocus: true,
+                            textAlignVertical: TextAlignVertical.center,
+                            onChanged: (text) => month = text,
+                            keyboardType: TextInputType.numberWithOptions(decimal: true,signed: false),
+                          ),
+                              TextField(
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.date_range_outlined),
+                              border: OutlineInputBorder(),
+                              hintText: 'Year',
+                            ),
+                            textAlign: TextAlign.center,
+                            autofocus: true,
+                            textAlignVertical: TextAlignVertical.center,
+                            onChanged: (text) => year = text,
+                            keyboardType: TextInputType.numberWithOptions(decimal: true,signed: false),
+                          ),
+                          Divider(),
+                          Wrap(
+                            children: 
+                            ["electronique","mecanique","software",'otherFormation',"comite","bronze","gold","silver","otherAward","eurobot",'memberOf','responsable'].map((e) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: ElevatedButton(onPressed: ()async{
+                                    ad..dismiss();
+                                      if(title.trim().isEmpty){
+                                        showSnackBar("Please put a title", col:Colors.red);
+
+                                      }
+                                     else if(double.parse(day)>31 || double.parse(day)<1 || double.parse(month)>12 || double.parse(month)<1 || double.parse(year)>DateTime.now().year || double.parse(year)<2000 ){
+                                       print(day);
+                                       print(month);
+                                       print(year);
+
+                                        showSnackBar("Please put a valid date", col:Colors.red);
+                                      }else{
+                                        setState(() {
+                                          loadingBadge=true;
+                                        });
+                                        
+                                        await FirestoreService.addBadge(id, title, "empty", day+"-"+month+"-"+year, e.toString()).then((value) {
+                                          setState(() {
+                                            loadingBadge=false;
+                                          });
+                                        });
+                                      }
+                                      
+                                  }, child:Text(e.toString())),
+                                );
+                            }).toList()
+                            ,
+                          )
+
+                          
+                            ],
+              
+                          )
+                        ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+       
+        );
+
+    
+      
+    ad..show();
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -374,32 +514,15 @@ class _OtherProfileState extends State<OtherProfile>
                                                             .fastOutSlowIn)))
                                                 .value),
                                     0.0),
-                                child: loading == false
+                                child: loadingBadge == false
                                     ? IconButton(
                                         iconSize: 40,
                                         onPressed: () async {
-                                          setState(() {
-                                            loading = true;
-                                          });
-                                          await FirestoreService.setXp(
-                                                  user, toAdd)
-                                              .timeout(Duration(seconds: 6))
-                                              .then((value) {
-                                            setState(() {
-                                              loading = false;
-                                            });
-                                            if (value) {
-                                              Navigator
-                                                  .pushReplacementNamed(
-                                                context,
-                                                "/otherProfile",
-                                              );
-                                            }
-                                            // Navigator.push(context, "/otherProfile");
-                                          });
+                                          popUp(context,user["phone"]!);
+                                        
                                         },
-                                        icon: Icon(Icons.send))
-                                    : CircularProgressIndicator()),
+                                        icon: Icon(Icons.badge))
+                                    : Center(child: CircularProgressIndicator())),
                           );
                         },
                       )

@@ -80,14 +80,13 @@ class _AllBadgesScreenState extends State<AllBadgesScreen>
           return const SizedBox();
         } else {
           return DefaultTabController(
-            length: 4,
+            length: 3,
             child: Scaffold(
               appBar: AppBar(
                 bottom: const TabBar(
                   tabs: [
                     Tab(icon: Icon(Icons.badge_outlined),text: "Badges"),
                     Tab(icon: Icon(Icons.military_tech_outlined),text: "Awards"),
-                    Tab(icon: Icon(Icons.event),text: "Events"),
                     Tab(icon: Icon(Icons.lightbulb_outline_rounded),text: "Workshops"),
 
                   ],
@@ -97,7 +96,6 @@ class _AllBadgesScreenState extends State<AllBadgesScreen>
                 children: [
                   BadgesScreen(type:"badges",phone: widget.phone,),
                   BadgesScreen(type:"awards",phone: widget.phone),
-                  BadgesScreen(type:"events",phone: widget.phone),
                   BadgesScreen(type:"workshops",phone: widget.phone),
 
                 ],

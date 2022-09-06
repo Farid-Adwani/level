@@ -40,7 +40,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
     int index = 0;
      return  GestureDetector(
       onTap: () async{
-                    List<String> types=["electronique","mecanique","software",'otherFormation',"comite","bronze","gold","silver","otherAward","eurobot",'memberOf'];
+                    List<String> types=["electronique","mecanique","software",'otherFormation',"comite","bronze","gold","silver","otherAward","eurobot",'memberOf','responsable'];
                     String description="this is a description nnnnnnnnnn";
                     String date=(Random().nextInt(3)+2019).toString()+"-"+(Random().nextInt(31)).toString()+"-"+(Random().nextInt(13)).toString();
                     String type=types[Random().nextInt(types.length)];
@@ -67,9 +67,8 @@ class _BadgesScreenState extends State<BadgesScreen> {
             Wrap(
                 alignment: WrapAlignment.center,
                 children: snapshot.data!.docs.map((doc) {
-                   if((state=="awards" &&(doc["type"]=="gold" || doc["type"]=="silver" || doc["type"]=="bronze" || doc["type"]=="otherAward")) 
-                   || (state=="badges" &&(doc["type"]=="comite" || doc["type"]=="memberOf" ))
-                   || (state=="events" &&(doc["type"]=="competition" || doc["type"]=="randonnee" || doc["type"]=="otherEvent" || doc["type"]=="project"))
+                   if((state=="awards" &&(doc["type"]=="gold" || doc["type"]=="silver" || doc["type"]=="bronze" || doc["type"]=="otherAward" || doc["type"]=="memberOf")  ) 
+                   || (state=="badges" &&(doc["type"]=="comite" || doc["type"]=="responsable" ))
                    || (state=="workshops" &&(doc["type"]=="mecanique" || doc["type"]=="electronique" || doc["type"]=="software" || doc["type"]=="otherFormation"))
 
                    ){
@@ -171,6 +170,18 @@ class _BadgesScreenState extends State<BadgesScreen> {
                     ];
                     shadow = Colors.white;
                     photo = "assets/images/badges/memberOf.png";
+                  }
+                   if (doc["type"] == "responsable") {
+                    gradient = [
+                      Colors.white,
+
+                      Color.fromARGB(255, 58, 14, 70),
+                      Color.fromARGB(255, 58, 14, 70),
+
+                      Colors.purple[900]!,
+                    ];
+                    shadow = Colors.white;
+                    photo = "assets/images/badges/responsable.png";
                   }
      
                   return Stack(
