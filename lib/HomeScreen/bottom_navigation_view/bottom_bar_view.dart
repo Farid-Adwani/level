@@ -33,6 +33,7 @@ class _BottomBarViewState extends State<BottomBarView>
     super.initState();
   }
 
+bool inProfile=false;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -142,10 +143,10 @@ class _BottomBarViewState extends State<BottomBarView>
                     child: Container(
                       // alignment: Alignment.center,s
                       decoration: BoxDecoration(
-                        color: AerobotixAppTheme.nearlyDarkBlue,
+                        color: inProfile ? Colors.purple : Color.fromARGB(255, 255, 255, 255),
                         gradient: LinearGradient(
                             colors: [
-                              AerobotixAppTheme.nearlyDarkBlue,
+                              inProfile ? Colors.purple : Color.fromARGB(255, 255, 255, 255),
                               HexColor('#6A88E5'),
                             ],
                             begin: Alignment.topLeft,
@@ -153,7 +154,7 @@ class _BottomBarViewState extends State<BottomBarView>
                         shape: BoxShape.circle,
                         boxShadow: <BoxShadow>[
                           BoxShadow(
-                              color: AerobotixAppTheme.nearlyDarkBlue
+                              color: Color.fromARGB(255, 190, 190, 190)
                                   .withOpacity(0.4),
                               offset: const Offset(8.0, 16.0),
                               blurRadius: 16.0),
@@ -165,11 +166,19 @@ class _BottomBarViewState extends State<BottomBarView>
                           splashColor: Colors.white.withOpacity(0.1),
                           highlightColor: Colors.transparent,
                           focusColor: Colors.transparent,
-                          onTap: widget.addClick,
-                          child: Icon(
-                            Icons.add,
-                            color: AerobotixAppTheme.button_bar,
-                            size: 32,
+                          onTap: (){
+                            setState(){
+                              inProfile=true;
+                              print("aaaaaaaaaaa");
+                              widget.tabIconsList?.forEach((TabIconData tab) {
+        tab.isSelected = false;
+        widget.addClick!();
+  
+      });
+                            }
+                          },
+                          child: Image.asset(
+                            "assets/HomeScreen/profile.png"
                           ),
                         ),
                       ),

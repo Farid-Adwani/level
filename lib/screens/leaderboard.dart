@@ -67,6 +67,9 @@ class _leaderboardScreenState extends State<leaderboardScreen>
           poduimR3a = [];
 
           for (var element in all) {
+            if(imMap.containsKey(element.get("phone"))==false){
+                          getIm(element.get("phone"), element.get("photo"));
+                        }
             if(element.get("gameLevel")=="3asfour"){
               if(poduim3as.length<3){
                 poduim3as.add(element);
