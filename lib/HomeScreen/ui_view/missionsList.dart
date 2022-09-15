@@ -11,8 +11,9 @@ import 'package:easy_container/easy_container.dart';
 import 'package:flutter/material.dart';
 
 class MissionsList extends StatefulWidget {
-  MissionsList({Key? key, this.animationController}) : super(key: key);
+  MissionsList({Key? key, this.animationController, required this.categ}) : super(key: key);
 
+  String categ="";
   final AnimationController? animationController;
   @override
   _MissionsListState createState() => _MissionsListState();
@@ -79,7 +80,7 @@ class _MissionsListState extends State<MissionsList>
                           if (imMap.containsKey(doc.get("name")) == false) {
                             getIm(doc.get("name"), doc.get("photo"));
                           }
-                          if ((categories == doc.get("state").toString()) &&
+                          if ((categories == doc.get("state").toString() || (widget.categ=="sub" && doc.get("members").contains(Member.phone)) || (widget.categ=="done" && doc.get("done").contains(Member.phone))) &&
                               (search == "" ||
                                   doc
                                       .get("name")
@@ -96,7 +97,7 @@ class _MissionsListState extends State<MissionsList>
                                 onLongPress: () {
                                   // if(doc.get("state")=="new"){
                                   //   print(doc.get("name"));
-                                  popUp(context, doc.get("name"));
+                                  popUp(context, doc.get("name"),doc.get("members"),doc.get("done"));
                                   // }
                                 },
                                 onTap: () {},
@@ -266,7 +267,14 @@ class _MissionsListState extends State<MissionsList>
   String score = "";
   String entryYear = DateTime.now().year.toString();
   late AwesomeDialog ad;
-  bool popUp(context, String id) {
+  bool popUp(context, String id,List<dynamic> members,List<dynamic> done) {
+    List<String> output = [];
+
+members.forEach((element) {
+    if(!done.contains(element)){
+    output.add(element);
+}
+});
     score = "";
     entryYear = "";
 
@@ -287,7 +295,7 @@ class _MissionsListState extends State<MissionsList>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          "Change the State",
+                          "Subscribed Members",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
@@ -295,6 +303,100 @@ class _MissionsListState extends State<MissionsList>
                           ),
                         ),
                         Divider(),
+                        Column(
+                          children: output.map((doc) {
+                              return 
+                                 Card(
+                              borderOnForeground: true,
+                              elevation: 50,
+                              margin: EdgeInsets.all(2),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                      onTap: () async {
+                                        setState(() {
+                                         
+                                        });
+                                       
+                                      },
+                                      child: Center(
+                                          child: Text(
+                                       doc.toString(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1.2,
+                                          fontSize: 15,
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255),
+                                        ),
+                                      ))),
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                          onPressed: () {
+                                            
+                                          },
+                                          icon: Icon(Icons.done_outline_rounded,color: Colors.green,)),
+                                    
+                                    ],
+                                  ),
+                                  
+                                ],
+                              ),
+                            )
+                      ;
+                          }).toList()
+                        )
+                      ,
+                      Text(
+                          "Succeeded Members",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        Divider(),
+                        Column(
+                          children: done.map((doc) {
+                              return 
+                                 Card(
+                              borderOnForeground: true,
+                              elevation: 50,
+                              margin: EdgeInsets.all(2),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                      onTap: () async {
+                                        setState(() {
+                                         
+                                        });
+                                       
+                                      },
+                                      child: Center(
+                                          child: Text(
+                                       doc.toString(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1.2,
+                                          fontSize: 15,
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255),
+                                        ),
+                                      ))),
+                             
+                                  
+                                ],
+                              ),
+                            )
+                      ;
+                          }).toList()
+                        )
+                     
                       ]),
                 ),
               ),
@@ -391,7 +493,10 @@ class _MissionsListState extends State<MissionsList>
           return const SizedBox();
         } else {
           return SafeArea(
-            child: DefaultTabController(
+            child: 
+            widget.categ.isNotEmpty?
+            missionsList(""):
+            DefaultTabController(
               initialIndex: 0,
               length: 2,
               child: Column(
