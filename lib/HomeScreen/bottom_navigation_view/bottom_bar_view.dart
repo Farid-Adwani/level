@@ -69,6 +69,9 @@ bool inProfile=false;
                                   removeAllSelect: () {
                                     setRemoveAllSelection(
                                         widget.tabIconsList?[0]);
+                                                 setState(() {
+                            inProfile=false;
+                         });
                                     widget.changeIndex!(0);
                                   }),
                             ),
@@ -78,6 +81,9 @@ bool inProfile=false;
                                   removeAllSelect: () {
                                     setRemoveAllSelection(
                                         widget.tabIconsList?[1]);
+                                                 setState(() {
+                            inProfile=false;
+                         });
                                     widget.changeIndex!(1);
                                   }),
                             ),
@@ -95,6 +101,9 @@ bool inProfile=false;
                                   removeAllSelect: () {
                                     setRemoveAllSelection(
                                         widget.tabIconsList?[2]);
+                                         setState(() {
+                            inProfile=false;
+                         });
                                     widget.changeIndex!(2);
                                   }),
                             ),
@@ -104,6 +113,9 @@ bool inProfile=false;
                                   removeAllSelect: () {
                                     setRemoveAllSelection(
                                         widget.tabIconsList?[3]);
+                                                 setState(() {
+                            inProfile=false;
+                         });
                                     widget.changeIndex!(3);
                                   }),
                             ),
@@ -143,18 +155,27 @@ bool inProfile=false;
                     child: Container(
                       // alignment: Alignment.center,s
                       decoration: BoxDecoration(
-                        color: inProfile ? Colors.purple : Color.fromARGB(255, 255, 255, 255),
-                        gradient: LinearGradient(
+                        color: AerobotixAppTheme.nearlyDarkBlue,
+                        gradient: inProfile==false? 
+                         LinearGradient(
                             colors: [
-                              inProfile ? Colors.purple : Color.fromARGB(255, 255, 255, 255),
-                              HexColor('#6A88E5'),
+                             Colors.white,
+                             Colors.white,
+
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight) :
+                             LinearGradient(
+                            colors: [
+                              Colors.blue,
+                             Color.fromARGB(255, 173, 17, 30)
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight),
                         shape: BoxShape.circle,
                         boxShadow: <BoxShadow>[
                           BoxShadow(
-                              color: Color.fromARGB(255, 190, 190, 190)
+                              color: AerobotixAppTheme.nearlyDarkBlue
                                   .withOpacity(0.4),
                               offset: const Offset(8.0, 16.0),
                               blurRadius: 16.0),
@@ -166,20 +187,20 @@ bool inProfile=false;
                           splashColor: Colors.white.withOpacity(0.1),
                           highlightColor: Colors.transparent,
                           focusColor: Colors.transparent,
-                          onTap: (){
-                            setState(){
-                              inProfile=true;
-                              print("aaaaaaaaaaa");
+                          onTap:(){ widget.addClick!();
+
+                         setState(() {
+                            inProfile=true;
+                         });
                               widget.tabIconsList?.forEach((TabIconData tab) {
         tab.isSelected = false;
         widget.addClick!();
-  
+
       });
-                            }
+
+
                           },
-                          child: Image.asset(
-                            "assets/HomeScreen/profile.png"
-                          ),
+                          child: Image.asset("assets/HomeScreen/profile.png"),
                         ),
                       ),
                     ),

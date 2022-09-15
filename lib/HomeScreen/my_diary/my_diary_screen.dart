@@ -8,6 +8,7 @@ import 'package:Aerobotix/HomeScreen/ui_view/photoView.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/title_view.dart';
 import 'package:Aerobotix/HomeScreen/my_diary/water_view.dart';
 import 'package:Aerobotix/model/member.dart';
+import 'package:Aerobotix/screens/missionsScreen.dart';
 import 'package:Aerobotix/services/firebase_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:avatar_glow/avatar_glow.dart';
@@ -28,7 +29,7 @@ class MyDiaryScreen extends StatefulWidget {
 class _MyDiaryScreenState extends State<MyDiaryScreen>
     with TickerProviderStateMixin {
       
-
+ AnimationController? animationController;
 
   Animation<double>? topBarAnimation;
   late ConfettiController _controllerCenter;
@@ -38,6 +39,10 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   double topBarOpacity = 0.0;
 
   void initState() {
+
+
+ animationController = AnimationController(
+        duration: const Duration(milliseconds: 600), vsync: this);
 
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
@@ -350,6 +355,40 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                               ),
                               child: Row(
                                 children: <Widget>[
+                                  Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: Stack(
+                                        children: [
+                                          IconButton(
+                                            onPressed: () {
+                                              print("missions");
+                                               Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) =>  missionsScreen(animationController: animationController)),
+  );
+                                            },
+                                            icon: Icon(
+                                              Icons.task_alt_sharp,
+                                              color: AerobotixAppTheme.grey,
+                                              size: 30,
+                                            ),
+                                          ),
+                                          Positioned(
+                                            right: 0,
+                                            child: 
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.red
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(3.0),
+                                              child: Text("15",style: TextStyle(fontSize: 10),),
+                                            ),
+                                          )
+                                          )
+                                        ],
+                                      )),
                                   Padding(
                                       padding: const EdgeInsets.only(right: 8),
                                       child: IconButton(

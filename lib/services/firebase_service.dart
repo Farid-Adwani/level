@@ -52,6 +52,17 @@ class FirestoreService {
     } catch (e) {}
   }
 
+    static Future<void> addMissionPhoto(String photo, String name) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentReference memberRef = db.collection('missions').doc(name);
+    try {
+      memberRef.set({
+        "photo": photo,
+      }, SetOptions(merge: true));
+      print("11111111111111111");
+    } catch (e) {}
+  }
+
   static Future<bool> addUser(
       String first_name,
       String last_name,
@@ -156,6 +167,51 @@ class FirestoreService {
           "name": name,
           "description": description,
           "photo": "",
+        });
+        showSnackBar('Your component is added successfully');
+        return true;
+      } catch (e) {
+        showSnackBar('Error', col: Colors.redAccent[700]);
+        return false;
+      }
+    } else {
+      showSnackBar('There is a component with the same name!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+  }
+
+   static Future<bool> addMission(name, description,score,maxSub) async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentReference matRef = db.collection('missions').doc(name);
+    bool exist = false;
+    try {
+      await matRef.get().then((doc) {
+        exist = doc.exists;
+      });
+    } catch (e) {
+      // If any error
+      return false;
+    }
+    if (exist == false) {
+      try {
+        matRef.set({
+          "name": name,
+          "description": description,
+          "photo": "",
+          "score": score,
+          "max":maxSub,
+          "State":"new",
+          "members":[],
+
+
         });
         showSnackBar('Your component is added successfully');
         return true;

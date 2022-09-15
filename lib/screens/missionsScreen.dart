@@ -1,11 +1,14 @@
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/MaterialApproval.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/addMateriel.dart';
+import 'package:Aerobotix/HomeScreen/ui_view/addMission.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/materialList.dart';
+import 'package:Aerobotix/HomeScreen/ui_view/missionsApproval.dart';
+import 'package:Aerobotix/HomeScreen/ui_view/missionsList.dart';
 import 'package:flutter/material.dart';
 
 class missionsScreen extends StatefulWidget {
-  const missionsScreen({Key? key, this.animationController}) : super(key: key);
+  const missionsScreen({Key? key, required this.animationController}) : super(key: key);
 
   final AnimationController? animationController;
   @override
@@ -84,22 +87,25 @@ class _missionsScreenState extends State<missionsScreen>
           return const SizedBox();
         } else {
           return DefaultTabController(
-            length: 3,
+            length: 4,
             child: Scaffold(
               appBar: AppBar(
                 bottom: const TabBar(
                   tabs: [
                     Tab(icon: Icon(Icons.add_box_outlined)),
-                    Tab(icon: Icon(Icons.list_rounded)),
-                    Tab(icon: Icon(Icons.add_shopping_cart)),
+                    Tab(icon: Icon(Icons.fiber_new_rounded)),
+                    Tab(icon: Icon(Icons.highlight_remove_rounded)),
+                    Tab(icon: Icon(Icons.done_all_outlined)),
                   ],
                 ),
               ),
               body: TabBarView(
                 children: [
-                  MaterialApproval(),
-                  MaterialList(),
-                  AddMaterial(),
+                  AddMission(),
+                  MissionsList(),
+
+                  MissionsApproval(),
+                  MissionsList(),
                 ],
               ),
             ),

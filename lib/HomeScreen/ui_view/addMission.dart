@@ -27,7 +27,7 @@ class _AddMissionState extends State<AddMission> {
   void getIm() async {
     try {
       matIm =
-          await FirestoreService.getMaterialImage("materials/",materialNameRef);
+          await FirestoreService.getMaterialImage("materials/",missionNameRef);
       setState(() {});
     } catch (e) {}
   }
@@ -47,23 +47,23 @@ class _AddMissionState extends State<AddMission> {
       uploading = true;
     });
     final fileName = basename(_photo!.path);
-    final destination = 'materials/';
+    final destination = 'missions/';
 
 
 
 
     try {
       String name = DateTime.now().toString() + fileName;
-      materialNameRef = name;
+      missionNameRef = name;
       final ref = FirebaseStorage.instance.ref(destination).child(name);
 
       await ref.putFile(_photo!).timeout(Duration(seconds: 7));
-      // await FirestoreService.AddMissionPhoto(name,materialName)
-      //     .timeout(Duration(seconds: 7))
-      //     .then((value) {
-      //   showSnackBar("Your photo is updated successfully !");
-      //   getIm();
-      // });
+      await FirestoreService.addMissionPhoto(name,missionName)
+          .timeout(Duration(seconds: 7))
+          .then((value) {
+        showSnackBar("Your photo is updated successfully !");
+        getIm();
+      });
     } on TimeoutException {
       showSnackBar("Please check your internet connection and retry !",
           col: Colors.red);
@@ -142,9 +142,12 @@ class _AddMissionState extends State<AddMission> {
         });
   }
 
-  String materialName = "";
-  String materialdescription = "";
-  String materialNameRef="";
+  String missionName = "";
+  String missionDescription = "";
+  String missionNameRef="";
+  String maxSub="1000";
+  String score="0";
+
   int step = 1;
 
   @override
@@ -161,7 +164,7 @@ class _AddMissionState extends State<AddMission> {
                           padding: const EdgeInsets.all(30.0),
                           child: step == 1
                               ? Text(
-                                  'Add a new component',
+                                  'Add a new Mission',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -182,37 +185,93 @@ class _AddMissionState extends State<AddMission> {
                                 )),
                       if (step == 1)
                         TextFormField(
-                          initialValue: materialName,
+                          initialValue: missionName,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            hintText: 'Enter the name of the component',
+                            hintText: 'Enter the name of the Mission',
                             prefixIcon: Icon(Icons.add_shopping_cart_rounded),
                           ),
                           onFieldSubmitted: (value) {
-                            materialName = value.trim();
+                            missionName = value.trim();
                           },
                           onChanged: (value) {
-                            materialName = value.trim();
+                            missionName = value.trim();
                           },
                           maxLength: 20,
                         ),
                       if (step == 1)
                         TextFormField(
-                          initialValue: materialdescription,
+                          initialValue: missionDescription,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            hintText: 'Enter the description of the component',
+                            hintText: 'Enter the description of the Mission',
                             // prefixIcon: Icon(Icons.description_outlined,),
                           ),
                           onFieldSubmitted: (value) {
-                            materialdescription = value.trim();
+                            missionDescription = value.trim();
                           },
                           onChanged: (value) {
-                            materialdescription = value.trim();
+                            missionDescription = value.trim();
                           },
                           maxLength: 250,
                           maxLines: 10,
                         ),
+                         if (step == 1)
+                         Padding(
+                           padding: const EdgeInsets.all(8.0),
+                           child: Text("Score"),
+                         ),
+                         if (step == 1)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            initialValue: score.toString(),
+                            textAlign: TextAlign.center,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Mission Score',
+                            ),
+                            onFieldSubmitted: (value) {
+                              score =value.trim();
+                            },
+                            onChanged: (value) {
+                                 score = value.trim();
+                            },
+                           
+                          ),
+                        ),
+                         if (step == 1)
+                         Padding(
+                           padding: const EdgeInsets.all(8.0),
+                           child: Text("Max"),
+                         ),
+                         if (step == 1)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            style: TextStyle(
+                              
+                            ),
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.center,
+                            initialValue: maxSub.toString(),
+                            decoration: InputDecoration(
+                            
+                              border: OutlineInputBorder(),
+                              hintText: 'Max',
+                            ),
+                            onFieldSubmitted: (value) {
+                              maxSub = value.trim();
+                            },
+                            onChanged: (value) {
+                                 maxSub = value.trim();
+                            },
+                           
+                          ),
+                        ),
+
+                        
                       if (step == 2)
                         AvatarGlow(
                           glowColor: Colors.blue,
@@ -240,7 +299,7 @@ class _AddMissionState extends State<AddMission> {
                                       : matIm.isEmpty
                                           ? DecorationImage(
                                               image: AssetImage(
-                                                "assets/images/tools.jpg",
+                                                "assets/images/mission.png",
                                               ),
                                               fit: BoxFit.fill)
                                           : null,
@@ -278,28 +337,28 @@ class _AddMissionState extends State<AddMission> {
                                setState(() {
                               verif=true;
                             });
-                              if (materialName.isEmpty) {
+                              if (missionName.isEmpty) {
                                 showSnackBar(
-                                    'Please enter the name of the component',
+                                    'Please enter the name of the Mission',
                                     col: Colors.redAccent[700]);
                                     setState(() {
                               verif=false;
                             });
                               } else {
-                            //   bool result= await FirestoreService.AddMission(materialName,materialdescription).then((value) {
+                              bool result= await FirestoreService.addMission(missionName,missionDescription,score,maxSub).then((value) {
 
-                            //     if(value==true){
-                            //       setState(() {
+                                if(value==true){
+                                  setState(() {
                                     
-                            //       step = 2;
-                            //     });
-                            //     }
-                            //  setState(() {
-                            //   verif=false;
-                            // });
-                            //     return value;
+                                  step = 2;
+                                });
+                                }
+                             setState(() {
+                              verif=false;
+                            });
+                                return value;
                               
-                            //    });
+                               });
                                 
                               }
                               

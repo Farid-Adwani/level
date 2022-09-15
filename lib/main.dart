@@ -3,6 +3,7 @@ import 'package:Aerobotix/HomeScreen/my_diary/otherProfile.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/AllBadges.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/badges.dart';
 import 'package:Aerobotix/screens/authentication_screen.dart';
+import 'package:Aerobotix/screens/missionsScreen.dart';
 import 'package:Aerobotix/screens/sign_up_screen.dart';
 import 'package:Aerobotix/screens/utils/globals.dart';
 import 'package:Aerobotix/screens/verify_phone_number_screen.dart';
@@ -40,6 +41,8 @@ class levelsApp extends StatelessWidget {
         "/sign_in": (context) => SignUpScreen(),
          AerobotixAppHomeScreen.id: (context) => AerobotixAppHomeScreen(),
          "/otherProfile": (context) => OtherProfile(),
+ 
+
 
         VerifyPhoneNumberScreen.id: (context) => VerifyPhoneNumberScreen(),
        

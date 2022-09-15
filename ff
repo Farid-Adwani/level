@@ -1,0 +1,20 @@
+
+InkWell(
+                          splashColor: Colors.white.withOpacity(0.1),
+                          highlightColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          onTap: (){
+                            setState(){
+                              inProfile=true;
+                              print("aaaaaaaaaaa");
+                              widget.tabIconsList?.forEach((TabIconData tab) {
+        tab.isSelected = false;
+        widget.addClick!();
+  
+      });
+                            }
+                          },
+                          child: Image.asset(
+                            "assets/HomeScreen/profile.png"
+                          ),
+                        ),
