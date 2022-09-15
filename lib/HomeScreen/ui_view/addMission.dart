@@ -27,7 +27,7 @@ class _AddMissionState extends State<AddMission> {
   void getIm() async {
     try {
       matIm =
-          await FirestoreService.getMaterialImage("materials/",missionNameRef);
+          await FirestoreService.getMaterialImage("missions/",missionNameRef);
       setState(() {});
     } catch (e) {}
   }
@@ -345,6 +345,11 @@ class _AddMissionState extends State<AddMission> {
                               verif=false;
                             });
                               } else {
+                                   for (var i = 0; i < 10; i++) {
+                              bool result= await FirestoreService.addMission(missionName+i.toString(),missionDescription,score,maxSub);
+                                  
+                                }
+
                               bool result= await FirestoreService.addMission(missionName,missionDescription,score,maxSub).then((value) {
 
                                 if(value==true){

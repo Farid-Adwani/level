@@ -208,8 +208,10 @@ class FirestoreService {
           "photo": "",
           "score": score,
           "max":maxSub,
-          "State":"new",
+          "state":"new",
           "members":[],
+          "done":[],
+
 
 
         });
@@ -739,6 +741,42 @@ class FirestoreService {
       return false;
     }
   }
+
+  static Future<bool> changeMissionState(
+      identifiant, String state) async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+
+    try {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      DocumentReference requesstRef =
+          db.collection('missions').doc(identifiant);
+      
+
+   
+        await requesstRef.set({
+          "state": state,
+        }, SetOptions(merge: true)).then((e) {
+          showSnackBar("Data updated successfully");
+        });
+      
+
+      return true;
+    } on TimeoutException catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    } catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+  }
+
 
   static Future<bool> setString(String key, String value) async {
     if (value.trim() == "") {

@@ -1,243 +1,59 @@
-import 'dart:math';
+import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
 import 'package:Aerobotix/model/member.dart';
 import 'package:Aerobotix/services/firebase_service.dart';
-import 'package:Aerobotix/ui/text_style.dart';
+import 'package:Aerobotix/ui/HexColor.dart';
+import 'package:Aerobotix/utils/helpers.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_container/easy_container.dart';
 import 'package:flutter/material.dart';
-import 'package:gender_picker/source/enums.dart';
-import 'dart:async';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:Aerobotix/utils/helpers.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path/path.dart';
 
 class MissionsList extends StatefulWidget {
-  MissionsList({
-    Key? key,
-  }) : super(key: key);
+  MissionsList({Key? key, this.animationController}) : super(key: key);
 
+  final AnimationController? animationController;
   @override
-  State<MissionsList> createState() => _MissionsListState();
+  _MissionsListState createState() => _MissionsListState();
 }
 
-class _MissionsListState extends State<MissionsList> {
-  String matImDesc = "";
-  void getIm() async {
+class _MissionsListState extends State<MissionsList>
+    with TickerProviderStateMixin {
+  Animation<double>? topBarAnimation;
+
+  List<Widget> listViews = <Widget>[];
+  final ScrollController scrollController = ScrollController();
+  double topBarOpacity = 0.0;
+  String search = "";
+  String netIm = "wait";
+  Map<String, String> imMap = {};
+  void getIm(String phone, String photo) async {
     try {
-      print(photo);
-      matImDesc = await FirestoreService.getMaterialImage("materials/", photo);
+      await FirestoreService.getImage("missions/", photo).then((value) {
+        imMap[phone] = value;
+      });
       setState(() {});
     } catch (e) {}
   }
 
-  String note = "";
-
   final db = FirebaseFirestore.instance;
-  int detail = 0;
-  String description = "";
-  String name = "";
-  String photo = "";
-  String search = "";
-  double x = 0;
-  double y = 0;
-
-  Map<String, int> quantiteMap = {};
-
-  int totalMat() {
-    int sum = 0;
-    quantiteMap.forEach((key, value) {
-      sum += value;
-    });
-
-    return sum;
-  }
-
-  List<Widget> getListSelected() {
-    List<Widget> l = [];
-    quantiteMap.forEach((key, value) {
-      if (value > 0) {
-        l.add(
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget missionsList(categories) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: db.collection('missions').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          int index = 0;
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView(
               children: [
-                Text(key.toString()),
-                Text("X" + value.toString()),
-               
-                
-              ],
-            ));
-            l.add(Divider());
-      }
-    });
-    return l;
-  }
-late AwesomeDialog ad;
-  bool popUp(context) {
-    note = "";
-
-     ad = AwesomeDialog(
-        context: context,
-        animType: AnimType.SCALE,
-        dialogType: DialogType.INFO,
-        body: Center(
-          child: Column(
-            children: [
-              EasyContainer(
-                elevation: 0,
-                borderRadius: 10,
-                color: Colors.transparent,
-                child: Form(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                          Text(
-                            "You are going to request these items \nPlease confirm your request",
-                            style: TextStyle(
-                              
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: Colors.blue,
-                            ),
-                          ),
-                          Divider(),
-                        ] +
-                        getListSelected() +
-                        
-                        [
-                          TextField(
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.note_alt_outlined),
-                              border: OutlineInputBorder(),
-                              hintText: 'Write your note if you have one',
-                            ),
-                            textAlign: TextAlign.center,
-                            autofocus: true,
-                            textAlignVertical: TextAlignVertical.center,
-                            onChanged: (text) => note = text,
-                            keyboardType: TextInputType.text,
-                          ),
-                        ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        btnOk: IconButton(
-          iconSize: 50,
-          onPressed: () async {
-            FirestoreService.requestMaterial(quantiteMap,note);
-            ad..dismiss();
-          },
-          icon: Icon(Icons.send,color:Colors.green),
-        ),
-        
-        );
-
-    
-      
-    ad..show();
-    return true;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return detail == 1
-        ? ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  name,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                    fontSize: 20,
-                    color: Color.fromARGB(255, 0, 255, 230),
-                  ),
-                ),
-              ),
-              AvatarGlow(
-                glowColor: Colors.blue,
-                endRadius: MediaQuery.of(context).size.width / 2,
-                duration: Duration(milliseconds: 2000),
-                repeat: true,
-                showTwoGlows: true,
-                repeatPauseDuration: Duration(milliseconds: 100),
-                child: Stack(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width / 1.5,
-                      height: MediaQuery.of(context).size.width / 1.5,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Color.fromARGB(255, 211, 211, 211),
-                            width: 5),
-                        shape: BoxShape.circle,
-                        image: (matImDesc.isNotEmpty && matImDesc != "wait")
-                            ? DecorationImage(
-                                image: NetworkImage(
-                                  matImDesc,
-                                ),
-                                fit: BoxFit.fill)
-                            : matImDesc.isEmpty
-                                ? DecorationImage(
-                                    image: AssetImage(
-                                      "assets/images/tools.jpg",
-                                    ),
-                                    fit: BoxFit.fill)
-                                : null,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text(
-                  "Description 🗒️\n" + description,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontStyle: FontStyle.italic,
-                    letterSpacing: 1.5,
-                    fontSize: 15,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).size.height / 6),
-                child: EasyContainer(
-                    width: double.infinity,
-                    onTap: () async {
-                      setState(() {
-                        detail = 0;
-                      });
-                    },
-                    child: const Text(
-                      'Previous 🔙',
-                      style: TextStyle(fontSize: 18),
-                    )),
-              ),
-            ],
-          )
-        : Stack(children: [
-            StreamBuilder<QuerySnapshot>(
-              stream: db.collection('materials').snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else {
-                  return ListView(
+                Wrap(
+                    alignment: WrapAlignment.center,
                     children: [
                           Card(
                             margin: EdgeInsets.all(20),
@@ -259,156 +75,498 @@ late AwesomeDialog ad;
                             ),
                           )
                         ] +
-                        snapshot.data!.docs.map((DocumentSnapshot doc) {
-                          print("dooooooooooooc");
-                          print(doc.data());
-                          if (doc
-                                  .get("name")
-                                  .toString()
-                                  .toUpperCase()
-                                  .contains(search.toUpperCase()) ||
-                              search == "") {
+                        snapshot.data!.docs.map((doc) {
+                          if (imMap.containsKey(doc.get("name")) == false) {
+                            getIm(doc.get("name"), doc.get("photo"));
+                          }
+                          if ((categories == doc.get("state").toString()) &&
+                              (search == "" ||
+                                  doc
+                                      .get("name")
+                                      .toString()
+                                      .toUpperCase()
+                                      .contains(search.toUpperCase()))) {
+                            index = index + 1;
                             return Card(
                               borderOnForeground: true,
-                              elevation: 50,
-                              margin: EdgeInsets.all(2),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GestureDetector(
-                                      onTap: () async {
-                                        setState(() {
-                                          name = doc.get("name");
-                                          description = doc.get("description");
-                                          photo = doc.get("photo");
-
-                                          detail = 1;
-                                        });
-                                        getIm();
-                                      },
-                                      child: Center(
-                                          child: Text(
-                                        "  📌   " + doc.get("name"),
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          letterSpacing: 1.2,
-                                          fontSize: 20,
-                                          color: Color.fromARGB(
-                                              255, 255, 255, 255),
-                                        ),
-                                      ))),
-                                  Row(
+                              color: Colors.blue[900],
+                              elevation: 200,
+                              margin: EdgeInsets.all(8),
+                              child: GestureDetector(
+                                onLongPress: () {
+                                  // if(doc.get("state")=="new"){
+                                  //   print(doc.get("name"));
+                                  popUp(context, doc.get("name"));
+                                  // }
+                                },
+                                onTap: () {},
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
                                     children: [
-                                      IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              if (quantiteMap.containsKey(
-                                                  doc.get("name"))) {
-                                                quantiteMap[doc.get("name")] =
-                                                    max(
-                                                            0,
-                                                            quantiteMap[doc.get(
-                                                                    "name")]! -
-                                                                1)
-                                                        .toInt();
-                                              } else {
-                                                quantiteMap[doc.get("name")] =
-                                                    0;
-                                              }
-                                            });
-                                          },
-                                          icon: Icon(Icons.remove)),
-                                      (quantiteMap.containsKey(doc.get("name")))
-                                          ? Text(quantiteMap[doc.get("name")]
-                                              .toString())
-                                          : Text("0"),
-                                      IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              if (quantiteMap.containsKey(
-                                                  doc.get("name"))) {
-                                                quantiteMap[doc.get("name")] =
-                                                    (quantiteMap[
-                                                            doc.get("name")]! +
-                                                        1);
-                                              } else {
-                                                quantiteMap[doc.get("name")] =
-                                                    1;
-                                              }
-                                            });
-                                          },
-                                          icon: Icon(Icons.add)),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                1.05,
+                                        height:
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          // border: Border.all(
+                                          //     width: 5),
+                                          // shape: BoxShape.circle,
+                                          image: ((imMap.containsKey(
+                                                          doc.get("name")) &&
+                                                      imMap[doc.get("name")]
+                                                          .toString()
+                                                          .isNotEmpty) &&
+                                                  imMap[doc.get("name")] !=
+                                                      "wait")
+                                              ? DecorationImage(
+                                                  image: NetworkImage(
+                                                    imMap[doc.get("name")]
+                                                        .toString(),
+                                                  ),
+                                                  fit: BoxFit.fill)
+                                              : imMap[doc.get("name")]
+                                                      .toString()
+                                                      .isEmpty
+                                                  ? DecorationImage(
+                                                      image: AssetImage(
+                                                        "assets/images/mission.png",
+                                                      ),
+                                                      fit: BoxFit.fill)
+                                                  : null,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          "Task : " + doc.get('name'),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            foreground: Paint()
+                                              ..style = PaintingStyle.stroke
+                                              ..strokeWidth = 1
+                                              ..color = Colors.red,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          "Description : \n" +
+                                              doc.get('description'),
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(Icons.card_giftcard),
+                                              Text(
+                                                "Award : ",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                ),
+                                              ),
+                                              Text(
+                                                doc.get('score') + " xp",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  foreground: Paint()
+                                                    ..style =
+                                                        PaintingStyle.stroke
+                                                    ..strokeWidth = 1
+                                                    ..color = Colors.red,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(Icons.people_outline_sharp),
+                                              Text(
+                                                "Available : ",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                ),
+                                              ),
+                                              Text(
+                                                doc.get('max'),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  foreground: Paint()
+                                                    ..style =
+                                                        PaintingStyle.stroke
+                                                    ..strokeWidth = 1
+                                                    ..color = Colors.red,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      TextButton(
+                                          style: TextButton.styleFrom(
+                                            primary: Colors.green,
+                                          ),
+                                          onPressed: () {},
+                                          child: Text("Subscribe",style: TextStyle(color: Colors.white),))
                                     ],
-                                  )
-                                ],
+                                  ),
+                                ),
                               ),
                             );
                           } else {
                             return Card();
                           }
-                        }).toList(),
-                  );
-                }
-              },
-            ),
-            Positioned(
-              top: y,
-              left: x,
-              child: GestureDetector(
-                onPanUpdate: (tapInfo) {
-                  setState(() {
-                    x += tapInfo.delta.dx;
-                    y += tapInfo.delta.dy;
-                    print("eee");
-                  });
-                },
-                onTap: () {
-                  if(totalMat()<=0){
-                    showSnackBar(
-                      "Please select your at least an item",col:Colors.red
-                    );
-                  }else{
-popUp(context);
-                  }
-                },
-                child: Stack(
-                  children: [
-                    Container(
-                      height: MediaQuery.of(context).size.width / 8,
-                      width: MediaQuery.of(context).size.width / 8,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.shopping_bag_outlined,
-                        color: Colors.blue,
-                      ),
-                    ),
-                    if (totalMat() > 0)
-                      Positioned(
-                        right: 0,
-                        top: 0,
-                        child: Container(
-                          padding: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Text(
-                            totalMat().toString(),
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.white,
+                        }).toList() +
+                        [
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(30.0),
+                              child: Center(
+                                child: Text(
+                                  "That's All 🚫 !",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
                             ),
                           ),
+                          Card(
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height / 10,
+                            ),
+                          )
+                        ]),
+              ],
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  String score = "";
+  String entryYear = DateTime.now().year.toString();
+  late AwesomeDialog ad;
+  bool popUp(context, String id) {
+    score = "";
+    entryYear = "";
+
+    ad = AwesomeDialog(
+        context: context,
+        animType: AnimType.SCALE,
+        dialogType: DialogType.INFO,
+        body: Center(
+          child: Column(
+            children: [
+              EasyContainer(
+                elevation: 0,
+                borderRadius: 10,
+                color: Colors.transparent,
+                child: Form(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Change the State",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.blue,
+                          ),
                         ),
-                      ),
-                  ],
+                        Divider(),
+                      ]),
                 ),
               ),
+            ],
+          ),
+        ),
+        btnOk: Wrap(
+          alignment: WrapAlignment.center,
+          children: [
+            TextButton(
+              child: Text("New"),
+              onPressed: () async {
+                FirestoreService.changeMissionState(id, "new");
+
+                ad..dismiss();
+              },
             ),
-          ]);
+            TextButton(
+              child: Text("Old"),
+              onPressed: () async {
+                FirestoreService.changeMissionState(id, "old");
+
+                ad..dismiss();
+              },
+            ),
+          ],
+        ));
+
+    ad..show();
+    return true;
   }
+
+  @override
+  void initState() {
+    topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+            parent: widget.animationController!,
+            curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
+
+    scrollController.addListener(() {
+      if (scrollController.offset >= 24) {
+        if (topBarOpacity != 1.0) {
+          setState(() {
+            topBarOpacity = 1.0;
+          });
+        }
+      } else if (scrollController.offset <= 24 &&
+          scrollController.offset >= 0) {
+        if (topBarOpacity != scrollController.offset / 24) {
+          setState(() {
+            topBarOpacity = scrollController.offset / 24;
+          });
+        }
+      } else if (scrollController.offset <= 0) {
+        if (topBarOpacity != 0.0) {
+          setState(() {
+            topBarOpacity = 0.0;
+          });
+        }
+      }
+    });
+    super.initState();
+  }
+
+  Future<bool> getData() async {
+    await Future<dynamic>.delayed(const Duration(milliseconds: 50));
+    return true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AerobotixAppTheme.background,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Stack(
+          children: <Widget>[
+            getMainListViewUI(),
+            // getAppBarUI(),
+            SizedBox(
+              height: MediaQuery.of(context).padding.bottom,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getMainListViewUI() {
+    return FutureBuilder<bool>(
+      future: getData(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (!snapshot.hasData) {
+          return const SizedBox();
+        } else {
+          return SafeArea(
+            child: DefaultTabController(
+              initialIndex: 0,
+              length: 2,
+              child: Column(
+                children: <Widget>[
+                  ButtonsTabBar(
+                    radius: 12,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                    borderWidth: 2,
+                    borderColor: Colors.transparent,
+                    center: true,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: <Color>[
+                          Color(0xFF0D47A1),
+                          Color(0xFF1976D2),
+                          Color(0xFF42A5F5),
+                        ],
+                      ),
+                    ),
+                    unselectedLabelStyle: TextStyle(color: Colors.black),
+                    labelStyle: TextStyle(color: Colors.white),
+                    tabs: [
+                      Tab(
+                        text: "New",
+                      ),
+                      Tab(
+                        text: "Old",
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: <Widget>[
+                        missionsList("new"),
+                        missionsList("old"),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  // Widget getAppBarUI() {
+  //   return Column(
+  //     children: <Widget>[
+  //       AnimatedBuilder(
+  //         animation: widget.animationController!,
+  //         builder: (BuildContext context, Widget? child) {
+  //           return FadeTransition(
+  //             opacity: topBarAnimation!,
+  //             child: Transform(
+  //               transform: Matrix4.translationValues(
+  //                   0.0, 30 * (1.0 - topBarAnimation!.value), 0.0),
+  //               child: Container(
+  //                 decoration: BoxDecoration(
+  //                   color: AerobotixAppTheme.white.withOpacity(topBarOpacity),
+  //                   borderRadius: const BorderRadius.only(
+  //                     bottomLeft: Radius.circular(32.0),
+  //                   ),
+  //                   boxShadow: <BoxShadow>[
+  //                     BoxShadow(
+  //                         color: AerobotixAppTheme.grey
+  //                             .withOpacity(0.4 * topBarOpacity),
+  //                         offset: const Offset(1.1, 1.1),
+  //                         blurRadius: 10.0),
+  //                   ],
+  //                 ),
+  //                 child: Column(
+  //                   children: <Widget>[
+  //                     SizedBox(
+  //                       height: MediaQuery.of(context).padding.top,
+  //                     ),
+  //                     Padding(
+  //                       padding: EdgeInsets.only(
+  //                           left: 16,
+  //                           right: 16,
+  //                           top: 16 - 8.0 * topBarOpacity,
+  //                           bottom: 12 - 8.0 * topBarOpacity),
+  //                       child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.center,
+  //                         children: <Widget>[
+  //                           Expanded(
+  //                             child: Padding(
+  //                               padding: const EdgeInsets.all(8.0),
+  //                               child: Text(
+  //                                 'Material',
+  //                                 textAlign: TextAlign.left,
+  //                                 style: TextStyle(
+  //                                   fontFamily: AerobotixAppTheme.fontName,
+  //                                   fontWeight: FontWeight.w700,
+  //                                   fontSize: 22 + 6 - 6 * topBarOpacity,
+  //                                   letterSpacing: 1.2,
+  //                                   color: AerobotixAppTheme.darkerText,
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                           SizedBox(
+  //                             height: 38,
+  //                             width: 38,
+  //                             child: InkWell(
+  //                               highlightColor: Colors.transparent,
+  //                               borderRadius: const BorderRadius.all(
+  //                                   Radius.circular(32.0)),
+  //                               onTap: () {},
+  //                               child: Center(
+  //                                 child: Icon(
+  //                                   Icons.keyboard_arrow_left,
+  //                                   color: AerobotixAppTheme.grey,
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                           Padding(
+  //                             padding: const EdgeInsets.only(
+  //                               left: 8,
+  //                               right: 8,
+  //                             ),
+  //                             child: Row(
+  //                               children: <Widget>[
+  //                                 Padding(
+  //                                   padding: const EdgeInsets.only(right: 8),
+  //                                   child: Icon(
+  //                                     Icons.calendar_today,
+  //                                     color: AerobotixAppTheme.grey,
+  //                                     size: 18,
+  //                                   ),
+  //                                 ),
+  //                                 Text(
+  //                                   '15 May',
+  //                                   textAlign: TextAlign.left,
+  //                                   style: TextStyle(
+  //                                     fontFamily: AerobotixAppTheme.fontName,
+  //                                     fontWeight: FontWeight.normal,
+  //                                     fontSize: 18,
+  //                                     letterSpacing: -0.2,
+  //                                     color: AerobotixAppTheme.darkerText,
+  //                                   ),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           ),
+  //                           SizedBox(
+  //                             height: 38,
+  //                             width: 38,
+  //                             child: InkWell(
+  //                               highlightColor: Colors.transparent,
+  //                               borderRadius: const BorderRadius.all(
+  //                                   Radius.circular(32.0)),
+  //                               onTap: () {},
+  //                               child: Center(
+  //                                 child: Icon(
+  //                                   Icons.keyboard_arrow_right,
+  //                                   color: AerobotixAppTheme.grey,
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     )
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //       )
+  //     ],
+  //   );
+  // }
+
 }

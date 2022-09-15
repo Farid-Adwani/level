@@ -102,10 +102,10 @@ class _missionsScreenState extends State<missionsScreen>
               body: TabBarView(
                 children: [
                   AddMission(),
-                  MissionsList(),
+                  MissionsList(animationController: widget.animationController),
 
                   MissionsApproval(),
-                  MissionsList(),
+                  MissionsList(animationController: widget.animationController),
                 ],
               ),
             ),

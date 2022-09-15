@@ -97,7 +97,7 @@ void fetch() async{
   await   FirestoreService.fetchUser(Member.phone).then((value) {
               setState(() {
                 
-              });sxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXxxxx
+              });
             });  
 }
  void initState() {
