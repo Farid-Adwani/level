@@ -778,6 +778,42 @@ class FirestoreService {
   }
 
 
+static Future<bool> subscribeToMission(
+      identifiant, String phone) async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+
+    try {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      DocumentReference requesstRef =
+          db.collection('missions').doc(identifiant);
+      
+
+   
+        await requesstRef.set({
+          "members": FieldValue.arrayUnion([phone]),
+        }, SetOptions(merge: true)).then((e) {
+          showSnackBar("Done affecting mission");
+        });
+      
+
+      return true;
+    } on TimeoutException catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    } catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+  }
+
+
   static Future<bool> addMissionMember(
       identifiant, String phone,String full_name,String field) async {
     bool result = await InternetConnectionChecker().hasConnection;
@@ -797,7 +833,7 @@ class FirestoreService {
         await requesstRef.set({
           field: FieldValue.arrayUnion([phone]),
         }, SetOptions(merge: true)).then((e) {
-          showSnackBar("Data updated successfully");
+          showSnackBar("Done affecting mission");
         });
       
 
@@ -875,6 +911,8 @@ class FirestoreService {
     }
 
     int x = value + double.parse(userr["xp"]!).toInt();
+    print("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+    print(x);
 
     try {
       FirebaseFirestore db = FirebaseFirestore.instance;

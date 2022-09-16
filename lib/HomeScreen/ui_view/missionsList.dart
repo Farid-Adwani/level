@@ -96,8 +96,9 @@ class _MissionsListState extends State<MissionsList>
                               child: GestureDetector(
                                 onLongPress: () {
                                   // if(doc.get("state")=="new"){
-                                  //   print(doc.get("name"));
-                                  popUp(context, doc.get("name"),doc.get("members"),doc.get("done"));
+                                    print("waaaaaaaaaa");
+                                    print(doc.get("score"));
+                                  popUp(context, doc.get("name"),doc.get("members"),doc.get("done"),doc.get("score"));
                                   // }
                                 },
                                 onTap: () {},
@@ -234,7 +235,7 @@ class _MissionsListState extends State<MissionsList>
                                               isloading=true;
 
                                             });
-                                            await FirestoreService.addMissionMember(doc.get("name"), Member.phone, Member.first_name+" "+Member.last_name, "done").then((value) {
+                                            await FirestoreService.addMissionMember(doc.get("name"), Member.phone, Member.first_name+" "+Member.last_name, "members").then((value) {
                                               setState(() {
                                                 isloading=false;
                                               });
@@ -276,18 +277,15 @@ class _MissionsListState extends State<MissionsList>
     );
   }
 
-  String score = "";
   String entryYear = DateTime.now().year.toString();
   late AwesomeDialog ad;
-  bool popUp(context, String id,List<dynamic> members,List<dynamic> done) {
+  bool popUp(context, String id,List<dynamic> members,List<dynamic> done,String score) {
     List<String> output = [];
-
 members.forEach((element) {
     if(!done.contains(element)){
     output.add(element);
 }
 });
-    score = "";
     entryYear = "";
 
     ad = AwesomeDialog(
@@ -347,7 +345,19 @@ members.forEach((element) {
                                   Row(
                                     children: [
                                       IconButton(
-                                          onPressed: () {
+                                          onPressed: () async{
+                                            
+                                            ad..dismiss();
+
+                                            await FirestoreService.addMissionMember(id, Member.phone, Member.first_name+" "+Member.last_name, "done").then((value) {
+
+                                            });
+                                            print("scooooooooooooooore");
+                                            print(score);
+                                           await  FirestoreService.setXp({"phone":Member.phone,
+                                           "gameLevel":Member.gameLevel,
+                                           "xp":Member.xp.toString()
+                                           }, double.parse(score).toInt());
                                             
                                           },
                                           icon: Icon(Icons.done_outline_rounded,color: Colors.green,)),
