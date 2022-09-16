@@ -226,9 +226,21 @@ class _MissionsListState extends State<MissionsList>
                                       TextButton(
                                           style: TextButton.styleFrom(
                                             primary: Colors.green,
+
+
                                           ),
-                                          onPressed: () {},
-                                          child: Text("Subscribe",style: TextStyle(color: Colors.white),))
+                                          onPressed: () async {
+                                            setState(() {
+                                              isloading=true;
+
+                                            });
+                                            await FirestoreService.addMissionMember(doc.get("name"), Member.phone, Member.first_name+" "+Member.last_name, "done").then((value) {
+                                              setState(() {
+                                                isloading=false;
+                                              });
+                                            });
+                                          },
+                                          child:isloading==false? Text("Subscribe",style: TextStyle(color: Colors.white),): CircularProgressIndicator())
                                     ],
                                   ),
                                 ),
@@ -429,6 +441,7 @@ members.forEach((element) {
     return true;
   }
 
+bool isloading =false;
   @override
   void initState() {
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
