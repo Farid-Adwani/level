@@ -224,9 +224,11 @@ class _MissionsListState extends State<MissionsList>
                                           ),
                                         ],
                                       ),
+                                      if ((doc.get("members").contains(Member.phone) || doc.get("done").contains(Member.phone))==false ) 
                                       TextButton(
                                           style: TextButton.styleFrom(
-                                            primary: Colors.green,
+                                            
+                                            backgroundColor: Colors.green,
 
 
                                           ),
