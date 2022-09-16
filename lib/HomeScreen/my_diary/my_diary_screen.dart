@@ -12,6 +12,7 @@ import 'package:Aerobotix/screens/missionsScreen.dart';
 import 'package:Aerobotix/services/firebase_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
@@ -28,9 +29,9 @@ class MyDiaryScreen extends StatefulWidget {
 
 class _MyDiaryScreenState extends State<MyDiaryScreen>
     with TickerProviderStateMixin {
-      
+   final db = FirebaseFirestore.instance;   
  AnimationController? animationController;
-
+int missionNum=0;
   Animation<double>? topBarAnimation;
   late ConfettiController _controllerCenter;
 
@@ -383,8 +384,28 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                                             ),
                                             child: Padding(
                                               padding: const EdgeInsets.all(3.0),
-                                              child: Text("15",style: TextStyle(fontSize: 10),),
+                                              child:
+                     
+                     StreamBuilder<QuerySnapshot>(
+      stream: db.collection('missions').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          missionNum=0;
+          for (var element in snapshot.data!.docs) {
+            if(element.get("state")=="new"){
+              missionNum++;
+            }
+          }
+          return Text(missionNum.toString(),style: TextStyle(fontSize: 10));
+        }else{
+          return Text("0");
+        }
+      },
+
+                                              
+                                              //  Text(missionNum.toString(),style: TextStyle(fontSize: 10),),
                                             ),
+                                          )
                                           )
                                           )
                                         ],

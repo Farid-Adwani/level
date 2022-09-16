@@ -345,10 +345,7 @@ class _AddMissionState extends State<AddMission> {
                               verif=false;
                             });
                               } else {
-                                   for (var i = 0; i < 10; i++) {
-                              bool result= await FirestoreService.addMission(missionName+i.toString(),missionDescription,score,maxSub);
-                                  
-                                }
+                                
 
                               bool result= await FirestoreService.addMission(missionName,missionDescription,score,maxSub).then((value) {
 
