@@ -30,7 +30,7 @@ class _AerobotixAppHomeScreenState extends State<AerobotixAppHomeScreen>
     tabIconsList.forEach((TabIconData tab) {
       tab.isSelected = false;
     });
-    tabIconsList[3].isSelected = true;
+   // tabIconsList[3].isSelected = true;
 
     animationController = AnimationController(
         duration: const Duration(milliseconds: 600), vsync: this);
@@ -86,7 +86,8 @@ class _AerobotixAppHomeScreenState extends State<AerobotixAppHomeScreen>
             print("aaaa");
             setState(() {
                   tabBody =
-                      leaderboardScreen(animationController: animationController);
+                      MyDiaryScreen(animationController: animationController);
+                    
                 });
           },
           changeIndex: (int index) {
@@ -97,7 +98,7 @@ class _AerobotixAppHomeScreenState extends State<AerobotixAppHomeScreen>
                 }
                 setState(() {
                   tabBody =
-                      TrainingScreen(animationController: animationController);
+                        leaderboardScreen(animationController: animationController);
                 });
               });
             } else  if (index == 1  ) {
@@ -116,8 +117,8 @@ class _AerobotixAppHomeScreenState extends State<AerobotixAppHomeScreen>
                   return;
                 }
                 setState(() {
-                  tabBody =
-                      MusicScreen(animationController: animationController);
+                  tabBody =TrainingScreen(animationController: animationController);
+                     
                 });
               });
             } 
@@ -128,7 +129,7 @@ class _AerobotixAppHomeScreenState extends State<AerobotixAppHomeScreen>
                 }
                 setState(() {
                   tabBody =
-                      MyDiaryScreen(animationController: animationController);
+                   MusicScreen(animationController: animationController);
                 });
               });
             }

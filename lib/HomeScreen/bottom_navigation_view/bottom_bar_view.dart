@@ -33,7 +33,7 @@ class _BottomBarViewState extends State<BottomBarView>
     super.initState();
   }
 
-bool inProfile=false;
+bool inProfile=true;
   @override
   Widget build(BuildContext context) {
     return Stack(

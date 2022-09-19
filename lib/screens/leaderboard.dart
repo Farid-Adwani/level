@@ -121,11 +121,11 @@ Column getPoduim(DocumentSnapshot pod,Color col , double size){
                                                   col,
                                               width: 4),
                                           shape: BoxShape.circle,
-                                          image: (imMap[pod.get("phone")]
+                                          image: (imMap.containsKey(
+                                                      pod.get("phone")) && imMap[pod.get("phone")]
                                                       .toString()
                                                       .isNotEmpty &&
-                                                  imMap.containsKey(
-                                                      pod.get("phone")) &&
+                                                   
                                                   imMap[pod.get("phone")] !=
                                                       "wait")
                                               ? DecorationImage(

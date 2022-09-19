@@ -612,7 +612,7 @@ class FirestoreService {
           .child(path + image)
           .getDownloadURL()
           .onError((error, stackTrace) => "")
-          .timeout(Duration(seconds: 10), onTimeout: () => "");
+          .timeout(Duration(seconds: 20), onTimeout: () => "");
       print(downloadURL);
     } catch (e) {
       return "";
@@ -622,7 +622,6 @@ class FirestoreService {
 
   static Future<String> getMaterialImage(path, image) async {
     print(path);
-    print("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrgg");
     String downloadURL = "";
     if (image == "") {
       return "";

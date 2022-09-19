@@ -21,6 +21,8 @@ class OtherProfile extends StatefulWidget {
 
 class _OtherProfileState extends State<OtherProfile>
     with TickerProviderStateMixin {
+late AwesomeDialog ad ;
+
   Animation<double>? topBarAnimation;
   late ConfettiController _controllerCenter;
 
@@ -220,13 +222,12 @@ class _OtherProfileState extends State<OtherProfile>
 String day="",month="",year="";
 String title="";
 String entryYear=DateTime.now().year.toString();
-late AwesomeDialog ad;
- bool popUp(context,String id) {
+ bool popUp(contextt,String id) {
     title = "";
     entryYear="";
 
      ad = AwesomeDialog(
-        context: context,
+        context: contextt,
         animType: AnimType.SCALE,
         dialogType: DialogType.INFO,
         body: Center(
@@ -312,7 +313,7 @@ late AwesomeDialog ad;
                                 return Padding(
                                   padding: const EdgeInsets.all(2.0),
                                   child: ElevatedButton(onPressed: ()async{
-                                    ad..dismiss();
+                                   // ad..dismiss();
                                       if(title.trim().isEmpty){
                                         showSnackBar("Please put a title", col:Colors.red);
 
