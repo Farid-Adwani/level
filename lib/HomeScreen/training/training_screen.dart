@@ -2,6 +2,7 @@ import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/MaterialApproval.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/addMateriel.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/materialList.dart';
+import 'package:Aerobotix/model/member.dart';
 import 'package:flutter/material.dart';
 
 class TrainingScreen extends StatefulWidget {
@@ -84,22 +85,22 @@ class _TrainingScreenState extends State<TrainingScreen>
           return const SizedBox();
         } else {
           return DefaultTabController(
-            length: 3,
+            length: Member.roles.contains("material") ? 3: 1,
             child: Scaffold(
               appBar: AppBar(
-                bottom: const TabBar(
+                bottom:  TabBar(
                   tabs: [
-                    Tab(icon: Icon(Icons.add_box_outlined)),
+                   if(Member.roles.contains("material"))  Tab(icon: Icon(Icons.add_box_outlined)),
                     Tab(icon: Icon(Icons.list_rounded)),
-                    Tab(icon: Icon(Icons.add_shopping_cart)),
+                    if (Member.roles.contains("material") ) Tab(icon: Icon(Icons.add_shopping_cart)),
                   ],
                 ),
               ),
               body: TabBarView(
                 children: [
-                  MaterialApproval(),
+                  if(Member.roles.contains("material"))   MaterialApproval(),
                   MaterialList(),
-                  AddMaterial(),
+                  if(Member.roles.contains("material"))   AddMaterial(),
                 ],
               ),
             ),

@@ -217,7 +217,7 @@ Column matList(list) {
                                 index=index+1;
                             return Card(
 
-                              color: index.isEven? Colors.pink:Colors.blueAccent,
+                              color: index.isEven? Color.fromARGB(255, 110, 42, 42):Color.fromARGB(255, 49, 36, 109),
                               borderOnForeground: true,
                               elevation: 200,
                               margin: EdgeInsets.all(5),

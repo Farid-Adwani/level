@@ -109,9 +109,9 @@ class _AllMembersScreenState extends State<AllMembersScreen>
                         if(imMap.containsKey(doc.get("phone"))==false){
                           getIm(doc.get("phone"), doc.get("photo"));
                         }
-                        if ((categories == "all" ||
-                                categories ==
-                                    doc.get("gameLevel").toString() || (categories =="new" &&
+                        if (((categories == "all"  &&  doc.get("new")==false )||
+                                ( categories ==
+                                    doc.get("gameLevel").toString() &&  doc.get("new")==false ) || (categories =="new" &&
                                     doc.get("new")==true))  &&
                             (search == "" ||
                                 doc
@@ -127,7 +127,7 @@ class _AllMembersScreenState extends State<AllMembersScreen>
                           index = index + 1;
                           return Card(
                             borderOnForeground: true,
-                            color: Colors.white,
+                            color: Colors.transparent,
                             elevation: 200,
                             margin: EdgeInsets.all(8),
                             child: GestureDetector(
@@ -143,97 +143,91 @@ class _AllMembersScreenState extends State<AllMembersScreen>
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(2.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: AssetImage(gif),
-                                          fit: BoxFit.fill)),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      AvatarGlow(
-                                        glowColor: Colors.blue,
-                                        endRadius:
-                                            MediaQuery.of(context).size.width /
-                                                8,
-                                        duration: Duration(milliseconds: 2000),
-                                        repeat: true,
-                                        showTwoGlows: true,
-                                        repeatPauseDuration:
-                                            Duration(milliseconds: 100),
-                                        child: Container(
-                                          // width: MediaQuery.of(context).size.width / 2,
-                                          // height: MediaQuery.of(context).size.width / 2,
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: doc.get("gender") ==
-                                                        "Female"
-                                                    ? Colors.pinkAccent
-                                                    : Colors.blue,
-                                                width: 5),
-                                            shape: BoxShape.circle,
-                                            image: (imMap[doc.get("phone")].toString().isNotEmpty && imMap.containsKey(doc.get("phone"))  && 
-                                                    imMap[doc.get("phone")] != "wait")
-                                                ? DecorationImage(
-                                                    image: NetworkImage(
-                                                      imMap[doc.get("phone")].toString(),
-                                                    ),
-                                                    fit: BoxFit.fill)
-                                                : imMap[doc.get("phone")].toString().isEmpty
-                                                    ? doc.get("gender") ==
-                                                            "Female"
-                                                        ? DecorationImage(
-                                                            image: AssetImage(
-                                                              "assets/images/gadget2.jpg",
-                                                            ),
-                                                            fit: BoxFit.fill)
-                                                        : DecorationImage(
-                                                            image: AssetImage(
-                                                              "assets/images/gadget4.jpg",
-                                                            ),
-                                                            fit: BoxFit.fill)
-                                                    : null,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    AvatarGlow(
+                                      glowColor: Colors.blue,
+                                      endRadius:
+                                          MediaQuery.of(context).size.width /
+                                              8,
+                                      duration: Duration(milliseconds: 2000),
+                                      repeat: true,
+                                      showTwoGlows: true,
+                                      repeatPauseDuration:
+                                          Duration(milliseconds: 100),
+                                      child: Container(
+                                        // width: MediaQuery.of(context).size.width / 2,
+                                        // height: MediaQuery.of(context).size.width / 2,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: doc.get("gender") ==
+                                                      "Female"
+                                                  ? Colors.pinkAccent
+                                                  : Colors.blue,
+                                              width: 5),
+                                          shape: BoxShape.circle,
+                                          image: (imMap[doc.get("phone")].toString().isNotEmpty && imMap.containsKey(doc.get("phone"))  && 
+                                                  imMap[doc.get("phone")] != "wait")
+                                              ? DecorationImage(
+                                                  image: NetworkImage(
+                                                    imMap[doc.get("phone")].toString(),
+                                                  ),
+                                                  fit: BoxFit.fill)
+                                              : imMap[doc.get("phone")].toString().isEmpty
+                                                  ? doc.get("gender") ==
+                                                          "Female"
+                                                      ? DecorationImage(
+                                                          image: AssetImage(
+                                                            "assets/images/gadget2.jpg",
+                                                          ),
+                                                          fit: BoxFit.fill)
+                                                      : DecorationImage(
+                                                          image: AssetImage(
+                                                            "assets/images/gadget4.jpg",
+                                                          ),
+                                                          fit: BoxFit.fill)
+                                                  : null,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Stack(
+                                        children: <Widget>[
+                                          // Stroked text as border.
+                                          Text(
+                                            
+                                            doc.get('first_name') +
+                                                "\n" +
+                                                doc.get('last_name'),
+                                                textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              foreground: Paint()
+                                                ..style = PaintingStyle.stroke
+                                                ..strokeWidth = 6
+                                                ..color = colorLevel,
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Stack(
-                                          children: <Widget>[
-                                            // Stroked text as border.
-                                            Text(
-                                              
-                                              doc.get('first_name') +
-                                                  "\n" +
-                                                  doc.get('last_name'),
-                                                  textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                foreground: Paint()
-                                                  ..style = PaintingStyle.stroke
-                                                  ..strokeWidth = 6
-                                                  ..color = colorLevel,
-                                              ),
-                                            ),
-                                            // Solid text as fill.
-                                            Text(
+                                          // Solid text as fill.
+                                          Text(
 
-                                              doc.get('first_name') +
-                                                  "\n" +
-                                                  doc.get('last_name'),
-                                              textAlign: TextAlign.center,
+                                            doc.get('first_name') +
+                                                "\n" +
+                                                doc.get('last_name'),
+                                            textAlign: TextAlign.center,
 
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                color: Colors.white,
-                                              ),
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.white,
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -510,7 +504,7 @@ late AwesomeDialog ad;
           return SafeArea(
             child: DefaultTabController(
               initialIndex: 0,
-              length: 8,
+              length: Member.roles.contains("admin")==true ? 8 :7,
               child: Column(
                 children: <Widget>[
                   ButtonsTabBar(
@@ -530,7 +524,9 @@ late AwesomeDialog ad;
                     ),
                     unselectedLabelStyle: TextStyle(color: Colors.black),
                     labelStyle: TextStyle(color: Colors.white),
-                    tabs: [
+                    tabs:
+                     (Member.roles.contains("admin")==true)?
+                     [
                       Tab(
                         text: "New",
                       ),
@@ -555,12 +551,37 @@ late AwesomeDialog ad;
                       Tab(
                         text: "3orsa",
                       ),
-                    ],
+                    ]:
+                     [
+                
+                      Tab(
+                        text: "All",
+                      ),
+                      Tab(
+                        text: "3asfour",
+                      ),
+                      Tab(
+                        text: "Wlidha",
+                      ),
+                      Tab(
+                        text: "Kassa7",
+                      ),
+                      Tab(
+                        text: "R3ad",
+                      ),
+                      Tab(
+                        text: "Jen",
+                      ),
+                      Tab(
+                        text: "3orsa",
+                      ),
+                    ]
+                    ,
                   ),
                   Expanded(
                     child: TabBarView(
                       children: <Widget>[
-                        MembersList("new"),
+                       if   (Member.roles.contains("admin"))  MembersList("new"),
                         MembersList("all"),
                         MembersList("3asfour"),
                         MembersList("wlidha"),

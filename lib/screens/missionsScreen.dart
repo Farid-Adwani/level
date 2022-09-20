@@ -5,6 +5,7 @@ import 'package:Aerobotix/HomeScreen/ui_view/addMission.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/materialList.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/missionsApproval.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/missionsList.dart';
+import 'package:Aerobotix/model/member.dart';
 import 'package:flutter/material.dart';
 
 class missionsScreen extends StatefulWidget {
@@ -86,12 +87,12 @@ class _missionsScreenState extends State<missionsScreen>
           return const SizedBox();
         } else {
           return DefaultTabController(
-            length: 4,
+            length: Member.roles.contains("admin") ?  4 :3,
             child: Scaffold(
               appBar: AppBar(
-                bottom: const TabBar(
+                bottom:  TabBar(
                   tabs: [
-                    Tab(icon: Icon(Icons.add_box_outlined)),
+                    if(Member.roles.contains("material"))   Tab(icon: Icon(Icons.add_box_outlined)),
                     Tab(icon: Icon(Icons.fiber_new_rounded)),
                     Tab(icon: Icon(Icons.highlight_remove_rounded)),
                     Tab(icon: Icon(Icons.done_all_outlined)),
@@ -100,7 +101,7 @@ class _missionsScreenState extends State<missionsScreen>
               ),
               body: TabBarView(
                 children: [
-                  AddMission(),
+                   if(Member.roles.contains("material"))   AddMission(),
                   MissionsList(animationController: widget.animationController,categ: ""),
 
                   MissionsList(animationController: widget.animationController,categ: "sub",),

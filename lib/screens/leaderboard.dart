@@ -271,9 +271,7 @@ Column getPoduim(DocumentSnapshot pod,Color col , double size){
                           getIm(doc.get("phone"), doc.get("photo"));
                         }
                         if ((categories == "all" ||
-                                categories == doc.get("gameLevel").toString() ||
-                                (categories == "new" &&
-                                    doc.get("new") == true)) &&
+                                categories == doc.get("gameLevel").toString()  ) && doc.get("new")==false &&
                             (search == "" ||
                                 doc
                                     .get("first_name")

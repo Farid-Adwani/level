@@ -2,6 +2,7 @@ import 'package:Aerobotix/model/member.dart';
 import 'package:Aerobotix/services/firebase_service.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:gender_picker/source/enums.dart';
 import 'dart:async';
 import 'dart:io';
@@ -50,10 +51,32 @@ class _PhotoViewState extends State<PhotoView> {
   bool uploading = false;
   Future uploadFile() async {
     if (_photo == null) return;
-    setState(() {
+    // print("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+    // await _photo!.length().then((value) {
+    //   print(value);
+    //   print("111");
+    // });
+
+ setState(() {
       uploading = true;
     });
-    final fileName = basename(_photo!.path);
+        final filePath = _photo!.absolute.path;
+    
+    // Create output file path
+    // eg:- "Volume/VM/abcd_out.jpeg"
+    final lastIndex = filePath.lastIndexOf(new RegExp(r'.jp'));
+    final splitted = filePath.substring(0, (lastIndex));
+    final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
+
+    final compressedImage = await FlutterImageCompress.compressAndGetFile(
+          filePath, 
+          outPath,
+          minWidth: 1000,
+          minHeight: 1000,
+          quality: 50).then((value) async {
+
+_photo=value;
+final fileName = basename(_photo!.path);
     final destination = 'profiles/${Member.phone}/profile/';
 
     try {
@@ -62,7 +85,7 @@ class _PhotoViewState extends State<PhotoView> {
       final ref = FirebaseStorage.instance.ref(destination).child(name);
 
       await ref.putFile(_photo!).timeout(Duration(seconds: 7));
-      await FirestoreService.addMaterialPhoto(name, Member.phone)
+      await FirestoreService.addProfilePhoto(name, Member.phone)
           .timeout(Duration(seconds: 7))
           .then((value) {
         showSnackBar("Your photo is updated successfully !");
@@ -84,6 +107,14 @@ class _PhotoViewState extends State<PhotoView> {
         _photo = null;
       });
     }
+          });
+
+    //  await compressedImage!.length().then((value) {
+    //   print(value);
+    //   print("111");
+    // });
+   
+    
     setState(() {
       uploading = false;
     });

@@ -112,7 +112,7 @@ late AwesomeDialog ad ;
       GlassTextView(
         other: user,
         field: "last_name",
-        ratio: 1.5,
+        ratio: 1.1,
         text: Member.last_name,
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: animationController!,
@@ -125,7 +125,7 @@ late AwesomeDialog ad ;
       GlassTextView(
         other: user,
         field: "branch",
-        ratio: 2.5,
+        ratio: 1.1,
         text: Member.branch,
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: animationController!,
@@ -138,7 +138,7 @@ late AwesomeDialog ad ;
       GlassTextView(
         other: user,
         field: "level",
-        ratio: 5,
+        ratio: 1.1,
         text: Member.level.toString(),
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: animationController!,
@@ -307,13 +307,26 @@ String entryYear=DateTime.now().year.toString();
                             keyboardType: TextInputType.numberWithOptions(decimal: true,signed: false),
                           ),
                           Divider(),
-                          Wrap(
+                         
+                          
+                            ],
+
+              
+                          ),
+                        
+                        ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+       btnOk:  Wrap(
                             children: 
                             ["electronique","mecanique","software",'otherFormation',"comite","bronze","gold","silver","otherAward","eurobot",'memberOf','responsable'].map((e) {
                                 return Padding(
                                   padding: const EdgeInsets.all(2.0),
                                   child: ElevatedButton(onPressed: ()async{
-                                   // ad..dismiss();
                                       if(title.trim().isEmpty){
                                         showSnackBar("Please put a title", col:Colors.red);
 
@@ -333,6 +346,8 @@ String entryYear=DateTime.now().year.toString();
                                           setState(() {
                                             loadingBadge=false;
                                           });
+                                   ad..dismiss();
+
                                         });
                                       }
                                       
@@ -342,18 +357,6 @@ String entryYear=DateTime.now().year.toString();
                             ,
                           )
 
-                          
-                            ],
-              
-                          )
-                        ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-       
         );
 
     

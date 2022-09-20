@@ -24,6 +24,8 @@ class Member {
   static bool isNew = true;
   static List<dynamic> badges=[];
   static List<dynamic> otherBadges=[];
+  static List<dynamic> roles=[];
+
 
 
 

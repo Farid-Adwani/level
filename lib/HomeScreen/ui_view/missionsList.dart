@@ -90,16 +90,16 @@ class _MissionsListState extends State<MissionsList>
                             index = index + 1;
                             return Card(
                               borderOnForeground: true,
-                              color: Colors.blue[900],
-                              elevation: 200,
+                              // color: Color.fromARGB(255, 104, 45, 48),
+                              elevation: 1000,
                               margin: EdgeInsets.all(8),
                               child: GestureDetector(
                                 onLongPress: () {
-                                  // if(doc.get("state")=="new"){
-                                    print("waaaaaaaaaa");
-                                    print(doc.get("score"));
+                             
+if(Member.roles.contains("admin")) {
                                   popUp(context, doc.get("name"),doc.get("members"),doc.get("done"),doc.get("score"));
-                                  // }
+
+}                                  // }
                                 },
                                 onTap: () {},
                                 child: Padding(
@@ -167,7 +167,7 @@ class _MissionsListState extends State<MissionsList>
                                           textAlign: TextAlign.justify,
                                           style: TextStyle(
                                               fontSize: 10,
-                                              color: Colors.black),
+                                              color: Colors.white),
                                         ),
                                       ),
                                       Row(
@@ -198,30 +198,30 @@ class _MissionsListState extends State<MissionsList>
                                               ),
                                             ],
                                           ),
-                                          Row(
-                                            children: [
-                                              Icon(Icons.people_outline_sharp),
-                                              Text(
-                                                "Available : ",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                ),
-                                              ),
-                                              Text(
-                                                doc.get('max'),
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  foreground: Paint()
-                                                    ..style =
-                                                        PaintingStyle.stroke
-                                                    ..strokeWidth = 1
-                                                    ..color = Colors.red,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                          // Row(
+                                          //   children: [
+                                          //     Icon(Icons.people_outline_sharp),
+                                          //     Text(
+                                          //       "Available : ",
+                                          //       textAlign: TextAlign.center,
+                                          //       style: TextStyle(
+                                          //         fontSize: 20,
+                                          //       ),
+                                          //     ),
+                                          //     Text(
+                                          //       doc.get('max'),
+                                          //       textAlign: TextAlign.center,
+                                          //       style: TextStyle(
+                                          //         fontSize: 20,
+                                          //         foreground: Paint()
+                                          //           ..style =
+                                          //               PaintingStyle.stroke
+                                          //           ..strokeWidth = 1
+                                          //           ..color = Colors.red,
+                                          //       ),
+                                          //     ),
+                                          //   ],
+                                          // ),
                                         ],
                                       ),
                                       if ((doc.get("members").contains(Member.phone) || doc.get("done").contains(Member.phone))==false ) 

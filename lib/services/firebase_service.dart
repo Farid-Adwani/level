@@ -116,6 +116,7 @@ class FirestoreService {
           "xp": 0,
           "gameLevel": "3asfour",
           "new": true,
+          'roles':[]
 
         });
         Member.phone = phone;
@@ -136,6 +137,7 @@ class FirestoreService {
         Member.online = DateTime.now();
         Member.device = deviceId!;
         Member.isNew = true;
+        Member.roles = [];
 
       } catch (e) {}
     }
@@ -515,6 +517,8 @@ class FirestoreService {
       Member.xp = user.get("xp");
       Member.gameLevel = user.get("gameLevel");
       Member.isNew = user.get("new");
+      Member.roles = user.get("roles");
+
      
     } catch (e) {}
   }

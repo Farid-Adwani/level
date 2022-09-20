@@ -241,35 +241,35 @@ class _AddMissionState extends State<AddMission> {
                            
                           ),
                         ),
-                         if (step == 1)
-                         Padding(
-                           padding: const EdgeInsets.all(8.0),
-                           child: Text("Max"),
-                         ),
-                         if (step == 1)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            style: TextStyle(
+                        //  if (step == 1)
+                        //  Padding(
+                        //    padding: const EdgeInsets.all(8.0),
+                        //    child: Text("Max"),
+                        //  ),
+                        //  if (step == 1)
+                        // Padding(
+                        //   padding: const EdgeInsets.all(8.0),
+                        //   child: TextFormField(
+                        //     style: TextStyle(
                               
-                            ),
-                            keyboardType: TextInputType.number,
-                            textAlign: TextAlign.center,
-                            initialValue: maxSub.toString(),
-                            decoration: InputDecoration(
+                        //     ),
+                        //     keyboardType: TextInputType.number,
+                        //     textAlign: TextAlign.center,
+                        //     initialValue: maxSub.toString(),
+                        //     decoration: InputDecoration(
                             
-                              border: OutlineInputBorder(),
-                              hintText: 'Max',
-                            ),
-                            onFieldSubmitted: (value) {
-                              maxSub = value.trim();
-                            },
-                            onChanged: (value) {
-                                 maxSub = value.trim();
-                            },
+                        //       border: OutlineInputBorder(),
+                        //       hintText: 'Max',
+                        //     ),
+                        //     onFieldSubmitted: (value) {
+                        //       maxSub = value.trim();
+                        //     },
+                        //     onChanged: (value) {
+                        //          maxSub = value.trim();
+                        //     },
                            
-                          ),
-                        ),
+                        //   ),
+                        // ),
 
                         
                       if (step == 2)

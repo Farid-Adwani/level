@@ -219,39 +219,28 @@ class _MusicScreenState extends State<MusicScreen>
                                 IconButton(
                                     onPressed: () async {
                                       print("waaaaaaa");
-
+                                      if(Member.roles.contains("music")){
                                       FirestoreService.playSong(
                                           Member.phone,
                                           "resume" +
                                               Random()
                                                   .nextInt(5000)
                                                   .toString());
-                                    },
+                                    }
+                                    else{
+                                    showSnackBar("You don't have the permission !" ,col: Colors.red);
+                                   }},
                                     icon: Icon(
                                         Icons.play_circle_outline_outlined,size: 40,)),
                                 IconButton(
                                   onPressed: () async {
-                                    print("lawwejjj");
+                                   if(Member.roles.contains("music")){
+                                     print("lawwejjj");
                                     setState(() {
                                       searching = true;
                                     });
                                     
-                                    // search=search.trim();
-                                    // search=search.replaceAll(" ", "+");
-                                    // search=search.replaceAll("+", "%2B");
-
-                                    // http.Response res= await http.get(Uri.parse('https://www.youtube.com/results?search_query=gabi')).then((value) {
-                                    //   print(value.body.indexOf('watch?v=mX'));
-                                    // print(value.body.split(" "));
-                                    // print("eee"); 
- 
- 
-                                    // print(html.parse(value.body).getElementsByTagName("body"));
-                                    // for (var element in html.parse(value.body).querySelectorAll("a")) {
-                                    //   print(element.text);
-                                    // }
-                                    // return value;
-                                    // });
+                                 
                                     try{
                                     videoResult = await ytApi.search(search);
 
@@ -262,6 +251,9 @@ class _MusicScreenState extends State<MusicScreen>
                                       searching = false;
                                     });
                                     print(videoResult);
+                                   }else{
+                                    showSnackBar("You don't have the permission !" ,col: Colors.red);
+                                   }
                                   },
                                   icon: Icon(Icons.search, size: 40),
                                 ),

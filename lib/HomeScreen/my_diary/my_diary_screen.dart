@@ -112,7 +112,7 @@ int missionNum=0;
       GlassTextView(
         field: "last_name",
 
-        ratio: 1.5,
+        ratio: 1.1,
         text: Member.last_name,
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
@@ -125,7 +125,7 @@ int missionNum=0;
       GlassTextView(
         field: "branch",
 
-        ratio: 2.5,
+        ratio: 1.1,
         text: Member.branch,
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
@@ -138,7 +138,7 @@ int missionNum=0;
       GlassTextView(
         field: "level",
 
-        ratio: 5,
+        ratio: 1.1,
         text: Member.level.toString(),
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
