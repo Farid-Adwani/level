@@ -612,7 +612,7 @@ class FirestoreService {
             doc.get("birth_date").toDate().month.toString() +
             "-" +
             doc.get("birth_date").toDate().year.toString();
-        user["claim"] = doc.get("claim");
+        user["claim"] = doc.get("claim").toString();
           
         print(user);
       }).timeout(Duration(seconds: 5));
