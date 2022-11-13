@@ -82,8 +82,6 @@ late AwesomeDialog ad ;
   }
 
   void addAllListData() {
-    print(user);
-    print("waaaaaaaaaaaaaaaaaaa");
     const int count = 9;
     listViews.add(
       PhotoView(
@@ -332,9 +330,6 @@ String entryYear=DateTime.now().year.toString();
 
                                       }
                                      else if(double.parse(day)>31 || double.parse(day)<1 || double.parse(month)>12 || double.parse(month)<1 || double.parse(year)>DateTime.now().year || double.parse(year)<2000 ){
-                                       print(day);
-                                       print(month);
-                                       print(year);
 
                                         showSnackBar("Please put a valid date", col:Colors.red);
                                       }else{

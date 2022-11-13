@@ -118,13 +118,11 @@ class _GlassTextViewState extends State<GlassTextView> {
         btnOk: IconButton(
           iconSize: 50,
           onPressed: () async {
-            //print(filedReset);
 
             await FirestoreService.setString(widget.field, fieldReset)
                 .then((value) {
               FirestoreService.fetchUser(Member.phone).then((value) {
                 setState(() {
-                  print("waaaaa");
                 });
                 ad..dismiss();
               });
@@ -140,8 +138,6 @@ class _GlassTextViewState extends State<GlassTextView> {
   @override
   Widget build(BuildContext context) {
     String interpretedText = "";
-    print("wwwwwwwwwwwwwwwwwwwwwwww");
-    print(widget.other);
     if (widget.other.isNotEmpty) {
       switch (widget.field) {
         case "last_name":
@@ -304,7 +300,6 @@ class _GlassTextViewState extends State<GlassTextView> {
                                                   Member.phone)
                                               .then((value) {
                                             setState(() {
-                                              print("waaaaa");
                                             });
                                           });
                                         });
@@ -414,7 +409,6 @@ class _GlassTextViewState extends State<GlassTextView> {
                                                     Member.phone)
                                                 .then((value) {
                                               setState(() {
-                                                print("waaaaa");
                                               });
                                             });
                                           });

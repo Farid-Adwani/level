@@ -83,7 +83,6 @@ class _AerobotixAppHomeScreenState extends State<AerobotixAppHomeScreen>
         BottomBarView(
           tabIconsList: tabIconsList,
           addClick: () {
-            print("aaaa");
             setState(() {
                   tabBody =
                       MyDiaryScreen(animationController: animationController);

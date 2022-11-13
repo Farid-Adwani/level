@@ -93,7 +93,6 @@ _photo=value;
     } catch (e) {
       showSnackBar("Please check your internet connection and retry !",
           col: Colors.red);
-      print(e);
       setState(() {
         uploading = false;
         _photo = null;

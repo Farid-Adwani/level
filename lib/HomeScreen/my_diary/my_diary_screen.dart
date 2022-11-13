@@ -37,16 +37,11 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   auth() async {
     try {
       final userCredential = await FirebaseAuth.instance.signInAnonymously();
-      print(
-          "SignedSignedSignedSignedSignedSignedSigned in with temporary account.");
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "operation-not-allowed":
-          print(
-              "Anonymous Anonymous Anonymous Anonymous Anonymous Anonymous Anonymous auth hasn't been enabled for this project.");
           break;
         default:
-          print("UnknownUnknownUnknownUnknownUnknownUnknown error.");
       }
     }
   }
@@ -95,7 +90,6 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   }
 
   void addAllListData() {
-    print(Member.claim);
 
     int count = Member.claim > 0 ? 10 : 9;
     if (Member.claim > 0) {

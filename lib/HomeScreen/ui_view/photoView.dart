@@ -51,11 +51,6 @@ class _PhotoViewState extends State<PhotoView> {
   bool uploading = false;
   Future uploadFile() async {
     if (_photo == null) return;
-    // print("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
-    // await _photo!.length().then((value) {
-    //   print(value);
-    //   print("111");
-    // });
 
  setState(() {
       uploading = true;

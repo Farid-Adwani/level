@@ -28,7 +28,6 @@ class _MaterialListState extends State<MaterialList> {
   String matImDesc = "";
   void getIm() async {
     try {
-      print(photo);
       matImDesc = await FirestoreService.getMaterialImage("materials/", photo);
       setState(() {});
     } catch (e) {}
@@ -262,8 +261,6 @@ late AwesomeDialog ad;
                           )
                         ] +
                         snapshot.data!.docs.map((DocumentSnapshot doc) {
-                          print("dooooooooooooc");
-                          print(doc.data());
                           if (doc
                                   .get("name")
                                   .toString()
@@ -362,7 +359,6 @@ late AwesomeDialog ad;
                   setState(() {
                     x += tapInfo.delta.dx;
                     y += tapInfo.delta.dy;
-                    print("eee");
                   });
                 },
                 onTap: () {
