@@ -225,7 +225,7 @@ class _MusicScreenState extends State<MusicScreen>
                                           "resume" +
                                               Random()
                                                   .nextInt(5000)
-                                                  .toString());
+                                                  .toString(),"");
                                     }
                                     else{
                                     showSnackBar("You don't have the permission !" ,col: Colors.red);
@@ -269,7 +269,7 @@ class _MusicScreenState extends State<MusicScreen>
                                   onTap: () async {
                                     print(e.url);
                                     FirestoreService.playSong(
-                                        Member.phone, e.url);
+                                        Member.phone, e.url,e.title);
                                   },
                                   child: Wrap(
                                     alignment: WrapAlignment.spaceBetween,

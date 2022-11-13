@@ -1,23 +1,18 @@
+import 'package:Aerobotix/HomeScreen/Aerobotix_app_home_screen.dart';
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/GlassTextView.dart';
-import 'package:Aerobotix/HomeScreen/ui_view/body_measurement.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/glass_view.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/mediterranean_diet_view.dart';
-import 'package:Aerobotix/HomeScreen/ui_view/detailsView.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/photoView.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/title_view.dart';
-import 'package:Aerobotix/HomeScreen/my_diary/water_view.dart';
 import 'package:Aerobotix/model/member.dart';
 import 'package:Aerobotix/screens/missionsScreen.dart';
 import 'package:Aerobotix/services/firebase_service.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:avatar_glow/avatar_glow.dart';
+import 'package:Aerobotix/utils/helpers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
-import 'package:glassmorphism/glassmorphism.dart';
-import 'package:status_view/status_view.dart';
 
 class MyDiaryScreen extends StatefulWidget {
   const MyDiaryScreen({Key? key, this.animationController}) : super(key: key);
@@ -29,9 +24,9 @@ class MyDiaryScreen extends StatefulWidget {
 
 class _MyDiaryScreenState extends State<MyDiaryScreen>
     with TickerProviderStateMixin {
-   final db = FirebaseFirestore.instance;   
- AnimationController? animationController;
-int missionNum=0;
+  final db = FirebaseFirestore.instance;
+  AnimationController? animationController;
+  int missionNum = 0;
   Animation<double>? topBarAnimation;
   late ConfettiController _controllerCenter;
 
@@ -39,10 +34,27 @@ int missionNum=0;
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
 
+  auth() async {
+    try {
+      final userCredential = await FirebaseAuth.instance.signInAnonymously();
+      print(
+          "SignedSignedSignedSignedSignedSignedSigned in with temporary account.");
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "operation-not-allowed":
+          print(
+              "Anonymous Anonymous Anonymous Anonymous Anonymous Anonymous Anonymous auth hasn't been enabled for this project.");
+          break;
+        default:
+          print("UnknownUnknownUnknownUnknownUnknownUnknown error.");
+      }
+    }
+  }
+
   void initState() {
+    auth();
 
-
- animationController = AnimationController(
+    animationController = AnimationController(
         duration: const Duration(milliseconds: 600), vsync: this);
 
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -82,11 +94,25 @@ int missionNum=0;
     super.initState();
   }
 
-
-
-
   void addAllListData() {
-    const int count = 9;
+    print(Member.claim);
+
+    int count = Member.claim > 0 ? 10 : 9;
+    if (Member.claim > 0) {
+      listViews.add(
+        GlassTextView(
+          field: "claim",
+          ratio: 1.3,
+          text: "Click to claim award: " + Member.claim.toString() + " px",
+          animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+              CurvedAnimation(
+                  parent: widget.animationController!,
+                  curve: Interval((1 / count) * 1, 1.0,
+                      curve: Curves.fastOutSlowIn))),
+          animationController: widget.animationController!,
+        ),
+      );
+    }
     listViews.add(
       PhotoView(
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
@@ -99,7 +125,7 @@ int missionNum=0;
     listViews.add(
       GlassTextView(
         field: "first_name",
-        ratio: 1.1,
+        ratio: 1.3,
         text: Member.first_name,
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
@@ -111,8 +137,7 @@ int missionNum=0;
     listViews.add(
       GlassTextView(
         field: "last_name",
-
-        ratio: 1.1,
+        ratio: 1.3,
         text: Member.last_name,
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
@@ -124,8 +149,7 @@ int missionNum=0;
     listViews.add(
       GlassTextView(
         field: "branch",
-
-        ratio: 1.1,
+        ratio: 1.3,
         text: Member.branch,
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
@@ -137,8 +161,7 @@ int missionNum=0;
     listViews.add(
       GlassTextView(
         field: "level",
-
-        ratio: 1.1,
+        ratio: 1.3,
         text: Member.level.toString(),
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
@@ -161,7 +184,7 @@ int missionNum=0;
     );
     listViews.add(
       MediterranesnDietView(
-        xp:Member.xp,
+        xp: Member.xp,
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
             curve:
@@ -170,13 +193,12 @@ int missionNum=0;
       ),
     );
 
-      listViews.add(
+    listViews.add(
       GlassView(
           date: "",
           text: "Badges",
           photo: "badge2.png",
           phone: Member.phone,
-
           animation: Tween<double>(begin: 0.0, end: 1.0).animate(
               CurvedAnimation(
                   parent: widget.animationController!,
@@ -203,8 +225,7 @@ int missionNum=0;
     );
     listViews.add(
       GlassView(
-          date: (DateTime.now().year-Member.entryYear).toString()+
-              " Years",
+          date: (DateTime.now().year - Member.entryYear).toString() + " Years",
           text: "Experience : ",
           photo: "aerDate.png",
           animation: Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -227,39 +248,48 @@ int missionNum=0;
       color: AerobotixAppTheme.background,
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Stack(
-          children: <Widget>[
-            ConfettiWidget(
-              confettiController: _controllerCenter,
-              blastDirectionality: BlastDirectionality
-                  .explosive, // don't specify a direction, blast randomly
-              shouldLoop:
-                  false, // start again as soon as the animation is finished
-              colors: const [
-                Colors.green,
-                Colors.blue,
-                Colors.red,
-                Colors.blueAccent,
-                Colors.yellow,
-                Colors.black,
-                Colors.white,
-                Colors.pink,
-                Colors.brown,
-              ], // manually specify the colors to be used
-              // createParticlePath: drawStar, // define a custom shape/path.
-              emissionFrequency: 0.0001,
-              gravity: 1,
-              numberOfParticles: 200,
-              minimumSize: Size(15, 15),
-              maximumSize: Size(16, 16),
-              particleDrag: 0.03,
+        body: Center(
+          child: SafeArea(
+            child: Banner(
+              message: Member.isNew ? "Not verified" : "Verified",
+              location: BannerLocation.topEnd,
+              color: Member.isNew ? Colors.red : Colors.green,
+              child: Stack(
+                children: <Widget>[
+                  ConfettiWidget(
+                    confettiController: _controllerCenter,
+                    blastDirectionality: BlastDirectionality
+                        .explosive, // don't specify a direction, blast randomly
+                    shouldLoop:
+                        false, // start again as soon as the animation is finished
+                    colors: const [
+                      Colors.green,
+                      Colors.blue,
+                      Colors.red,
+                      Colors.blueAccent,
+                      Colors.yellow,
+                      Colors.black,
+                      Colors.white,
+                      Colors.pink,
+                      Colors.brown,
+                    ], // manually specify the colors to be used
+                    // createParticlePath: drawStar, // define a custom shape/path.
+                    emissionFrequency: 0.0001,
+                    gravity: 1,
+                    numberOfParticles: 200,
+                    minimumSize: Size(15, 15),
+                    maximumSize: Size(16, 16),
+                    particleDrag: 0.03,
+                  ),
+                  getMainListViewUI(),
+                  getAppBarUI(),
+                  SizedBox(
+                    height: MediaQuery.of(context).padding.bottom,
+                  )
+                ],
+              ),
             ),
-            getMainListViewUI(),
-            getAppBarUI(),
-            SizedBox(
-              height: MediaQuery.of(context).padding.bottom,
-            )
-          ],
+          ),
         ),
       ),
     );
@@ -355,6 +385,11 @@ int missionNum=0;
                                 right: 8,
                               ),
                               child: Row(
+                                //  Navigator
+                                //                       .pushReplacementNamed(
+                                //                     context,
+                                //                     AerobotixAppHomeScreen.id,
+                                //                   );
                                 children: <Widget>[
                                   Padding(
                                       padding: const EdgeInsets.only(right: 8),
@@ -362,11 +397,18 @@ int missionNum=0;
                                         children: [
                                           IconButton(
                                             onPressed: () {
-                                              print("missions");
-                                               Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) =>  missionsScreen(animationController: animationController)),
-  );
+                                              Member.isNew
+                                                  ? showSnackBar(
+                                                      "Your account must be verified !",
+                                                      col: Colors.red)
+                                                  : Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              missionsScreen(
+                                                                  animationController:
+                                                                      animationController)),
+                                                    );
                                             },
                                             icon: Icon(
                                               Icons.task_alt_sharp,
@@ -375,40 +417,65 @@ int missionNum=0;
                                             ),
                                           ),
                                           Positioned(
-                                            right: 0,
-                                            child: 
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.red
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(3.0),
-                                              child:
-                     
-                     StreamBuilder<QuerySnapshot>(
-      stream: db.collection('missions').snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          missionNum=0;
-          for (var element in snapshot.data!.docs) {
-            if(element.get("state")=="new"){
-              missionNum++;
-            }
-          }
-          return Text(missionNum.toString(),style: TextStyle(fontSize: 10));
-        }else{
-          return Text("0");
-        }
-      },
+                                              right: 0,
+                                              child: Container(
+                                                  decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: Colors.red),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            3.0),
+                                                    child: StreamBuilder<
+                                                        QuerySnapshot>(
+                                                      stream: db
+                                                          .collection(
+                                                              'missions')
+                                                          .snapshots(),
+                                                      builder:
+                                                          (context, snapshot) {
+                                                        if (snapshot.hasData) {
+                                                          missionNum = 0;
+                                                          for (var element
+                                                              in snapshot
+                                                                  .data!.docs) {
+                                                            if (element.get(
+                                                                    "state") ==
+                                                                "new") {
+                                                              missionNum++;
+                                                            }
+                                                          }
+                                                          return Text(
+                                                              missionNum
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      10));
+                                                        } else {
+                                                          return Text("0");
+                                                        }
+                                                      },
 
-                                              
-                                              //  Text(missionNum.toString(),style: TextStyle(fontSize: 10),),
-                                            ),
-                                          )
-                                          )
-                                          )
+                                                      //  Text(missionNum.toString(),style: TextStyle(fontSize: 10),),
+                                                    ),
+                                                  )))
                                         ],
+                                      )),
+                                  Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: IconButton(
+                                        onPressed: () {
+                                              Navigator
+                                                      .pushReplacementNamed(
+                                                    context,
+                                                    AerobotixAppHomeScreen.id,
+                                                  );
+                                        },
+                                        icon: Icon(
+                                          Icons.refresh,
+                                          color: AerobotixAppTheme.grey,
+                                          size: 30,
+                                        ),
                                       )),
                                   Padding(
                                       padding: const EdgeInsets.only(right: 8),

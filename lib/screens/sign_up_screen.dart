@@ -6,6 +6,7 @@ import 'package:Aerobotix/ui/text_style.dart' as textStyle;
 import 'package:easy_container/easy_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:gender_picker/gender_picker.dart';
 import 'package:gender_picker/source/enums.dart';
 import 'package:image_picker/image_picker.dart';
@@ -89,6 +90,24 @@ class _SignUpScreenState extends State<SignUpScreen>
     setState(() {
       uploading = true;
     });
+
+         final filePath = _photo!.absolute.path;
+    
+    // Create output file path
+    // eg:- "Volume/VM/abcd_out.jpeg"
+    final lastIndex = filePath.lastIndexOf(new RegExp(r'.jp'));
+    final splitted = filePath.substring(0, (lastIndex));
+    final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
+
+    final compressedImage = await FlutterImageCompress.compressAndGetFile(
+          filePath, 
+          outPath,
+          minWidth: 1000,
+          minHeight: 1000,
+          quality: 50).then((value) async {
+
+_photo=value;
+
     final fileName = basename(_photo!.path);
     final destination = 'profiles/${Member.phone}/profile/';
 
@@ -116,6 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen>
         _photo = null;
       });
     }
+          });
     setState(() {
       uploading = false;
     });

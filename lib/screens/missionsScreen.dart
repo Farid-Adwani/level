@@ -94,7 +94,7 @@ class _missionsScreenState extends State<missionsScreen>
                   tabs: [
                     if(Member.roles.contains("material"))   Tab(icon: Icon(Icons.add_box_outlined)),
                     Tab(icon: Icon(Icons.fiber_new_rounded)),
-                    Tab(icon: Icon(Icons.highlight_remove_rounded)),
+                    Tab(icon: Icon(Icons.ads_click)),
                     Tab(icon: Icon(Icons.done_all_outlined)),
                   ],
                 ),

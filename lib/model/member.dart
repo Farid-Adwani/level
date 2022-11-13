@@ -25,6 +25,7 @@ class Member {
   static List<dynamic> badges=[];
   static List<dynamic> otherBadges=[];
   static List<dynamic> roles=[];
+  static int claim=0;
 
 
 

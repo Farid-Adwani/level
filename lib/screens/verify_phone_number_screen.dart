@@ -169,6 +169,8 @@ AvatarGlow(
                 result = await FirestoreService.auth(code, Member.phone);
                 if (result == true) {
                   await FirestoreService.updateDevice(Member.phone);
+                  Member.isNew ?  showSnackBar("Please pay the club subscription fees and wait for the comitee to verify your identity ",col: Colors.red, duration: Duration(seconds: 4))
+                 :
                   showSnackBar("Mar7ba biiiiik fi lFamilia 💖 👪 💖!");
                   Navigator.pushNamedAndRemoveUntil(
                     context,

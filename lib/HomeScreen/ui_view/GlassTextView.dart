@@ -1,3 +1,4 @@
+import 'package:Aerobotix/HomeScreen/Aerobotix_app_home_screen.dart';
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/wave_view.dart';
 import 'package:Aerobotix/model/member.dart';
@@ -21,8 +22,7 @@ class GlassTextView extends StatefulWidget {
       required this.text,
       required this.ratio,
       required this.field,
-      this.other=const {}
-      })
+      this.other = const {}})
       : super(key: key);
 
   final AnimationController? animationController;
@@ -30,7 +30,7 @@ class GlassTextView extends StatefulWidget {
   String text;
   double ratio;
   String field;
-  Map<String,String> other;
+  Map<String, String> other;
 
   String? filedReset;
   @override
@@ -38,10 +38,10 @@ class GlassTextView extends StatefulWidget {
 }
 
 class _GlassTextViewState extends State<GlassTextView> {
-  bool edited=false;
-    int level = 0;
+  bool edited = false;
+  int level = 0;
   String filiere = "";
-   List<bool> _isSelected = [false, false, false, false, false, false];
+  List<bool> _isSelected = [false, false, false, false, false, false];
   List<bool> _isSelected2 = [
     false,
     false,
@@ -52,18 +52,18 @@ class _GlassTextViewState extends State<GlassTextView> {
     false,
     false
   ];
-late AwesomeDialog ad ;
+  late AwesomeDialog ad;
   final _popKey = GlobalKey<FormState>();
   String fieldReset = "";
-    bool popUp(context) {
-    if(widget.field=="branch" || widget.field=="level"){
+  bool popUp(context) {
+    if (widget.field == "branch" || widget.field == "level") {
       setState(() {
-        edited=true;
+        edited = true;
       });
       return true;
     }
-    level=0;
-     ad = AwesomeDialog(
+    level = 0;
+    ad = AwesomeDialog(
         context: context,
         animType: AnimType.SCALE,
         dialogType: DialogType.INFO,
@@ -82,13 +82,7 @@ late AwesomeDialog ad ;
                 borderRadius: 10,
                 color: Colors.transparent,
                 child: Form(
-                  child: 
-          
-
-                 
-                  
-                  
-                  TextField(
+                  child: TextField(
                     textAlign: TextAlign.center,
                     autofocus: true,
                     textAlignVertical: TextAlignVertical.center,
@@ -121,12 +115,10 @@ late AwesomeDialog ad ;
             ],
           ),
         ),
-
         btnOk: IconButton(
           iconSize: 50,
           onPressed: () async {
             //print(filedReset);
-           
 
             await FirestoreService.setString(widget.field, fieldReset)
                 .then((value) {
@@ -135,7 +127,6 @@ late AwesomeDialog ad ;
                   print("waaaaa");
                 });
                 ad..dismiss();
-               
               });
             });
           },
@@ -146,47 +137,49 @@ late AwesomeDialog ad ;
     return true;
   }
 
-
   @override
   Widget build(BuildContext context) {
-    String interpretedText="";
+    String interpretedText = "";
     print("wwwwwwwwwwwwwwwwwwwwwwww");
     print(widget.other);
-    if(widget.other.isNotEmpty){
+    if (widget.other.isNotEmpty) {
       switch (widget.field) {
-      case "last_name":
-        interpretedText=widget.other["last_name"]!;
-        break;
+        case "last_name":
+          interpretedText = widget.other["last_name"]!;
+          break;
         case "first_name":
-        interpretedText=widget.other["first_name"]!;
-        break;
+          interpretedText = widget.other["first_name"]!;
+          break;
         case "branch":
-        interpretedText=widget.other["branch"]!;
-        break;
+          interpretedText = widget.other["branch"]!;
+          break;
         case "level":
-        interpretedText=widget.other["level"]!;
-        break;
-      default:
-    }
-    }else{
+          interpretedText = widget.other["level"]!;
+          break;
+        default:
+      }
+    } else {
       switch (widget.field) {
-      case "last_name":
-        interpretedText=Member.last_name;
-        break;
+        case "last_name":
+          interpretedText = Member.last_name;
+          break;
         case "first_name":
-        interpretedText=Member.first_name;
-        break;
+          interpretedText = Member.first_name;
+          break;
         case "branch":
-        interpretedText=Member.branch;
-        break;
+          interpretedText = Member.branch;
+          break;
         case "level":
-        interpretedText=Member.level.toString();
-        break;
-      default:
+          interpretedText = Member.level.toString();
+          break;
+        case "claim":
+          interpretedText = widget.text;
+          break;
+          
+        default:
+      }
     }
-    }
-    
-                         
+
     return AnimatedBuilder(
       animation: widget.animationController!,
       builder: (BuildContext context, Widget? child) {
@@ -200,259 +193,304 @@ late AwesomeDialog ad ;
                     left: 24, right: 24, top: 0, bottom: 0),
                 child: Column(
                   children: [
-                      edited==true?
-                      widget.field=="branch"?
-                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                   children: [
-                     ToggleButtons(
-                      constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width / 13,
-                          minWidth: MediaQuery.of(context).size.width / 13,
-                          maxHeight: MediaQuery.of(context).size.width / 10,
-                          minHeight: MediaQuery.of(context).size.width / 10),
+                    edited == true
+                        ? widget.field == "branch"
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ToggleButtons(
+                                    constraints: BoxConstraints(
+                                        maxWidth:
+                                            MediaQuery.of(context).size.width /
+                                                13,
+                                        minWidth:
+                                            MediaQuery.of(context).size.width /
+                                                13,
+                                        maxHeight:
+                                            MediaQuery.of(context).size.width /
+                                                10,
+                                        minHeight:
+                                            MediaQuery.of(context).size.width /
+                                                10),
 
-                      children: <Widget>[
-                        Text("MPI"),
-                        Text("CBA"),
-                        Text("IIA"),
-                        Text("IMI"),
-                        Text("GL"),
-                        Text("RT"),
-                        Text("BIO"),
-                        Text("CH"),
-                      ],
+                                    children: <Widget>[
+                                      Text("MPI"),
+                                      Text("CBA"),
+                                      Text("IIA"),
+                                      Text("IMI"),
+                                      Text("GL"),
+                                      Text("RT"),
+                                      Text("BIO"),
+                                      Text("CH"),
+                                    ],
 
-                      isSelected: _isSelected2,
+                                    isSelected: _isSelected2,
 
-                      onPressed: (int index) {
-                        setState(() {
-                          _isSelected2 = [
-                            false,
-                            false,
-                            false,
-                            false,
-                            false,
-                            false,
-                            false,
-                            false
-                          ];
-                          _isSelected2[index] = !_isSelected2[index];
-                          switch (index) {
-                            case 0:
-                              filiere = "MPI";
-                              break;
-                            case 1:
-                              filiere = "CBA";
-                              break;
-                            case 2:
-                              filiere = "IIA";
-                              break;
-                            case 3:
-                              filiere = "IMI";
-                              break;
-                            case 4:
-                              filiere = "GL";
-                              break;
-                            case 5:
-                              filiere = "RT";
-                              break;
-                            case 6:
-                              filiere = "BIO";
-                              break;
-                            case 7:
-                              filiere = "CH";
-                              break;
+                                    onPressed: (int index) {
+                                      setState(() {
+                                        _isSelected2 = [
+                                          false,
+                                          false,
+                                          false,
+                                          false,
+                                          false,
+                                          false,
+                                          false,
+                                          false
+                                        ];
+                                        _isSelected2[index] =
+                                            !_isSelected2[index];
+                                        switch (index) {
+                                          case 0:
+                                            filiere = "MPI";
+                                            break;
+                                          case 1:
+                                            filiere = "CBA";
+                                            break;
+                                          case 2:
+                                            filiere = "IIA";
+                                            break;
+                                          case 3:
+                                            filiere = "IMI";
+                                            break;
+                                          case 4:
+                                            filiere = "GL";
+                                            break;
+                                          case 5:
+                                            filiere = "RT";
+                                            break;
+                                          case 6:
+                                            filiere = "BIO";
+                                            break;
+                                          case 7:
+                                            filiere = "CH";
+                                            break;
 
-                            default:
-                          }
-                        });
-                      },
+                                          default:
+                                        }
+                                      });
+                                    },
 
-                      // region example 1
+                                    // region example 1
 
-                      color: Colors.grey,
+                                    color: Colors.grey,
 
-                      selectedColor: Colors.red,
+                                    selectedColor: Colors.red,
 
-                      fillColor: Colors.lightBlueAccent,
+                                    fillColor: Colors.lightBlueAccent,
 
-                      // endregion
+                                    // endregion
 
-                      // region example 2
+                                    // region example 2
 
-                      borderColor: Colors.lightBlueAccent,
+                                    borderColor: Colors.lightBlueAccent,
 
-                      selectedBorderColor: Colors.red,
+                                    selectedBorderColor: Colors.red,
 
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
 
-                      // endregion
-                ),
-                    IconButton(onPressed: ()async{
-                setState(() {
-                  edited=false;
-                });
-            await FirestoreService.setString(widget.field, filiere)
-                .then((value) {
-              FirestoreService.fetchUser(Member.phone).then((value) {
-                setState(() {
-                  print("waaaaa");
-                });
-               
-              });
-            });
-          
-                  }, icon: Icon(Icons.send))
-                   ],
-                 )
-                  : 
+                                    // endregion
+                                  ),
+                                  IconButton(
+                                      onPressed: () async {
+                                        setState(() {
+                                          edited = false;
+                                        });
+                                        await FirestoreService.setString(
+                                                widget.field, filiere)
+                                            .then((value) {
+                                          FirestoreService.fetchUser(
+                                                  Member.phone)
+                                              .then((value) {
+                                            setState(() {
+                                              print("waaaaa");
+                                            });
+                                          });
+                                        });
+                                      },
+                                      icon: Icon(Icons.send))
+                                ],
+                              )
+                            : Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ToggleButtons(
+                                      constraints: BoxConstraints(
+                                          maxWidth: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              10,
+                                          minWidth: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              10,
+                                          maxHeight: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              10,
+                                          minHeight: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              10),
+                                      children: <Widget>[
+                                        Text("1"),
+                                        Text("2"),
+                                        Text("3"),
+                                        Text("4"),
+                                        Text("5"),
+                                        Text("5+"),
+                                      ],
 
-                    Center(
-                child: 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                                      isSelected: _isSelected,
 
-                  children: [
-                    ToggleButtons(
-                      constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width / 10,
-                          minWidth: MediaQuery.of(context).size.width / 10,
-                          maxHeight: MediaQuery.of(context).size.width / 10,
-                          minHeight: MediaQuery.of(context).size.width / 10),
-                      children: <Widget>[
-                        Text("1"),
-                        Text("2"),
-                        Text("3"),
-                        Text("4"),
-                        Text("5"),
-                        Text("5+"),
-                      ],
+                                      onPressed: (int index) {
+                                        setState(() {
+                                          _isSelected = [
+                                            false,
+                                            false,
+                                            false,
+                                            false,
+                                            false,
+                                            false,
+                                          ];
+                                          _isSelected[index] =
+                                              !_isSelected[index];
+                                          switch (index) {
+                                            case 0:
+                                              level = 1;
+                                              break;
+                                            case 1:
+                                              level = 2;
+                                              break;
+                                            case 2:
+                                              level = 3;
+                                              break;
+                                            case 3:
+                                              level = 4;
+                                              break;
+                                            case 4:
+                                              level = 5;
+                                              break;
+                                            case 5:
+                                              level = 6;
+                                              break;
+                                            default:
+                                          }
+                                        });
+                                      },
 
-                      isSelected: _isSelected,
+                                      // region example 1
 
-                      onPressed: (int index) {
-                        setState(() {
-                          _isSelected = [
-                            false,
-                            false,
-                            false,
-                            false,
-                            false,
-                            false,
-                          ];
-                          _isSelected[index] = !_isSelected[index];
-                          switch (index) {
-                            case 0:
-                              level = 1;
-                              break;
-                            case 1:
-                              level = 2;
-                              break;
-                            case 2:
-                              level = 3;
-                              break;
-                            case 3:
-                              level = 4;
-                              break;
-                            case 4:
-                              level = 5;
-                              break;
-                            case 5:
-                              level = 6;
-                              break;
-                            default:
-                          }
-                        });
-                      },
+                                      color: Colors.grey,
 
-                      // region example 1
+                                      selectedColor: Colors.red,
 
-                      color: Colors.grey,
+                                      fillColor: Colors.lightBlueAccent,
 
-                      selectedColor: Colors.red,
+                                      // endregion
 
-                      fillColor: Colors.lightBlueAccent,
+                                      // region example 2
 
-                      // endregion
+                                      borderColor: Colors.lightBlueAccent,
 
-                      // region example 2
+                                      selectedBorderColor: Colors.red,
 
-                      borderColor: Colors.lightBlueAccent,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
 
-                      selectedBorderColor: Colors.red,
-
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-
-                      // endregion
-                    ),
-                  
-                  IconButton(onPressed: ()async{
-                    setState(() {
-                      edited=false;
-                    });
-            await FirestoreService.setlevel(widget.field, level)
-                .then((value) {
-              FirestoreService.fetchUser(Member.phone).then((value) {
-                setState(() {
-                  print("waaaaa");
-                });
-               
-              });
-            });
-          
-                  }, icon: Icon(Icons.send))
-                  ],
-                ),
-              )
-                  :
-                    GlassmorphicContainer(
-                      width: MediaQuery.of(context).size.width / widget.ratio,
-                      height: MediaQuery.of(context).size.width / 9,
-                      borderRadius: 20,
-                      blur: 20,
-                      alignment: Alignment.bottomCenter,
-                      border: 2,
-                      linearGradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color(0xFFffffff).withOpacity(0.1),
-                            Color(0xFFFFFFFF).withOpacity(0.05),
-                          ],
-                          stops: [
-                            0.1,
-                            1,
-                          ]),
-                      borderGradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFFffffff).withOpacity(0.5),
-                          Color((0xFFFFFFFF)).withOpacity(0.5),
-                        ],
-                      ),
-                      child: 
-                      
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(child: Center(child: 
-
-                           Text(interpretedText)
-                         
-                        
-                        
-                          
-                          )),
-                          if(widget.other.isEmpty) IconButton(
-                              onPressed: () {
-                                popUp(context);
-                              },
-                              icon: Icon(Icons.edit))
-                        ],
-                      ),
-                    ),
+                                      // endregion
+                                    ),
+                                    IconButton(
+                                        onPressed: () async {
+                                          setState(() {
+                                            edited = false;
+                                          });
+                                          await FirestoreService.setlevel(
+                                                  widget.field, level)
+                                              .then((value) {
+                                            FirestoreService.fetchUser(
+                                                    Member.phone)
+                                                .then((value) {
+                                              setState(() {
+                                                print("waaaaa");
+                                              });
+                                            });
+                                          });
+                                        },
+                                        icon: Icon(Icons.send))
+                                  ],
+                                ),
+                              )
+                        : GestureDetector(
+                          onTap: (){
+                            FirestoreService.setXp({"phone":Member.phone,"gameLevel":Member.gameLevel,"xp":Member.xp.toString()}, Member.claim).then((value) {
+                              FirestoreService.resetClaim(Member.phone);
+                               Navigator
+                                                      .pushReplacementNamed(
+                                                    context,
+                                                    AerobotixAppHomeScreen.id,
+                                                  );
+                                                  
+                            });
+                          },
+                          child: GlassmorphicContainer(
+                              width: MediaQuery.of(context).size.width /
+                                  widget.ratio,
+                              height: MediaQuery.of(context).size.width / 9,
+                              borderRadius: 20,
+                              blur: 20,
+                              alignment: Alignment.bottomCenter,
+                              border: 2,
+                              linearGradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: widget.field == "claim"
+                                      ? [
+                                          Color.fromARGB(255, 192, 204, 23).withOpacity(0.1),
+                                          Color.fromARGB(255, 255, 252, 62).withOpacity(0.05),
+                                        ]
+                                      : [
+                                          Color(0xFFffffff).withOpacity(0.1),
+                                          Color(0xFFFFFFFF).withOpacity(0.05),
+                                        ],
+                                  stops: [
+                                    0.1,
+                                    1,
+                                  ]),
+                              borderGradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors:widget.field == "claim" ?
+                                
+                                [
+                                  Color.fromARGB(255, 208, 211, 13)
+                                      .withOpacity(0.5),
+                                  Color((0xFFFFFFFF)).withOpacity(0.5),
+                                ]: [
+                                  Color.fromARGB(255, 165, 26, 26)
+                                      .withOpacity(0.5),
+                                  Color((0xFFFFFFFF)).withOpacity(0.5),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                      child:
+                                          Center(child: Text(interpretedText))),
+                                  if (widget.other.isEmpty &&
+                                      widget.field != "claim")
+                                    IconButton(
+                                        onPressed: () {
+                                          popUp(context);
+                                        },
+                                        icon: Icon(Icons.edit))
+                                ],
+                              ),
+                            ),
+                        ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 150,
                     ),

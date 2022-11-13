@@ -117,9 +117,10 @@ Column matList(list) {
         ),
         btnOk: 
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-          iconSize: 50,
+          iconSize: 30,
           onPressed: () async {
             FirestoreService.changeRequestState(id, note, "requested");
             ad..dismiss();
@@ -127,7 +128,7 @@ Column matList(list) {
           icon: Icon(Icons.fiber_new_sharp,color:Colors.red[700]),
         ),
          IconButton(
-          iconSize: 50,
+          iconSize: 30,
           onPressed: () async {
             FirestoreService.changeRequestState(id, note, "accepted");
 
@@ -136,7 +137,7 @@ Column matList(list) {
           icon: Icon(Icons.done_all_outlined,color:Colors.red[500]),
         ),
          IconButton(
-          iconSize: 50,
+          iconSize: 30,
           onPressed: () async {
             FirestoreService.changeRequestState(id, note, "delievered");
 
@@ -145,7 +146,7 @@ Column matList(list) {
           icon: Icon(Icons.handyman_sharp,color:Colors.red[300]),
         ),
          IconButton(
-          iconSize: 50,
+          iconSize: 30,
           onPressed: () async {
             FirestoreService.changeRequestState(id, note, "restored");
 

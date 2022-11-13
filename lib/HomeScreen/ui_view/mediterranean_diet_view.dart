@@ -41,7 +41,7 @@ void setGameLevel(){
     case "wlidha":
       print("wlidha");
       song="audio/wlidha.mp3";
-      levelText='Wlidha';
+      levelText='7arbi';
       gif="assets/HomeScreen/wlidha.gif";
       colorLevel=HexColor("973747");
       break;

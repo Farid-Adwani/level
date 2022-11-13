@@ -57,7 +57,6 @@ class _leaderboardScreenState extends State<leaderboardScreen>
         } else {
           List<DocumentSnapshot> all = snapshot.data!.docs.toList();
           int index = 0;
-
           all.sort(((a, b) => double.parse(b.get("xp").toString())
               .compareTo(double.parse(a.get("xp").toString()))));
           poduim3as = [];
@@ -67,99 +66,86 @@ class _leaderboardScreenState extends State<leaderboardScreen>
           poduimR3a = [];
 
           for (var element in all) {
-            if(imMap.containsKey(element.get("phone"))==false){
-                          getIm(element.get("phone"), element.get("photo"));
-                        }
-            if(element.get("gameLevel")=="3asfour"){
-              if(poduim3as.length<3){
+            // if(imMap.containsKey(element.get("phone"))==false){
+            //               getIm(element.get("phone"), element.get("photo"));
+            //             }
+            if (element.get("gameLevel") == "3asfour" &&
+                element.get("new") == false) {
+              if (poduim3as.length < 3) {
                 poduim3as.add(element);
               }
-            }else if(element.get("gameLevel")=="wlidha"){
-              if(poduimWli.length<3){
+            } else if (element.get("gameLevel") == "wlidha") {
+              if (poduimWli.length < 3) {
                 poduimWli.add(element);
               }
-            }
-            else if(element.get("gameLevel")=="kassa7"){
-              if(poduimKas.length<3){
+            } else if (element.get("gameLevel") == "kassa7") {
+              if (poduimKas.length < 3) {
                 poduimKas.add(element);
               }
-            }
-            else if(element.get("gameLevel")=="r3ad"){
-              if(poduimR3a.length<3){
+            } else if (element.get("gameLevel") == "r3ad") {
+              if (poduimR3a.length < 3) {
                 poduimR3a.add(element);
               }
-            }
-            else if(element.get("gameLevel")=="jen"){
-              if(poduimJen.length<3){
+            } else if (element.get("gameLevel") == "jen") {
+              if (poduimJen.length < 3) {
                 poduimJen.add(element);
               }
             }
           }
 
-Column getPoduim(DocumentSnapshot pod,Color col , double size){
-  return 
-       Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: AvatarGlow(
-                                      glowColor: Colors.blue,
-                                      endRadius:
-                                          MediaQuery.of(context).size.width / size,
-                                      duration: Duration(milliseconds: 2000),
-                                      repeat: true,
-                                      showTwoGlows: true,
-                                      repeatPauseDuration:
-                                          Duration(milliseconds: 100),
-                                      child: Container(
-                                        // width: MediaQuery.of(context).size.width / 2,
-                                        // height: MediaQuery.of(context).size.width / 2,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color:
-                                                  col,
-                                              width: 4),
-                                          shape: BoxShape.circle,
-                                          image: (imMap.containsKey(
-                                                      pod.get("phone")) && imMap[pod.get("phone")]
-                                                      .toString()
-                                                      .isNotEmpty &&
-                                                   
-                                                  imMap[pod.get("phone")] !=
-                                                      "wait")
-                                              ? DecorationImage(
-                                                  image: NetworkImage(
-                                                    imMap[pod.get("phone")]
-                                                        .toString(),
-                                                  ),
-                                                  fit: BoxFit.fill)
-                                              : imMap[pod.get("phone")]
-                                                      .toString()
-                                                      .isEmpty
-                                                  ? pod.get("gender") ==
-                                                          "Female"
-                                                      ? DecorationImage(
-                                                          image: AssetImage(
-                                                            "assets/images/gadget2.jpg",
-                                                          ),
-                                                          fit: BoxFit.fill)
-                                                      : DecorationImage(
-                                                          image: AssetImage(
-                                                            "assets/images/gadget4.jpg",
-                                                          ),
-                                                          fit: BoxFit.fill)
-                                                  : null,
+          Column getPoduim(DocumentSnapshot pod, Color col, double size) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: AvatarGlow(
+                    glowColor: Colors.blue,
+                    endRadius: MediaQuery.of(context).size.width / size,
+                    duration: Duration(milliseconds: 2000),
+                    repeat: true,
+                    showTwoGlows: true,
+                    repeatPauseDuration: Duration(milliseconds: 100),
+                    child: Container(
+                      // width: MediaQuery.of(context).size.width / 2,
+                      // height: MediaQuery.of(context).size.width / 2,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: col, width: 4),
+                        shape: BoxShape.circle,
+                        image: (imMap.containsKey(pod.get("phone")) &&
+                                imMap[pod.get("phone")].toString().isNotEmpty &&
+                                imMap[pod.get("phone")] != "wait")
+                            ? DecorationImage(
+                                image: NetworkImage(
+                                  imMap[pod.get("phone")].toString(),
+                                ),
+                                fit: BoxFit.fill)
+                            : imMap[pod.get("phone")].toString().isEmpty
+                                ? pod.get("gender") == "Female"
+                                    ? DecorationImage(
+                                        image: AssetImage(
+                                          "assets/images/gadget2.jpg",
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                 Icon(Icons.military_tech,size: 30,color: col,),
-                                
-                                ],
-                              );
-                        
-}
+                                        fit: BoxFit.fill)
+                                    : DecorationImage(
+                                        image: AssetImage(
+                                          "assets/images/gadget4.jpg",
+                                        ),
+                                        fit: BoxFit.fill)
+                                : null,
+                      ),
+                    ),
+                  ),
+                ),
+                Icon(
+                  Icons.military_tech,
+                  size: 30,
+                  color: col,
+                ),
+              ],
+            );
+          }
+
           return ListView(
             children: [
               Wrap(
@@ -184,56 +170,65 @@ Column getPoduim(DocumentSnapshot pod,Color col , double size){
                             maxLines: 1,
                           ),
                         ),
-                        if (categories=="3asfour" && poduim3as.length > 2)
+                        if (categories == "3asfour" && poduim3as.length > 2)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              getPoduim(poduim3as[2], Color.fromARGB(255,205, 127, 50),11),
-                              getPoduim(poduim3as[0], Color.fromARGB(255,218,165,3), 9),
-                              getPoduim(poduim3as[1], Color.fromARGB(255, 192,192,192), 10),
-
-                               ],
+                              getPoduim(poduim3as[2],
+                                  Color.fromARGB(255, 205, 127, 50), 11),
+                              getPoduim(poduim3as[0],
+                                  Color.fromARGB(255, 218, 165, 3), 9),
+                              getPoduim(poduim3as[1],
+                                  Color.fromARGB(255, 192, 192, 192), 10),
+                            ],
                           ),
-                          if (categories=="wlidha" && poduimWli.length > 2)
+                        if (categories == "wlidha" && poduimWli.length > 2)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              getPoduim(poduimWli[2], Color.fromARGB(255,205, 127, 50),11),
-                              getPoduim(poduimWli[0], Color.fromARGB(255,218,165,3), 9),
-                              getPoduim(poduimWli[1], Color.fromARGB(255, 192,192,192), 10),
-
-                               ],
-                          )
-                          ,
-                          if (categories=="kassa7" && poduimKas.length > 2)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              getPoduim(poduimKas[2], Color.fromARGB(255,205, 127, 50),11),
-                              getPoduim(poduimKas[0], Color.fromARGB(255,218,165,3), 9),
-                              getPoduim(poduimKas[1], Color.fromARGB(255, 192,192,192), 10),
-
-                               ],
+                              getPoduim(poduimWli[2],
+                                  Color.fromARGB(255, 205, 127, 50), 11),
+                              getPoduim(poduimWli[0],
+                                  Color.fromARGB(255, 218, 165, 3), 9),
+                              getPoduim(poduimWli[1],
+                                  Color.fromARGB(255, 192, 192, 192), 10),
+                            ],
                           ),
-                          if (categories=="r3ad" && poduimR3a.length > 2)
+                        if (categories == "kassa7" && poduimKas.length > 2)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              getPoduim(poduimR3a[2], Color.fromARGB(255,205, 127, 50),11),
-                              getPoduim(poduimR3a[0], Color.fromARGB(255,218,165,3), 9),
-                              getPoduim(poduimR3a[1], Color.fromARGB(255, 192,192,192), 10),
-
-                               ],
+                              getPoduim(poduimKas[2],
+                                  Color.fromARGB(255, 205, 127, 50), 11),
+                              getPoduim(poduimKas[0],
+                                  Color.fromARGB(255, 218, 165, 3), 9),
+                              getPoduim(poduimKas[1],
+                                  Color.fromARGB(255, 192, 192, 192), 10),
+                            ],
                           ),
-                          if (categories=="jen" && poduimJen.length > 2)
+                        if (categories == "r3ad" && poduimR3a.length > 2)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              getPoduim(poduimJen[2], Color.fromARGB(255,205, 127, 50),11),
-                              getPoduim(poduimJen[0], Color.fromARGB(255,218,165,3), 9),
-                              getPoduim(poduimJen[1], Color.fromARGB(255, 192,192,192), 10),
-
-                               ],
+                              getPoduim(poduimR3a[2],
+                                  Color.fromARGB(255, 205, 127, 50), 11),
+                              getPoduim(poduimR3a[0],
+                                  Color.fromARGB(255, 218, 165, 3), 9),
+                              getPoduim(poduimR3a[1],
+                                  Color.fromARGB(255, 192, 192, 192), 10),
+                            ],
+                          ),
+                        if (categories == "jen" && poduimJen.length > 2)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              getPoduim(poduimJen[2],
+                                  Color.fromARGB(255, 205, 127, 50), 11),
+                              getPoduim(poduimJen[0],
+                                  Color.fromARGB(255, 218, 165, 3), 9),
+                              getPoduim(poduimJen[1],
+                                  Color.fromARGB(255, 192, 192, 192), 10),
+                            ],
                           )
                       ] +
                       all.map((doc) {
@@ -267,11 +262,13 @@ Column getPoduim(DocumentSnapshot pod,Color col , double size){
                             colorLevel = HexColor("BD8484");
                             gif = "assets/HomeScreen/3asfour.gif";
                         }
-                        if (imMap.containsKey(doc.get("phone")) == true) {
+                        if (imMap.containsKey(doc.get("phone")) == false) {
                           getIm(doc.get("phone"), doc.get("photo"));
                         }
                         if ((categories == "all" ||
-                                categories == doc.get("gameLevel").toString()  ) && doc.get("new")==false &&
+                                categories ==
+                                    doc.get("gameLevel").toString()) &&
+                            doc.get("new") == false &&
                             (search == "" ||
                                 doc
                                     .get("first_name")
@@ -284,7 +281,7 @@ Column getPoduim(DocumentSnapshot pod,Color col , double size){
                                     .toUpperCase()
                                     .contains(search.toUpperCase()))) {
                           index = index + 1;
-                         
+
                           return Card(
                             borderOnForeground: true,
                             color: Colors.white,
@@ -316,7 +313,9 @@ Column getPoduim(DocumentSnapshot pod,Color col , double size){
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: search==""?Text(index.toString()): Text("#"),
+                                            child: search == ""
+                                                ? Text(index.toString())
+                                                : Text("#"),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(4.0),
@@ -538,7 +537,7 @@ Column getPoduim(DocumentSnapshot pod,Color col , double size){
               },
             ),
             TextButton(
-              child: Text("Wlidha"),
+              child: Text("7arbi"),
               onPressed: () async {
                 if (entryYear.isNotEmpty &&
                     double.tryParse(entryYear) != null &&
@@ -737,7 +736,7 @@ Column getPoduim(DocumentSnapshot pod,Color col , double size){
                         text: "3asfour",
                       ),
                       Tab(
-                        text: "Wlidha",
+                        text: "7arbi",
                       ),
                       Tab(
                         text: "Kassa7",
@@ -749,7 +748,7 @@ Column getPoduim(DocumentSnapshot pod,Color col , double size){
                         text: "Jen",
                       ),
                       Tab(
-                        text: "3orsa",
+                        text: '3orsa',
                       ),
                     ],
                   ),
@@ -761,7 +760,7 @@ Column getPoduim(DocumentSnapshot pod,Color col , double size){
                         MembersList("kassa7"),
                         MembersList("r3ad"),
                         MembersList("jen"),
-                        MembersList("3orsa"),
+                        MembersList('3orsa'),
                       ],
                     ),
                   ),

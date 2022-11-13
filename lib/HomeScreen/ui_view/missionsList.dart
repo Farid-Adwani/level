@@ -38,6 +38,34 @@ class _MissionsListState extends State<MissionsList>
     } catch (e) {}
   }
 
+
+List<String> names(List<dynamic> inn){
+  List<String> l =[];
+  for(int i=0; i<inn.length;i++){
+    String e=inn[i];
+
+     if(e.toString().split("~").length>1){
+    l.add(e.toString().split("~")[1]);
+    }else{
+      l.add("nooo");
+    }
+  }
+ 
+
+  return l;
+
+}
+
+List<String> phones(List<dynamic> inn){
+  List<String> l =[];
+  for(int i=0; i<inn.length;i++){
+    String e=inn[i];
+    l.add(e.toString().split("~")[0]);
+  }
+
+  return l;
+
+}
   final db = FirebaseFirestore.instance;
   Widget missionsList(categories) {
     return StreamBuilder<QuerySnapshot>(
@@ -80,7 +108,7 @@ class _MissionsListState extends State<MissionsList>
                           if (imMap.containsKey(doc.get("name")) == false) {
                             getIm(doc.get("name"), doc.get("photo"));
                           }
-                          if ((categories == doc.get("state").toString() || (widget.categ=="sub" && doc.get("members").contains(Member.phone)) || (widget.categ=="done" && doc.get("done").contains(Member.phone))) &&
+                          if ((categories == doc.get("state").toString() || (widget.categ=="sub" && phones(doc.get("members")).contains(Member.phone)) || (widget.categ=="done" && phones(doc.get("done")).contains(Member.phone))) &&
                               (search == "" ||
                                   doc
                                       .get("name")
@@ -224,7 +252,7 @@ if(Member.roles.contains("admin")) {
                                           // ),
                                         ],
                                       ),
-                                      if ((doc.get("members").contains(Member.phone) || doc.get("done").contains(Member.phone))==false ) 
+                                      if ((phones(doc.get("members")).contains(Member.phone) || phones(doc.get("done")).contains(Member.phone))==false && doc.get("state")=="new" ) 
                                       TextButton(
                                           style: TextButton.styleFrom(
                                             
@@ -288,6 +316,8 @@ members.forEach((element) {
     output.add(element);
 }
 });
+
+
     entryYear = "";
 
     ad = AwesomeDialog(
@@ -316,7 +346,9 @@ members.forEach((element) {
                         ),
                         Divider(),
                         Column(
-                          children: output.map((doc) {
+                          children: names(output).asMap().entries.map((entry) {
+                            String doc=entry.value;
+                            int ind=entry.key;
                               return 
                                  Card(
                               borderOnForeground: true,
@@ -335,6 +367,7 @@ members.forEach((element) {
                                       },
                                       child: Center(
                                           child: Text(
+                                       
                                        doc.toString(),
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -351,15 +384,10 @@ members.forEach((element) {
                                             
                                             ad..dismiss();
 
-                                            await FirestoreService.addMissionMember(id, Member.phone, Member.first_name+" "+Member.last_name, "done").then((value) {
+                                            await FirestoreService.addMissionMember(id,output[ind].split('~')[0],doc, "done").then((value) {
 
                                             });
-                                            print("scooooooooooooooore");
-                                            print(score);
-                                           await  FirestoreService.setXp({"phone":Member.phone,
-                                           "gameLevel":Member.gameLevel,
-                                           "xp":Member.xp.toString()
-                                           }, double.parse(score).toInt());
+                                           await  FirestoreService.setClaim(output[ind].split('~')[0],double.parse(score).toInt());
                                             
                                           },
                                           icon: Icon(Icons.done_outline_rounded,color: Colors.green,)),
@@ -384,7 +412,7 @@ members.forEach((element) {
                         ),
                         Divider(),
                         Column(
-                          children: done.map((doc) {
+                          children: names(done).map((doc) {
                               return 
                                  Card(
                               borderOnForeground: true,
@@ -500,7 +528,7 @@ bool isloading =false;
         body: Stack(
           children: <Widget>[
             getMainListViewUI(),
-            // getAppBarUI(),
+            getAppBarUI(),
             SizedBox(
               height: MediaQuery.of(context).padding.bottom,
             )
@@ -569,134 +597,134 @@ bool isloading =false;
     );
   }
 
-  // Widget getAppBarUI() {
-  //   return Column(
-  //     children: <Widget>[
-  //       AnimatedBuilder(
-  //         animation: widget.animationController!,
-  //         builder: (BuildContext context, Widget? child) {
-  //           return FadeTransition(
-  //             opacity: topBarAnimation!,
-  //             child: Transform(
-  //               transform: Matrix4.translationValues(
-  //                   0.0, 30 * (1.0 - topBarAnimation!.value), 0.0),
-  //               child: Container(
-  //                 decoration: BoxDecoration(
-  //                   color: AerobotixAppTheme.white.withOpacity(topBarOpacity),
-  //                   borderRadius: const BorderRadius.only(
-  //                     bottomLeft: Radius.circular(32.0),
-  //                   ),
-  //                   boxShadow: <BoxShadow>[
-  //                     BoxShadow(
-  //                         color: AerobotixAppTheme.grey
-  //                             .withOpacity(0.4 * topBarOpacity),
-  //                         offset: const Offset(1.1, 1.1),
-  //                         blurRadius: 10.0),
-  //                   ],
-  //                 ),
-  //                 child: Column(
-  //                   children: <Widget>[
-  //                     SizedBox(
-  //                       height: MediaQuery.of(context).padding.top,
-  //                     ),
-  //                     Padding(
-  //                       padding: EdgeInsets.only(
-  //                           left: 16,
-  //                           right: 16,
-  //                           top: 16 - 8.0 * topBarOpacity,
-  //                           bottom: 12 - 8.0 * topBarOpacity),
-  //                       child: Row(
-  //                         mainAxisAlignment: MainAxisAlignment.center,
-  //                         children: <Widget>[
-  //                           Expanded(
-  //                             child: Padding(
-  //                               padding: const EdgeInsets.all(8.0),
-  //                               child: Text(
-  //                                 'Material',
-  //                                 textAlign: TextAlign.left,
-  //                                 style: TextStyle(
-  //                                   fontFamily: AerobotixAppTheme.fontName,
-  //                                   fontWeight: FontWeight.w700,
-  //                                   fontSize: 22 + 6 - 6 * topBarOpacity,
-  //                                   letterSpacing: 1.2,
-  //                                   color: AerobotixAppTheme.darkerText,
-  //                                 ),
-  //                               ),
-  //                             ),
-  //                           ),
-  //                           SizedBox(
-  //                             height: 38,
-  //                             width: 38,
-  //                             child: InkWell(
-  //                               highlightColor: Colors.transparent,
-  //                               borderRadius: const BorderRadius.all(
-  //                                   Radius.circular(32.0)),
-  //                               onTap: () {},
-  //                               child: Center(
-  //                                 child: Icon(
-  //                                   Icons.keyboard_arrow_left,
-  //                                   color: AerobotixAppTheme.grey,
-  //                                 ),
-  //                               ),
-  //                             ),
-  //                           ),
-  //                           Padding(
-  //                             padding: const EdgeInsets.only(
-  //                               left: 8,
-  //                               right: 8,
-  //                             ),
-  //                             child: Row(
-  //                               children: <Widget>[
-  //                                 Padding(
-  //                                   padding: const EdgeInsets.only(right: 8),
-  //                                   child: Icon(
-  //                                     Icons.calendar_today,
-  //                                     color: AerobotixAppTheme.grey,
-  //                                     size: 18,
-  //                                   ),
-  //                                 ),
-  //                                 Text(
-  //                                   '15 May',
-  //                                   textAlign: TextAlign.left,
-  //                                   style: TextStyle(
-  //                                     fontFamily: AerobotixAppTheme.fontName,
-  //                                     fontWeight: FontWeight.normal,
-  //                                     fontSize: 18,
-  //                                     letterSpacing: -0.2,
-  //                                     color: AerobotixAppTheme.darkerText,
-  //                                   ),
-  //                                 ),
-  //                               ],
-  //                             ),
-  //                           ),
-  //                           SizedBox(
-  //                             height: 38,
-  //                             width: 38,
-  //                             child: InkWell(
-  //                               highlightColor: Colors.transparent,
-  //                               borderRadius: const BorderRadius.all(
-  //                                   Radius.circular(32.0)),
-  //                               onTap: () {},
-  //                               child: Center(
-  //                                 child: Icon(
-  //                                   Icons.keyboard_arrow_right,
-  //                                   color: AerobotixAppTheme.grey,
-  //                                 ),
-  //                               ),
-  //                             ),
-  //                           ),
-  //                         ],
-  //                       ),
-  //                     )
-  //                   ],
-  //                 ),
-  //               ),
-  //             ),
-  //           );
-  //         },
-  //       )
-  //     ],
-  //   );
-  // }
+  Widget getAppBarUI() {
+    return Column(
+      children: <Widget>[
+        AnimatedBuilder(
+          animation: widget.animationController!,
+          builder: (BuildContext context, Widget? child) {
+            return FadeTransition(
+              opacity: topBarAnimation!,
+              child: Transform(
+                transform: Matrix4.translationValues(
+                    0.0, 30 * (1.0 - topBarAnimation!.value), 0.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AerobotixAppTheme.white.withOpacity(topBarOpacity),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(32.0),
+                    ),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color: AerobotixAppTheme.grey
+                              .withOpacity(0.4 * topBarOpacity),
+                          offset: const Offset(1.1, 1.1),
+                          blurRadius: 10.0),
+                    ],
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: MediaQuery.of(context).padding.top,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: 16,
+                            right: 16,
+                            top: 16 - 8.0 * topBarOpacity,
+                            bottom: 12 - 8.0 * topBarOpacity),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Material',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontFamily: AerobotixAppTheme.fontName,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 22 + 6 - 6 * topBarOpacity,
+                                    letterSpacing: 1.2,
+                                    color: AerobotixAppTheme.darkerText,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 38,
+                              width: 38,
+                              child: InkWell(
+                                highlightColor: Colors.transparent,
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(32.0)),
+                                onTap: () {},
+                                child: Center(
+                                  child: Icon(
+                                    Icons.keyboard_arrow_left,
+                                    color: AerobotixAppTheme.grey,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 8,
+                                right: 8,
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: Icon(
+                                      Icons.calendar_today,
+                                      color: AerobotixAppTheme.grey,
+                                      size: 18,
+                                    ),
+                                  ),
+                                  Text(
+                                    '15 May',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontFamily: AerobotixAppTheme.fontName,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 18,
+                                      letterSpacing: -0.2,
+                                      color: AerobotixAppTheme.darkerText,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 38,
+                              width: 38,
+                              child: InkWell(
+                                highlightColor: Colors.transparent,
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(32.0)),
+                                onTap: () {},
+                                child: Center(
+                                  child: Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: AerobotixAppTheme.grey,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        )
+      ],
+    );
+  }
 
 }

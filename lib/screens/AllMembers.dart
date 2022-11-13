@@ -146,7 +146,7 @@ class _AllMembersScreenState extends State<AllMembersScreen>
                                 child: Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
-                                  children: [
+                                   children: [
                                     AvatarGlow(
                                       glowColor: Colors.blue,
                                       endRadius:
@@ -351,7 +351,7 @@ late AwesomeDialog ad;
           },
         ),
        TextButton(
-              child: Text("Wlidha"),
+              child: Text("7arbi"),
           onPressed: () async {
             if(entryYear.isNotEmpty && double.tryParse(entryYear)!=null && double.parse(entryYear)<=DateTime.now().year  && double.parse(entryYear)>= 2000
             && score.isNotEmpty && double.tryParse(score)!=null && double.parse(score)<=5000  && double.parse(score)>= 0
@@ -411,7 +411,7 @@ late AwesomeDialog ad;
           },
         ),
         TextButton(
-              child: Text("3orsa"),
+              child: Text('3orsa'),
           onPressed: () async {
             if(entryYear.isNotEmpty && double.tryParse(entryYear)!=null && double.parse(entryYear)<=DateTime.now().year  && double.parse(entryYear)>= 2000
             && score.isNotEmpty && double.tryParse(score)!=null && double.parse(score)<=5000  && double.parse(score)>= 0
@@ -435,6 +435,8 @@ late AwesomeDialog ad;
     ad..show();
     return true;
   }
+
+
 
   @override
   void initState() {
@@ -537,7 +539,7 @@ late AwesomeDialog ad;
                         text: "3asfour",
                       ),
                       Tab(
-                        text: "Wlidha",
+                        text: "7arbi",
                       ),
                       Tab(
                         text: "Kassa7",
@@ -549,7 +551,7 @@ late AwesomeDialog ad;
                         text: "Jen",
                       ),
                       Tab(
-                        text: "3orsa",
+                        text: '3orsa',
                       ),
                     ]:
                      [
@@ -573,7 +575,7 @@ late AwesomeDialog ad;
                         text: "Jen",
                       ),
                       Tab(
-                        text: "3orsa",
+                        text: '3orsa',
                       ),
                     ]
                     ,

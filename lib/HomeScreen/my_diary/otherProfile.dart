@@ -42,7 +42,6 @@ late AwesomeDialog ad ;
 
   void initState() {
     user = {};
-
     animationController = AnimationController(
         duration: const Duration(milliseconds: 600), vsync: this);
     getUser();
@@ -79,126 +78,15 @@ late AwesomeDialog ad ;
     });
 
     super.initState();
+
   }
 
   void addAllListData() {
-    print(user);
-    print("waaaaaaaaaaaaaaaaaaa");
-    const int count = 9;
-    listViews.add(
-      PhotoView(
-        other: user,
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: animationController!,
-            curve:
-                Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: animationController!,
-      ),
-    );
-    listViews.add(
-      GlassTextView(
-        other: user,
-        field: "first_name",
-        ratio: 1.1,
-        text: Member.first_name,
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: animationController!,
-            curve:
-                Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: animationController!,
-      ),
-    );
-    listViews.add(
-      GlassTextView(
-        other: user,
-        field: "last_name",
-        ratio: 1.1,
-        text: Member.last_name,
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: animationController!,
-            curve:
-                Interval((1 / count) * 4, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: animationController!,
-      ),
-    );
-    listViews.add(
-      GlassTextView(
-        other: user,
-        field: "branch",
-        ratio: 1.1,
-        text: Member.branch,
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: animationController!,
-            curve:
-                Interval((1 / count) * 6, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: animationController!,
-      ),
-    );
-    listViews.add(
-      GlassTextView(
-        other: user,
-        field: "level",
-        ratio: 1.1,
-        text: Member.level.toString(),
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: animationController!,
-            curve:
-                Interval((1 / count) * 7, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: animationController!,
-      ),
-    );
-    listViews.add(
-      TitleView(
-        titleTxt: 'Level',
-        subTxt: 'Details',
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: animationController!,
-            curve:
-                Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: animationController!,
-      ),
-    );
-    listViews.add(
-      MediterranesnDietView(
-        xp: double.parse(user["xp"].toString()).toInt(),
-        other: user,
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: animationController!,
-            curve:
-                Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: animationController!,
-      ),
-    );
-
-  listViews.add(
-      GlassView(
-          date: "",
-          text: "Badges",
-          photo: "badge2.png",
-          phone: user["phone"]!,
-          animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(
-                  parent: animationController!,
-                  curve: Interval((1 / count) * 7, 1.0,
-                      curve: Curves.fastOutSlowIn))),
-          animationController: animationController!),
-    );
-
+    const int count = 1;
+   
     listViews.add(
       GlassView(
-          date: user["birth_date"]!,
-          text: "Birth Date : ",
-          photo: "birthdate.png",
-          animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(
-                  parent: animationController!,
-                  curve: Interval((1 / count) * 7, 1.0,
-                      curve: Curves.fastOutSlowIn))),
-          animationController: animationController!),
-    );
-    listViews.add(
-      GlassView(
-          date: (DateTime.now().year - Member.entryYear).toString() + " Years",
+          date: (DateTime.now().year - int.parse(user["entryYear"].toString())).toString() + " Years",
           text: "Experience : ",
           photo: "aerDate.png",
           animation: Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -208,6 +96,7 @@ late AwesomeDialog ad ;
                       curve: Curves.fastOutSlowIn))),
           animationController: animationController!),
     );
+ 
   }
 
   Future<bool> getData() async {
@@ -342,11 +231,12 @@ String entryYear=DateTime.now().year.toString();
                                           loadingBadge=true;
                                         });
                                         
+
                                         await FirestoreService.addBadge(id, title, "empty", day+"-"+month+"-"+year, e.toString()).then((value) {
                                           setState(() {
                                             loadingBadge=false;
                                           });
-                                   ad..dismiss();
+                                       ad..dismiss();
 
                                         });
                                       }
@@ -355,7 +245,8 @@ String entryYear=DateTime.now().year.toString();
                                 );
                             }).toList()
                             ,
-                          )
+                          ),
+                          dismissOnTouchOutside: true
 
         );
 
@@ -366,176 +257,177 @@ String entryYear=DateTime.now().year.toString();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext contextini) {
     return Container(
       color: AerobotixAppTheme.background,
-      child: Scaffold(
+      child:
+       Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
           children: <Widget>[
-            ConfettiWidget(
-              confettiController: _controllerCenter,
-              blastDirectionality: BlastDirectionality
-                  .explosive, // don't specify a direction, blast randomly
-              shouldLoop:
-                  false, // start again as soon as the animation is finished
-              colors: const [
-                Colors.green,
-                Colors.blue,
-                Colors.red,
-                Colors.blueAccent,
-                Colors.yellow,
-                Colors.black,
-                Colors.white,
-                Colors.pink,
-                Colors.brown,
-              ], // manually specify the colors to be used
-              // createParticlePath: drawStar, // define a custom shape/path.
-              emissionFrequency: 0.0001,
-              gravity: 1,
-              numberOfParticles: 200,
-              minimumSize: Size(15, 15),
-              maximumSize: Size(16, 16),
-              particleDrag: 0.03,
-            ),
-            user.isEmpty
-                ? Center(child: CircularProgressIndicator())
-                : ListView(
-                    children: [
-                      getMainListViewUI(),
-                      AnimatedBuilder(
-                        animation: animationController!,
-                        builder: (BuildContext context, Widget? child) {
-                          return FadeTransition(
-                            opacity: Tween<double>(begin: 0.0, end: 1.0)
-                                .animate(CurvedAnimation(
-                                    parent: animationController!,
-                                    curve: Interval((1 / 9) * 8, 1.0,
-                                        curve: Curves.fastOutSlowIn))),
-                            child: new Transform(
-                                transform: new Matrix4.translationValues(
-                                    0.0,
-                                    30 *
-                                        (1.0 -
-                                            Tween<double>(begin: 0.0, end: 1.0)
-                                                .animate(CurvedAnimation(
-                                                    parent:
-                                                        animationController!,
-                                                    curve: Interval(
-                                                        (1 / 9) * 8, 1.0,
-                                                        curve: Curves
-                                                            .fastOutSlowIn)))
-                                                .value),
-                                    0.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(
-                                      onLongPress: () {
-                                        setState(() {
-                                          toAdd = toAdd - 100;
-                                        });
-                                      },
-                                      child: IconButton(
-                                          iconSize: 40,
-                                          onPressed: () {
-                                            setState(() {
-                                              toAdd = toAdd - 10;
-                                            });
-                                          },
-                                          icon: Icon(Icons.remove)),
-                                    ),
-                                    Text(toAdd.toString(),
-                                        style: TextStyle(fontSize: 25)),
-                                    GestureDetector(
-                                      onLongPress: () {
-                                        setState(() {
-                                          toAdd = toAdd + 100;
-                                        });
-                                      },
-                                      child: IconButton(
-                                          iconSize: 40,
-                                          onPressed: () {
-                                            setState(() {
-                                              toAdd = toAdd + 10;
-                                            });
-                                          },
-                                          icon: Icon(Icons.add)),
-                                    ),
-                                    loading == false
-                                        ? IconButton(
-                                            iconSize: 40,
-                                            onPressed: () async {
-                                              setState(() {
-                                                loading = true;
-                                              });
-                                              await FirestoreService.setXp(
-                                                      user, toAdd)
-                                                  .timeout(Duration(seconds: 6))
-                                                  .then((value) {
-                                                setState(() {
-                                                  loading = false;
-                                                });
-                                                if (value) {
-                                                  Navigator
-                                                      .pushReplacementNamed(
-                                                    context,
-                                                    "/otherProfile",
-                                                  );
-                                                }
-                                                // Navigator.push(context, "/otherProfile");
-                                              });
-                                            },
-                                            icon: Icon(Icons.send))
-                                        : CircularProgressIndicator()
-                                  ],
-                                )),
-                          );
-                        },
-                      )
-                   ,
-                      AnimatedBuilder(
-                        animation: animationController!,
-                        builder: (BuildContext context, Widget? child) {
-                          return FadeTransition(
-                            opacity: Tween<double>(begin: 0.0, end: 1.0)
-                                .animate(CurvedAnimation(
-                                    parent: animationController!,
-                                    curve: Interval((1 / 9) * 8, 1.0,
-                                        curve: Curves.fastOutSlowIn))),
-                            child: new Transform(
-                                transform: new Matrix4.translationValues(
-                                    0.0,
-                                    30 *
-                                        (1.0 -
-                                            Tween<double>(begin: 0.0, end: 1.0)
-                                                .animate(CurvedAnimation(
-                                                    parent:
-                                                        animationController!,
-                                                    curve: Interval(
-                                                        (1 / 9) * 8, 1.0,
-                                                        curve: Curves
-                                                            .fastOutSlowIn)))
-                                                .value),
-                                    0.0),
-                                child: loadingBadge == false
-                                    ? IconButton(
-                                        iconSize: 40,
-                                        onPressed: () async {
-                                          popUp(context,user["phone"]!);
+            // ConfettiWidget(
+            //   confettiController: _controllerCenter,
+            //   blastDirectionality: BlastDirectionality
+            //       .explosive, // don't specify a direction, blast randomly
+            //   shouldLoop:
+            //       false, // start again as soon as the animation is finished
+            //   colors: const [
+            //     Colors.green,
+            //     Colors.blue,
+            //     Colors.red,
+            //     Colors.blueAccent,
+            //     Colors.yellow,
+            //     Colors.black,
+            //     Colors.white,
+            //     Colors.pink,
+            //     Colors.brown,
+            //   ], // manually specify the colors to be used
+            //   // createParticlePath: drawStar, // define a custom shape/path.
+            //   emissionFrequency: 0.0001,
+            //   gravity: 1,
+            //   numberOfParticles: 200,
+            //   minimumSize: Size(15, 15),
+            //   maximumSize: Size(16, 16),
+            //   particleDrag: 0.03,
+            // ),
+            // // user.isEmpty
+            //     ? Center(child: CircularProgressIndicator())
+            //     : ListView(
+            //         children: [
+            //           // getMainListViewUI(),
+            //        if(Member.roles.contains("admin"))   AnimatedBuilder(
+            //             animation: animationController!,
+            //             builder: (BuildContext context, Widget? child) {
+            //               return FadeTransition(
+            //                 opacity: Tween<double>(begin: 0.0, end: 1.0)
+            //                     .animate(CurvedAnimation(
+            //                         parent: animationController!,
+            //                         curve: Interval((1 / 9) * 8, 1.0,
+            //                             curve: Curves.fastOutSlowIn))),
+            //                 child: new Transform(
+            //                     transform: new Matrix4.translationValues(
+            //                         0.0,
+            //                         30 *
+            //                             (1.0 -
+            //                                 Tween<double>(begin: 0.0, end: 1.0)
+            //                                     .animate(CurvedAnimation(
+            //                                         parent:
+            //                                             animationController!,
+            //                                         curve: Interval(
+            //                                             (1 / 9) * 8, 1.0,
+            //                                             curve: Curves
+            //                                                 .fastOutSlowIn)))
+            //                                     .value),
+            //                         0.0),
+            //                     child: Row(
+            //                       mainAxisAlignment: MainAxisAlignment.center,
+            //                       children: [
+            //                         GestureDetector(
+            //                           onLongPress: () {
+            //                             setState(() {
+            //                               toAdd = toAdd - 100;
+            //                             });
+            //                           },
+            //                           child: IconButton(
+            //                               iconSize: 40,
+            //                               onPressed: () {
+            //                                 setState(() {
+            //                                   toAdd = toAdd - 10;
+            //                                 });
+            //                               },
+            //                               icon: Icon(Icons.remove)),
+            //                         ),
+            //                         Text(toAdd.toString(),
+            //                             style: TextStyle(fontSize: 25)),
+            //                         GestureDetector(
+            //                           onLongPress: () {
+            //                             setState(() {
+            //                               toAdd = toAdd + 100;
+            //                             });
+            //                           },
+            //                           child: IconButton(
+            //                               iconSize: 40,
+            //                               onPressed: () {
+            //                                 setState(() {
+            //                                   toAdd = toAdd + 10;
+            //                                 });
+            //                               },
+            //                               icon: Icon(Icons.add)),
+            //                         ),
+            //                         loading == false
+            //                             ? IconButton(
+            //                                 iconSize: 40,
+            //                                 onPressed: () async {
+            //                                   setState(() {
+            //                                     loading = true;
+            //                                   });
+            //                                   await FirestoreService.setXp(
+            //                                           user, toAdd)
+            //                                       .timeout(Duration(seconds: 6))
+            //                                       .then((value) {
+            //                                     setState(() {
+            //                                       loading = false;
+            //                                     });
+            //                                     if (value) {
+            //                                       Navigator
+            //                                           .pushReplacementNamed(
+            //                                         context,
+            //                                         "/otherProfile",
+            //                                       );
+            //                                     }
+            //                                     // Navigator.push(context, "/otherProfile");
+            //                                   });
+            //                                 },
+            //                                 icon: Icon(Icons.send))
+            //                             : CircularProgressIndicator()
+            //                       ],
+            //                     )),
+            //               );
+            //             },
+            //           )
+            //        ,
+            //          if(Member.roles.contains("admin"))  AnimatedBuilder(
+            //             animation: animationController!,
+            //             builder: (BuildContext context, Widget? child) {
+            //               return FadeTransition(
+            //                 opacity: Tween<double>(begin: 0.0, end: 1.0)
+            //                     .animate(CurvedAnimation(
+            //                         parent: animationController!,
+            //                         curve: Interval((1 / 9) * 8, 1.0,
+            //                             curve: Curves.fastOutSlowIn))),
+            //                 child: new Transform(
+            //                     transform: new Matrix4.translationValues(
+            //                         0.0,
+            //                         30 *
+            //                             (1.0 -
+            //                                 Tween<double>(begin: 0.0, end: 1.0)
+            //                                     .animate(CurvedAnimation(
+            //                                         parent:
+            //                                             animationController!,
+            //                                         curve: Interval(
+            //                                             (1 / 9) * 8, 1.0,
+            //                                             curve: Curves
+            //                                                 .fastOutSlowIn)))
+            //                                     .value),
+            //                         0.0),
+            //                     child:  loadingBadge == false
+            //                         ? IconButton(
+            //                             iconSize: 40,
+            //                             onPressed: () async {
+            //                               popUp(contextini,user["phone"]!);
                                         
-                                        },
-                                        icon: Icon(Icons.badge))
-                                    : Center(child: CircularProgressIndicator())),
-                          );
-                        },
-                      )
+            //                             },
+            //                             icon: Icon(Icons.badge))
+            //                         : Center(child: CircularProgressIndicator())),
+            //               );
+            //             },
+            //           )
                    
-                    ],
-                  ),
-            SizedBox(
-              height: MediaQuery.of(context).padding.bottom,
-            )
+            //         ],
+            //       ),
+            // SizedBox(
+            //   height: MediaQuery.of(context).padding.bottom,
+            // )
           ],
         ),
       ),

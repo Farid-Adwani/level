@@ -116,7 +116,9 @@ class FirestoreService {
           "xp": 0,
           "gameLevel": "3asfour",
           "new": true,
-          'roles':[]
+          'roles':[],
+          'claim':0,
+
 
         });
         Member.phone = phone;
@@ -138,6 +140,7 @@ class FirestoreService {
         Member.device = deviceId!;
         Member.isNew = true;
         Member.roles = [];
+        Member.claim=0;
 
       } catch (e) {}
     }
@@ -251,6 +254,26 @@ class FirestoreService {
     }
     return map;
   }
+
+
+  static Future<String> getFullName(String ph) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    CollectionReference memberRef = db.collection('members');
+
+    try {
+      print("tryinnnnnnnnnnnnnnnnnnnnng");
+      QuerySnapshot user = await memberRef
+          .where("phone", isEqualTo: ph)
+          .limit(1)
+          .get();
+      DocumentSnapshot name = user.docs.first["first_name"]+" "+ user.docs.first["last_name"];
+      return name.toString();
+    } catch (e) {
+      return "";
+    }
+    return "";
+  }
+
 
   static Future<bool> isConnected() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
@@ -518,6 +541,7 @@ class FirestoreService {
       Member.gameLevel = user.get("gameLevel");
       Member.isNew = user.get("new");
       Member.roles = user.get("roles");
+      Member.claim=user.get("claim");
 
      
     } catch (e) {}
@@ -588,6 +612,7 @@ class FirestoreService {
             doc.get("birth_date").toDate().month.toString() +
             "-" +
             doc.get("birth_date").toDate().year.toString();
+        user["claim"] = doc.get("claim");
           
         print(user);
       }).timeout(Duration(seconds: 5));
@@ -832,11 +857,10 @@ static Future<bool> subscribeToMission(
           db.collection('missions').doc(identifiant);
       
 
-   
         await requesstRef.set({
-          field: FieldValue.arrayUnion([phone]),
+          field: FieldValue.arrayUnion([phone+"~"+full_name]),
         }, SetOptions(merge: true)).then((e) {
-          showSnackBar("Done affecting mission");
+        if(field=="members"){showSnackBar("Done affecting mission");}
         });
       
 
@@ -948,6 +972,7 @@ static Future<bool> subscribeToMission(
           }, SetOptions(merge: true)).timeout(Duration(seconds:6)).then((e) {
             showSnackBar("Data updated successfully");
           });
+          Member.xp=x +5000;
           return true;
       }else{
          if ((x / 5000) >= 1) {
@@ -970,10 +995,12 @@ static Future<bool> subscribeToMission(
         }
           await userRef.set({
             "gameLevel": neww,
-            "xp": x % 5000,
+            "xp": x / 5000,
           }, SetOptions(merge: true)).timeout(Duration(seconds:6)).then((e) {
             showSnackBar("Data updated successfully");
           });
+          Member.xp=x % 5000;
+
           return true;
         
       } else {
@@ -982,6 +1009,8 @@ static Future<bool> subscribeToMission(
         }, SetOptions(merge: true)).timeout(Duration(seconds:6)).then((e) {
           showSnackBar("Data updated successfully");
         });
+          Member.xp=x % 5000;
+
         return true;
       }
       }
@@ -995,6 +1024,74 @@ static Future<bool> subscribeToMission(
       return false;
     }
   }
+
+
+  static Future<bool> setClaim(String phone, int value) async {
+   
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+
+    DocumentSnapshot? user;
+
+    try {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      DocumentReference userRef = db.collection('members').doc(phone);
+      int claimm=0;
+      await userRef.get().then((doc) {
+        claimm = doc["claim"];
+      }).timeout(Duration(seconds: 5));
+      print(claimm);
+      print(claimm);
+      print(claimm);
+      print(claimm);
+
+
+       userRef.update({"claim": value+claimm});
+        showSnackBar("Done giving award");
+        return true;
+    } on TimeoutException catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    } catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+  }
+
+  static Future<bool> resetClaim(String phone) async {
+   
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+
+    DocumentSnapshot? user;
+
+    try {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      DocumentReference userRef = db.collection('members').doc(phone);
+       userRef.update({"claim": 0});
+       Member.claim=0;
+        return true;
+    } on TimeoutException catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    } catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+  }
+
 
   static Future<bool> setlevel(String key, int value) async {
     if (value == 0 ) {
@@ -1079,7 +1176,7 @@ static Future<bool> subscribeToMission(
       return false;
     }
   }
-  static Future<bool> playSong(String phone, String url) async {
+  static Future<bool> playSong(String phone, String url,String title) async {
    
     bool result = await InternetConnectionChecker().hasConnection;
     if (result == false) {
@@ -1097,8 +1194,10 @@ static Future<bool> subscribeToMission(
         
       songRef.set({
         "url": url,
+        "name": Member.first_name+" "+Member.last_name,
+        "title":title
       }, SetOptions(merge: true));
-        showSnackBar("Your song is in added to the queue");
+        showSnackBar("Your song will be playing now");
         return true;
       
     } on TimeoutException catch (e) {

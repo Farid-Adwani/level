@@ -131,6 +131,8 @@ late AwesomeDialog ad;
         btnOk: IconButton(
           iconSize: 50,
           onPressed: () async {
+            Member.isNew?                                  showSnackBar("Your account must be verified !",col:Colors.red):
+            
             FirestoreService.requestMaterial(quantiteMap,note);
             ad..dismiss();
           },

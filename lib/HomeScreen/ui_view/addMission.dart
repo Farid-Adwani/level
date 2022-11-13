@@ -4,6 +4,7 @@ import 'package:Aerobotix/services/firebase_service.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:easy_container/easy_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:gender_picker/source/enums.dart';
 import 'dart:async';
 import 'dart:io';
@@ -46,6 +47,25 @@ class _AddMissionState extends State<AddMission> {
     setState(() {
       uploading = true;
     });
+
+       final filePath = _photo!.absolute.path;
+    
+    // Create output file path
+    // eg:- "Volume/VM/abcd_out.jpeg"
+    final lastIndex = filePath.lastIndexOf(new RegExp(r'.jp'));
+    final splitted = filePath.substring(0, (lastIndex));
+    final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
+
+    final compressedImage = await FlutterImageCompress.compressAndGetFile(
+          filePath, 
+          outPath,
+          minWidth: 1000,
+          minHeight: 1000,
+          quality: 50).then((value) async {
+
+_photo=value;
+
+
     final fileName = basename(_photo!.path);
     final destination = 'missions/';
 
@@ -80,6 +100,8 @@ class _AddMissionState extends State<AddMission> {
         _photo = null;
       });
     }
+      });
+
     setState(() {
       uploading = false;
     });
