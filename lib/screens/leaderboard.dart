@@ -517,7 +517,7 @@ class _leaderboardScreenState extends State<leaderboardScreen>
           alignment: WrapAlignment.center,
           children: [
             TextButton(
-              child: Text("3asfour"),
+              child: Text("Chrara"),
               onPressed: () async {
                 if (entryYear.isNotEmpty &&
                     double.tryParse(entryYear) != null &&
@@ -733,7 +733,7 @@ class _leaderboardScreenState extends State<leaderboardScreen>
                     labelStyle: TextStyle(color: Colors.white),
                     tabs: [
                       Tab(
-                        text: "3asfour",
+                        text: "Chrara",
                       ),
                       Tab(
                         text: "7arbi",

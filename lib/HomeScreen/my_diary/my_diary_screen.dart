@@ -91,7 +91,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
 
   void addAllListData() {
 
-    int count = Member.claim > 0 ? 10 : 9;
+    int count = Member.claim > 0 ? 9 : 8;
     if (Member.claim > 0) {
       listViews.add(
         GlassTextView(
@@ -152,11 +152,17 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
         animationController: widget.animationController!,
       ),
     );
+    print(Member.level);
+    print(Member.level);
+    print(Member.level);
+    print(Member.level);
+    print(Member.level);
+
     listViews.add(
       GlassTextView(
         field: "level",
         ratio: 1.3,
-        text: Member.level.toString(),
+        text: Member.level==6? "5+" : Member.level.toString(),
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
             curve:
@@ -165,17 +171,17 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
       ),
     );
 
-    listViews.add(
-      TitleView(
-        titleTxt: 'Level',
-        subTxt: 'Details',
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController!,
-            curve:
-                Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController!,
-      ),
-    );
+    // listViews.add(
+    //   TitleView(
+    //     titleTxt: 'Level',
+    //     subTxt: 'Details',
+    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    //         parent: widget.animationController!,
+    //         curve:
+    //             Interval((1 / count) * 0, 1.0, curve: Curves.fastOutSlowIn))),
+    //     animationController: widget.animationController!,
+    //   ),
+    // );
     listViews.add(
       MediterranesnDietView(
         xp: Member.xp,
@@ -238,51 +244,53 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AerobotixAppTheme.background,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Center(
-          child: SafeArea(
-            child: Banner(
-              message: Member.isNew ? "Not verified" : "Verified",
-              location: BannerLocation.topEnd,
-              color: Member.isNew ? Colors.red : Colors.green,
-              child: Stack(
+    Widget stack=Stack(
                 children: <Widget>[
-                  ConfettiWidget(
-                    confettiController: _controllerCenter,
-                    blastDirectionality: BlastDirectionality
-                        .explosive, // don't specify a direction, blast randomly
-                    shouldLoop:
-                        false, // start again as soon as the animation is finished
-                    colors: const [
-                      Colors.green,
-                      Colors.blue,
-                      Colors.red,
-                      Colors.blueAccent,
-                      Colors.yellow,
-                      Colors.black,
-                      Colors.white,
-                      Colors.pink,
-                      Colors.brown,
-                    ], // manually specify the colors to be used
-                    // createParticlePath: drawStar, // define a custom shape/path.
-                    emissionFrequency: 0.0001,
-                    gravity: 1,
-                    numberOfParticles: 200,
-                    minimumSize: Size(15, 15),
-                    maximumSize: Size(16, 16),
-                    particleDrag: 0.03,
-                  ),
+                  // ConfettiWidget(
+                  //   confettiController: _controllerCenter,
+                  //   blastDirectionality: BlastDirectionality
+                  //       .explosive, // don't specify a direction, blast randomly
+                  //   shouldLoop:
+                  //       false, // start again as soon as the animation is finished
+                  //   colors: const [
+                  //     Colors.green,
+                  //     Colors.blue,
+                  //     Colors.red,
+                  //     Colors.blueAccent,
+                  //     Colors.yellow,
+                  //     Colors.black,
+                  //     Colors.white,
+                  //     Colors.pink,
+                  //     Colors.brown,
+                  //   ], // manually specify the colors to be used
+                  //   // createParticlePath: drawStar, // define a custom shape/path.
+                  //   emissionFrequency: 0.0001,
+                  //   gravity: 1,
+                  //   numberOfParticles: 200,
+                  //   minimumSize: Size(15, 15),
+                  //   maximumSize: Size(16, 16),
+                  //   particleDrag: 0.03,
+                  // ),
+                
                   getMainListViewUI(),
                   getAppBarUI(),
                   SizedBox(
                     height: MediaQuery.of(context).padding.bottom,
                   )
                 ],
-              ),
-            ),
+              );
+    return Container(
+      color: AerobotixAppTheme.background,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: SafeArea(
+            child:Member.isNew ? Banner(
+              message:  "Not verified",
+              location: BannerLocation.topEnd,
+              color:  Colors.red,
+              child: stack ,
+            ):stack,
           ),
         ),
       ),
@@ -296,22 +304,29 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
         if (!snapshot.hasData) {
           return const SizedBox();
         } else {
-          return ListView.builder(
-            controller: scrollController,
-            padding: EdgeInsets.only(
-              top: AppBar().preferredSize.height +
-                  MediaQuery.of(context).padding.top +
-                  24,
-              bottom: 62 + MediaQuery.of(context).padding.bottom,
-            ),
-            shrinkWrap: true,
-            itemCount: listViews.length,
-            scrollDirection: Axis.vertical,
-            itemBuilder: (BuildContext context, int index) {
-              widget.animationController?.forward();
+          return ListView(
+            children: [
+              ListView.builder(
+                controller: scrollController,
+                padding: EdgeInsets.only(
+                  top: AppBar().preferredSize.height +
+                      MediaQuery.of(context).padding.top +
+                      24,
+                  bottom: 62 + MediaQuery.of(context).padding.bottom,
+                ),
+                shrinkWrap: true,
+                itemCount: listViews.length,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (BuildContext context, int index) {
+                  widget.animationController?.forward();
 
-              return listViews[index];
-            },
+                  return listViews[index];
+                },
+              ),
+               SizedBox(
+                    height: 35,
+                  )
+            ],
           );
         }
       },
@@ -406,7 +421,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                                             },
                                             icon: Icon(
                                               Icons.task_alt_sharp,
-                                              color: AerobotixAppTheme.grey,
+                                              color: AerobotixAppTheme.darkerText,
                                               size: 30,
                                             ),
                                           ),
@@ -467,7 +482,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                                         },
                                         icon: Icon(
                                           Icons.refresh,
-                                          color: AerobotixAppTheme.grey,
+                                          color: AerobotixAppTheme.darkerText,
                                           size: 30,
                                         ),
                                       )),
@@ -480,7 +495,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                                         },
                                         icon: Icon(
                                           Icons.logout_rounded,
-                                          color: AerobotixAppTheme.grey,
+                                          color: AerobotixAppTheme.darkerText,
                                           size: 30,
                                         ),
                                       )),

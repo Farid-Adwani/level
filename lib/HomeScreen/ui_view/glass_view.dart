@@ -41,13 +41,14 @@ class GlassView extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(
-                        left: 24, right: 24, top: 0, bottom: 24),
+                        left: 24, right: 24, top: 0, bottom: 0),
                     child: Stack(
                       clipBehavior: Clip.none,
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(top: 16),
                           child: Container(
+                            width: MediaQuery.of(context).size.width/1.5,
                             decoration: BoxDecoration(
                               color: HexColor("#D7E0F9"),
                               borderRadius: BorderRadius.only(
@@ -90,14 +91,15 @@ class GlassView extends StatelessWidget {
                           top: -12,
                           left: 0,
                           child: SizedBox(
-                            width: 80,
-                            height: 80,
+                            width: 60,
+                            height: 60,
                             child: Image.asset("assets/HomeScreen/"+photo),
                           ),
                         )
                       ],
                     ),
                   ),
+              
                 ],
               ),
             ),

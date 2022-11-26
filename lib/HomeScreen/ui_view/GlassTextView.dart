@@ -166,7 +166,7 @@ class _GlassTextViewState extends State<GlassTextView> {
           interpretedText = Member.branch;
           break;
         case "level":
-          interpretedText = Member.level.toString();
+          interpretedText = Member.level==6? "5+" : Member.level.toString();
           break;
         case "claim":
           interpretedText = widget.text;
@@ -469,11 +469,9 @@ class _GlassTextViewState extends State<GlassTextView> {
                                 ],
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                      child:
-                                          Center(child: Text(interpretedText))),
+                                  Expanded(child: Center(child: Text(interpretedText))),
                                   if (widget.other.isEmpty &&
                                       widget.field != "claim")
                                     IconButton(

@@ -204,10 +204,10 @@ class _AllMembersScreenState extends State<AllMembersScreen>
                                                 doc.get('last_name'),
                                                 textAlign: TextAlign.center,
                                             style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: 15,
                                               foreground: Paint()
                                                 ..style = PaintingStyle.stroke
-                                                ..strokeWidth = 6
+                                                ..strokeWidth = 2
                                                 ..color = colorLevel,
                                             ),
                                           ),
@@ -220,7 +220,7 @@ class _AllMembersScreenState extends State<AllMembersScreen>
                                             textAlign: TextAlign.center,
 
                                             style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: 15,
                                               color: Colors.white,
                                             ),
                                           ),
@@ -336,7 +336,7 @@ late AwesomeDialog ad;
 
           children: [
             TextButton(
-              child: Text("3asfour"),
+              child: Text("Chrara"),
           onPressed: () async {
             if(entryYear.isNotEmpty && double.tryParse(entryYear)!=null && double.parse(entryYear)<=DateTime.now().year  && double.parse(entryYear)>= 2000
             && score.isNotEmpty && double.tryParse(score)!=null && double.parse(score)<=5000  && double.parse(score)>= 0
@@ -536,7 +536,7 @@ late AwesomeDialog ad;
                         text: "All",
                       ),
                       Tab(
-                        text: "3asfour",
+                        text: "Chrara",
                       ),
                       Tab(
                         text: "7arbi",
@@ -560,10 +560,10 @@ late AwesomeDialog ad;
                         text: "All",
                       ),
                       Tab(
-                        text: "3asfour",
+                        text: "Chrara",
                       ),
                       Tab(
-                        text: "Wlidha",
+                        text: "7arbi",
                       ),
                       Tab(
                         text: "Kassa7",

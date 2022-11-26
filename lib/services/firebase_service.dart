@@ -613,6 +613,13 @@ class FirestoreService {
             "-" +
             doc.get("birth_date").toDate().year.toString();
         user["claim"] = doc.get("claim").toString();
+        if(doc.get("roles").contains("music")){
+        user["music"] = "true";
+
+        }else{
+        user["music"] = "false";
+
+        }
           
         print(user);
       }).timeout(Duration(seconds: 5));
@@ -791,6 +798,52 @@ class FirestoreService {
         }, SetOptions(merge: true)).then((e) {
           showSnackBar("Data updated successfully");
         });
+      
+
+      return true;
+    } on TimeoutException catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    } catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+  }
+
+  static Future<bool> MusicPermission(
+      String phone,bool dec) async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+
+    try {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      DocumentReference requesstRef =
+          db.collection('members').doc(phone);
+      
+
+   
+        if (dec==true){
+          await requesstRef.set({
+          "roles": FieldValue.arrayUnion(["music"]),
+        }, SetOptions(merge: true)).then((e) {
+          showSnackBar("Done adding music permission");
+        });
+        Member.roles.add("music");
+        }else{
+          await requesstRef.set({
+          "roles": FieldValue.arrayRemove(["music"]),
+        }, SetOptions(merge: true)).then((e) {
+          showSnackBar("Done removing music permission");
+        });
+        Member.roles.remove("music");
+
+        }
       
 
       return true;
