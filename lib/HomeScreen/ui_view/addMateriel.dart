@@ -14,10 +14,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
 
 class AddMaterial extends StatefulWidget {
-
-
-  AddMaterial({Key? key,})
-      : super(key: key);
+  AddMaterial({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<AddMaterial> createState() => _AddMaterialState();
@@ -27,8 +26,8 @@ class _AddMaterialState extends State<AddMaterial> {
   String matIm = "";
   void getIm() async {
     try {
-      matIm =
-          await FirestoreService.getMaterialImage("materials/",materialNameRef);
+      matIm = await FirestoreService.getMaterialImage(
+          "materials/", materialNameRef);
       setState(() {});
     } catch (e) {}
   }
@@ -48,8 +47,8 @@ class _AddMaterialState extends State<AddMaterial> {
       uploading = true;
     });
 
-         final filePath = _photo!.absolute.path;
-    
+    final filePath = _photo!.absolute.path;
+
     // Create output file path
     // eg:- "Volume/VM/abcd_out.jpeg"
     final lastIndex = filePath.lastIndexOf(new RegExp(r'.jp'));
@@ -57,47 +56,41 @@ class _AddMaterialState extends State<AddMaterial> {
     final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
 
     final compressedImage = await FlutterImageCompress.compressAndGetFile(
-          filePath, 
-          outPath,
-          minWidth: 1000,
-          minHeight: 1000,
-          quality: 50).then((value) async {
+            filePath, outPath,
+            minWidth: 1000, minHeight: 1000, quality: 50)
+        .then((value) async {
+      _photo = value;
 
-_photo=value;
+      final fileName = basename(_photo!.path);
+      final destination = 'materials/';
 
-    final fileName = basename(_photo!.path);
-    final destination = 'materials/';
+      try {
+        String name = DateTime.now().toString() + fileName;
+        materialNameRef = name;
+        final ref = FirebaseStorage.instance.ref(destination).child(name);
 
-
-
-
-    try {
-      String name = DateTime.now().toString() + fileName;
-      materialNameRef = name;
-      final ref = FirebaseStorage.instance.ref(destination).child(name);
-
-      await ref.putFile(_photo!).timeout(Duration(seconds: 7));
-      await FirestoreService.addMaterialPhoto(name,materialName)
-          .timeout(Duration(seconds: 7))
-          .then((value) {
-        showSnackBar("Your photo is updated successfully !");
-        getIm();
-      });
-    } on TimeoutException {
-      showSnackBar("Please check your internet connection and retry !",
-          col: Colors.red);
-      setState(() {
-        uploading = false;
-        _photo = null;
-      });
-    } catch (e) {
-      showSnackBar("Please check your internet connection and retry !",
-          col: Colors.red);
-      setState(() {
-        uploading = false;
-        _photo = null;
-      });
-    }
+        await ref.putFile(_photo!).timeout(Duration(seconds: 7));
+        await FirestoreService.addMaterialPhoto(name, materialName)
+            .timeout(Duration(seconds: 7))
+            .then((value) {
+          showSnackBar("Your photo is updated successfully !");
+          getIm();
+        });
+      } on TimeoutException {
+        showSnackBar("Please check your internet connection and retry !",
+            col: Colors.red);
+        setState(() {
+          uploading = false;
+          _photo = null;
+        });
+      } catch (e) {
+        showSnackBar("Please check your internet connection and retry !",
+            col: Colors.red);
+        setState(() {
+          uploading = false;
+          _photo = null;
+        });
+      }
     });
 
     setState(() {
@@ -164,188 +157,177 @@ _photo=value;
 
   String materialName = "";
   String materialdescription = "";
-  String materialNameRef="";
+  String materialNameRef = "";
   int step = 1;
 
   @override
   Widget build(BuildContext context) {
-    
-        return
-                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 24, right: 24, top: 0, bottom: 0),
-                  child: ListView(
-                    
-                    children: [
-                      Padding(
-                          padding: const EdgeInsets.all(30.0),
-                          child: step == 1
-                              ? Text(
-                                  'Add a new component',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1.2,
-                                    fontSize: 20,
-                                    color: AerobotixAppTheme.darkerText,
-                                  ),
-                                )
-                              : Text(
-                                  'Insert the image',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1.2,
-                                    fontSize: 20,
-                                    color: AerobotixAppTheme.darkerText,
-                                  ),
-                                )),
-                      if (step == 1)
-                        TextFormField(
-                          initialValue: materialName,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Enter the name of the component',
-                            prefixIcon: Icon(Icons.add_shopping_cart_rounded),
-                          ),
-                          onFieldSubmitted: (value) {
-                            materialName = value.trim();
-                          },
-                          onChanged: (value) {
-                            materialName = value.trim();
-                          },
-                          maxLength: 20,
-                        ),
-                      if (step == 1)
-                        TextFormField(
-                          initialValue: materialdescription,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Enter the description of the component',
-                            // prefixIcon: Icon(Icons.description_outlined,),
-                          ),
-                          onFieldSubmitted: (value) {
-                            materialdescription = value.trim();
-                          },
-                          onChanged: (value) {
-                            materialdescription = value.trim();
-                          },
-                          maxLength: 250,
-                          maxLines: 10,
-                        ),
-                      if (step == 2)
-                        AvatarGlow(
-                          glowColor: Colors.blue,
-                          endRadius: MediaQuery.of(context).size.width / 2,
-                          duration: Duration(milliseconds: 2000),
-                          repeat: true,
-                          showTwoGlows: true,
-                          repeatPauseDuration: Duration(milliseconds: 100),
-                          child: Stack(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width / 1.5,
-                                height: MediaQuery.of(context).size.width / 1.5,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Color.fromARGB(255, 211, 211, 211),
-                                      width: 5),
-                                  shape: BoxShape.circle,
-                                  image: (matIm.isNotEmpty && matIm != "wait")
-                                      ? DecorationImage(
-                                          image: NetworkImage(
-                                            matIm,
-                                          ),
-                                          fit: BoxFit.fill)
-                                      : matIm.isEmpty
-                                          ? DecorationImage(
-                                              image: AssetImage(
-                                                "assets/images/tools.jpg",
-                                              ),
-                                              fit: BoxFit.fill)
-                                          : null,
-                                ),
+    return Padding(
+      padding: const EdgeInsets.only(left: 24, right: 24, top: 0, bottom: 0),
+      child: ListView(
+        children: [
+          Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: step == 1
+                  ? Text(
+                      'Add a new component',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                        fontSize: 20,
+                        color: AerobotixAppTheme.darkerText,
+                      ),
+                    )
+                  : Text(
+                      'Insert the image',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                        fontSize: 20,
+                        color: AerobotixAppTheme.darkerText,
+                      ),
+                    )),
+          if (step == 1)
+            TextFormField(
+              initialValue: materialName,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Enter the name of the component',
+                prefixIcon: Icon(Icons.add_shopping_cart_rounded),
+              ),
+              onFieldSubmitted: (value) {
+                materialName = value.trim();
+              },
+              onChanged: (value) {
+                materialName = value.trim();
+              },
+              maxLength: 20,
+            ),
+          if (step == 1)
+            TextFormField(
+              initialValue: materialdescription,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Enter the description of the component',
+                // prefixIcon: Icon(Icons.description_outlined,),
+              ),
+              onFieldSubmitted: (value) {
+                materialdescription = value.trim();
+              },
+              onChanged: (value) {
+                materialdescription = value.trim();
+              },
+              maxLength: 250,
+              maxLines: 10,
+            ),
+          if (step == 2)
+            AvatarGlow(
+              glowColor: Colors.blue,
+              endRadius: MediaQuery.of(context).size.width / 2,
+              duration: Duration(milliseconds: 2000),
+              repeat: true,
+              showTwoGlows: true,
+              repeatPauseDuration: Duration(milliseconds: 100),
+              child: Stack(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width / 1.5,
+                    height: MediaQuery.of(context).size.width / 1.5,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Color.fromARGB(255, 211, 211, 211), width: 5),
+                      shape: BoxShape.circle,
+                      image: (matIm.isNotEmpty && matIm != "wait")
+                          ? DecorationImage(
+                              image: NetworkImage(
+                                matIm,
                               ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width / 6,
-                                  height: MediaQuery.of(context).size.width / 6,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 211, 211, 211),
-                                    shape: BoxShape.circle,
+                              fit: BoxFit.fill)
+                          : matIm.isEmpty
+                              ? DecorationImage(
+                                  image: AssetImage(
+                                    "assets/images/tools.jpg",
                                   ),
-                                  child: IconButton(
-                                      onPressed: () {
-                                        _showPicker(context);
-                                      },
-                                      icon: Icon(
-                                        Icons.edit,
-                                        color: Color.fromARGB(255, 44, 19, 187),
-                                      )),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      EasyContainer(
-                          width: double.infinity,
-                          onTap: () async {
-                           
-                            // step
-                            if (step == 1) {
-                               setState(() {
-                              verif=true;
-                            });
-                              if (materialName.isEmpty) {
-                                showSnackBar(
-                                    'Please enter the name of the component',
-                                    col: Colors.redAccent[700]);
-                                    setState(() {
-                              verif=false;
-                            });
-                              } else {
-                              bool result= await FirestoreService.addMaterial(materialName,materialdescription).then((value) {
-
-                                if(value==true){
-                                  setState(() {
-                                    
-                                  step = 2;
-                                });
-                                }
-                             setState(() {
-                              verif=false;
-                            });
-                                return value;
-                              
-                               });
-                                
-                              }
-                              
-                            } else {
-                              setState(() { 
-                                step=1;
-                              });
-                            }
-                          },
-                          child:verif==false? step==1?const Text(
-                            'Continue',
-                            style: TextStyle(fontSize: 18),
-                          ):const Text(
-                            'Finish ☑️',
-                            style: TextStyle(fontSize: 18),
-                          ):
-                          CircularProgressIndicator()
-                          
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height/10,
-                          )
-                    ],
+                                  fit: BoxFit.fill)
+                              : null,
+                    ),
                   ),
-                );
-     
-    
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 6,
+                      height: MediaQuery.of(context).size.width / 6,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 211, 211, 211),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                          onPressed: () {
+                            _showPicker(context);
+                          },
+                          icon: Icon(
+                            Icons.edit,
+                            color: Color.fromARGB(255, 44, 19, 187),
+                          )),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          EasyContainer(
+              width: double.infinity,
+              onTap: () async {
+                // step
+                if (step == 1) {
+                  setState(() {
+                    verif = true;
+                  });
+                  if (materialName.isEmpty) {
+                    showSnackBar('Please enter the name of the component',
+                        col: Colors.redAccent[700]);
+                    setState(() {
+                      verif = false;
+                    });
+                  } else {
+                    bool result = await FirestoreService.addMaterial(
+                            materialName, materialdescription)
+                        .then((value) {
+                      if (value == true) {
+                        setState(() {
+                          step = 2;
+                        });
+                      }
+                      setState(() {
+                        verif = false;
+                      });
+                      return value;
+                    });
+                  }
+                } else {
+                  setState(() {
+                    step = 1;
+                  });
+                }
+              },
+              child: verif == false
+                  ? step == 1
+                      ? const Text(
+                          'Continue',
+                          style: TextStyle(fontSize: 18),
+                        )
+                      : const Text(
+                          'Finish ☑️',
+                          style: TextStyle(fontSize: 18),
+                        )
+                  : CircularProgressIndicator()),
+          SizedBox(
+            height: MediaQuery.of(context).size.height / 10,
+          )
+        ],
+      ),
+    );
   }
 }

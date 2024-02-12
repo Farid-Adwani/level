@@ -1,6 +1,6 @@
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_home_screen.dart';
-import 'package:Aerobotix/HomeScreen/my_diary/my_diary_screen.dart';
-import 'package:Aerobotix/HomeScreen/my_diary/otherProfile.dart';
+import 'package:Aerobotix/HomeScreen/profile/profile_screen.dart';
+import 'package:Aerobotix/HomeScreen/profile/otherProfile.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/AllBadges.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/badges.dart';
 import 'package:Aerobotix/screens/authentication_screen.dart';

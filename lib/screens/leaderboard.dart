@@ -1,4 +1,5 @@
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
+import 'package:Aerobotix/HomeScreen/profile/otherProfile.dart';
 import 'package:Aerobotix/model/member.dart';
 import 'package:Aerobotix/services/firebase_service.dart';
 import 'package:Aerobotix/ui/HexColor.dart';
@@ -148,297 +149,289 @@ class _leaderboardScreenState extends State<leaderboardScreen>
 
           return ListView(
             children: [
-              Wrap(
-                  alignment: WrapAlignment.center,
-                  children: [
-                        Card(
-                          margin: EdgeInsets.all(20),
-                          child: TextFormField(
-                            initialValue: search,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.search),
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter a name',
-                            ),
+                  Card(
+                    margin: EdgeInsets.all(20),
+                    child: TextFormField(
+                      initialValue: search,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search),
+                        border: OutlineInputBorder(),
+                        hintText: 'Enter a name',
+                      ),
 
-                            onChanged: (value) {
-                              setState(() {
-                                search = value.trim();
-                              });
-                            },
-                            // maxLength: 20,
-                            maxLines: 1,
-                          ),
-                        ),
-                        if (categories == "3asfour" && poduim3as.length > 2)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              getPoduim(poduim3as[2],
-                                  Color.fromARGB(255, 205, 127, 50), 11),
-                              getPoduim(poduim3as[0],
-                                  Color.fromARGB(255, 218, 165, 3), 9),
-                              getPoduim(poduim3as[1],
-                                  Color.fromARGB(255, 192, 192, 192), 10),
-                            ],
-                          ),
-                        if (categories == "wlidha" && poduimWli.length > 2)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              getPoduim(poduimWli[2],
-                                  Color.fromARGB(255, 205, 127, 50), 11),
-                              getPoduim(poduimWli[0],
-                                  Color.fromARGB(255, 218, 165, 3), 9),
-                              getPoduim(poduimWli[1],
-                                  Color.fromARGB(255, 192, 192, 192), 10),
-                            ],
-                          ),
-                        if (categories == "kassa7" && poduimKas.length > 2)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              getPoduim(poduimKas[2],
-                                  Color.fromARGB(255, 205, 127, 50), 11),
-                              getPoduim(poduimKas[0],
-                                  Color.fromARGB(255, 218, 165, 3), 9),
-                              getPoduim(poduimKas[1],
-                                  Color.fromARGB(255, 192, 192, 192), 10),
-                            ],
-                          ),
-                        if (categories == "r3ad" && poduimR3a.length > 2)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              getPoduim(poduimR3a[2],
-                                  Color.fromARGB(255, 205, 127, 50), 11),
-                              getPoduim(poduimR3a[0],
-                                  Color.fromARGB(255, 218, 165, 3), 9),
-                              getPoduim(poduimR3a[1],
-                                  Color.fromARGB(255, 192, 192, 192), 10),
-                            ],
-                          ),
-                        if (categories == "jen" && poduimJen.length > 2)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              getPoduim(poduimJen[2],
-                                  Color.fromARGB(255, 205, 127, 50), 11),
-                              getPoduim(poduimJen[0],
-                                  Color.fromARGB(255, 218, 165, 3), 9),
-                              getPoduim(poduimJen[1],
-                                  Color.fromARGB(255, 192, 192, 192), 10),
-                            ],
-                          )
-                      ] +
-                      all.map((doc) {
-                        String gif = "assets/HomeScreen/3asfour.gif";
-                        Color colorLevel = HexColor("973747");
-                        switch (doc.get("gameLevel").toString()) {
-                          case "wlidha":
-                            gif = "assets/HomeScreen/wlidha.gif";
-                            colorLevel = HexColor("973747");
-                            break;
-                          case "kassa7":
-                            gif = "assets/HomeScreen/kassa7.gif";
-                            colorLevel = HexColor("911E0E");
-                            break;
-                          case "r3ad":
-                            gif = "assets/HomeScreen/r3ad.gif";
-                            colorLevel = HexColor("E1CB53");
+                      onChanged: (value) {
+                        setState(() {
+                          search = value.trim();
+                        });
+                      },
+                      // maxLength: 20,
+                      maxLines: 1,
+                    ),
+                  ),
+                  if (categories == "3asfour" && poduim3as.length > 2)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        getPoduim(poduim3as[2],
+                            Color.fromARGB(255, 205, 127, 50), 11),
+                        getPoduim(
+                            poduim3as[0], Color.fromARGB(255, 218, 165, 3), 9),
+                        getPoduim(poduim3as[1],
+                            Color.fromARGB(255, 192, 192, 192), 10),
+                      ],
+                    ),
+                  if (categories == "wlidha" && poduimWli.length > 2)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        getPoduim(poduimWli[2],
+                            Color.fromARGB(255, 205, 127, 50), 11),
+                        getPoduim(
+                            poduimWli[0], Color.fromARGB(255, 218, 165, 3), 9),
+                        getPoduim(poduimWli[1],
+                            Color.fromARGB(255, 192, 192, 192), 10),
+                      ],
+                    ),
+                  if (categories == "kassa7" && poduimKas.length > 2)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        getPoduim(poduimKas[2],
+                            Color.fromARGB(255, 205, 127, 50), 11),
+                        getPoduim(
+                            poduimKas[0], Color.fromARGB(255, 218, 165, 3), 9),
+                        getPoduim(poduimKas[1],
+                            Color.fromARGB(255, 192, 192, 192), 10),
+                      ],
+                    ),
+                  if (categories == "r3ad" && poduimR3a.length > 2)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        getPoduim(poduimR3a[2],
+                            Color.fromARGB(255, 205, 127, 50), 11),
+                        getPoduim(
+                            poduimR3a[0], Color.fromARGB(255, 218, 165, 3), 9),
+                        getPoduim(poduimR3a[1],
+                            Color.fromARGB(255, 192, 192, 192), 10),
+                      ],
+                    ),
+                  if (categories == "jen" && poduimJen.length > 2)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        getPoduim(poduimJen[2],
+                            Color.fromARGB(255, 205, 127, 50), 11),
+                        getPoduim(
+                            poduimJen[0], Color.fromARGB(255, 218, 165, 3), 9),
+                        getPoduim(poduimJen[1],
+                            Color.fromARGB(255, 192, 192, 192), 10),
+                      ],
+                    ),
+                ] +
+                all.map((doc) {
+                  String gif = "assets/HomeScreen/3asfour.gif";
+                  Color colorLevel = HexColor("973747");
+                  switch (doc.get("gameLevel").toString()) {
+                    case "wlidha":
+                      gif = "assets/HomeScreen/wlidha.gif";
+                      colorLevel = HexColor("973747");
+                      break;
+                    case "kassa7":
+                      gif = "assets/HomeScreen/kassa7.gif";
+                      colorLevel = HexColor("911E0E");
+                      break;
+                    case "r3ad":
+                      gif = "assets/HomeScreen/r3ad.gif";
+                      colorLevel = HexColor("E1CB53");
 
-                            break;
-                          case "jen":
-                            gif = "assets/HomeScreen/jen.gif";
-                            colorLevel = HexColor("CA9FC8");
+                      break;
+                    case "jen":
+                      gif = "assets/HomeScreen/jen.gif";
+                      colorLevel = HexColor("CA9FC8");
 
-                            break;
-                          case "3orsa":
-                            gif = "assets/HomeScreen/3orsa.gif";
-                            colorLevel = HexColor("#90F1FB");
+                      break;
+                    case "3orsa":
+                      gif = "assets/HomeScreen/3orsa.gif";
+                      colorLevel = HexColor("#90F1FB");
 
-                            break;
-                          default:
-                            colorLevel = HexColor("BD8484");
-                            gif = "assets/HomeScreen/3asfour.gif";
-                        }
-                        if (imMap.containsKey(doc.get("phone")) == false) {
-                          getIm(doc.get("phone"), doc.get("photo"));
-                        }
-                        if ((categories == "all" ||
-                                categories ==
-                                    doc.get("gameLevel").toString()) &&
-                            doc.get("new") == false &&
-                            (search == "" ||
-                                doc
-                                    .get("first_name")
-                                    .toString()
-                                    .toUpperCase()
-                                    .contains(search.toUpperCase()) ||
-                                doc
-                                    .get("last_name")
-                                    .toString()
-                                    .toUpperCase()
-                                    .contains(search.toUpperCase()))) {
-                          index = index + 1;
+                      break;
+                    default:
+                      colorLevel = HexColor("BD8484");
+                      gif = "assets/HomeScreen/3asfour.gif";
+                  }
+                  if (imMap.containsKey(doc.get("phone")) == false) {
+                    getIm(doc.get("phone"), doc.get("photo"));
+                  }
+                  if ((categories == "all" ||
+                          categories == doc.get("gameLevel").toString()) &&
+                      doc.get("new") == false &&
+                      (search == "" ||
+                          doc
+                              .get("first_name")
+                              .toString()
+                              .toUpperCase()
+                              .contains(search.toUpperCase()) ||
+                          doc
+                              .get("last_name")
+                              .toString()
+                              .toUpperCase()
+                              .contains(search.toUpperCase()))) {
+                    index = index + 1;
 
-                          return Card(
-                            borderOnForeground: true,
-                            color: Colors.white,
-                            elevation: 200,
-                            margin: EdgeInsets.all(8),
-                            child: GestureDetector(
-                              onLongPress: () {
-                                if (doc.get("new") == true) {
-                                  print(doc.get("new"));
-                                  popUp(context, doc.get("phone"));
-                                }
-                              },
-                              onTap: () {
-                                Member.otherPhone = doc.get("phone");
-                                Navigator.pushNamed(context, "/otherProfile");
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(1.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 22, 21, 119)),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: search == ""
-                                                ? Text(index.toString())
-                                                : Text("#"),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(4.0),
-                                            child: AvatarGlow(
-                                              glowColor: Colors.blue,
-                                              endRadius: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  15,
-                                              duration:
-                                                  Duration(milliseconds: 2000),
-                                              repeat: true,
-                                              showTwoGlows: true,
-                                              repeatPauseDuration:
-                                                  Duration(milliseconds: 100),
-                                              child: Container(
-                                                // width: MediaQuery.of(context).size.width / 2,
-                                                // height: MediaQuery.of(context).size.width / 2,
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: doc.get(
-                                                                  "gender") ==
-                                                              "Female"
-                                                          ? Colors.pinkAccent
-                                                          : Colors.blue,
-                                                      width: 2),
-                                                  shape: BoxShape.circle,
-                                                  image: (imMap[doc.get("phone")]
-                                                              .toString()
-                                                              .isNotEmpty &&
-                                                          imMap.containsKey(doc
-                                                              .get("phone")) &&
-                                                          imMap[doc.get(
-                                                                  "phone")] !=
-                                                              "wait")
-                                                      ? DecorationImage(
-                                                          image: NetworkImage(
-                                                            imMap[doc.get(
-                                                                    "phone")]
-                                                                .toString(),
-                                                          ),
-                                                          fit: BoxFit.fill)
-                                                      : imMap[doc.get("phone")]
-                                                              .toString()
-                                                              .isEmpty
-                                                          ? doc.get("gender") ==
-                                                                  "Female"
-                                                              ? DecorationImage(
-                                                                  image:
-                                                                      AssetImage(
-                                                                    "assets/images/gadget2.jpg",
-                                                                  ),
-                                                                  fit: BoxFit
-                                                                      .fill)
-                                                              : DecorationImage(
-                                                                  image:
-                                                                      AssetImage(
-                                                                    "assets/images/gadget4.jpg",
-                                                                  ),
-                                                                  fit: BoxFit
-                                                                      .fill)
-                                                          : null,
-                                                ),
+                    return Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Card(
+                        borderOnForeground: true,
+                        color: Colors.white,
+                        elevation: 200,
+                        child: GestureDetector(
+                          onLongPress: () {
+                            if (doc.get("new") == true) {
+                              print(doc.get("new"));
+                              popUp(context, doc.get("phone"));
+                            }
+                          },
+                          onTap: () {
+                            Member.otherPhone = doc.get("phone");
+                            showModalBottomSheet(
+                                elevation: 1,
+                                context: context,
+                                builder: ((context) {
+                                  return Container(
+                                      decoration: BoxDecoration(
+                                        boxShadow: const [
+                                          BoxShadow(
+                                              color: AerobotixAppTheme
+                                                  .white, // shadow color
+                                              blurRadius: 20, // shadow radius
+                                              offset: Offset(
+                                                  5, 10), // shadow offset
+                                              spreadRadius:
+                                                  0.1, // The amount the box should be inflated prior to applying the blur
+                                              blurStyle: BlurStyle
+                                                  .outer // set blur style
                                               ),
-                                            ),
-                                          ),
                                         ],
                                       ),
+                                      child: OtherProfile());
+                                }));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 22, 21, 119)),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: search == ""
+                                            ? Text(index.toString())
+                                            : Text("#"),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: AvatarGlow(
+                                          glowColor: Colors.blue,
+                                          endRadius: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              15,
+                                          duration:
+                                              Duration(milliseconds: 2000),
+                                          repeat: true,
+                                          showTwoGlows: true,
+                                          repeatPauseDuration:
+                                              Duration(milliseconds: 100),
+                                          child: Container(
+                                            // width: MediaQuery.of(context).size.width / 2,
+                                            // height: MediaQuery.of(context).size.width / 2,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: (imMap[doc.get("phone")]
+                                                          .toString()
+                                                          .isNotEmpty &&
+                                                      imMap.containsKey(
+                                                          doc.get("phone")) &&
+                                                      imMap[doc.get("phone")] !=
+                                                          "wait")
+                                                  ? DecorationImage(
+                                                      image: NetworkImage(
+                                                        imMap[doc.get("phone")]
+                                                            .toString(),
+                                                      ),
+                                                      fit: BoxFit.fill)
+                                                  : imMap[doc.get("phone")]
+                                                          .toString()
+                                                          .isEmpty
+                                                      ? doc.get("gender") ==
+                                                              "Female"
+                                                          ? DecorationImage(
+                                                              image: AssetImage(
+                                                                "assets/images/gadget2.jpg",
+                                                              ),
+                                                              fit: BoxFit.fill)
+                                                          : DecorationImage(
+                                                              image: AssetImage(
+                                                                "assets/images/gadget4.jpg",
+                                                              ),
+                                                              fit: BoxFit.fill)
+                                                      : null,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text(
+                                      doc.get('first_name') +
+                                          " " +
+                                          doc.get('last_name'),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          doc.get('first_name') +
-                                              " " +
-                                              doc.get('last_name'),
+                                          doc.get('xp').toString() + " XP",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: Colors.white,
                                           ),
                                         ),
                                       ),
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              doc.get('xp').toString() + " XP",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
                                     ],
                                   ),
-                                ),
-                              ),
-                            ),
-                          );
-                        } else {
-                          return Card();
-                        }
-                      }).toList() +
-                      [
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(30.0),
-                            child: Center(
-                              child: Text(
-                                "That's All 🚫 !",
-                                style: TextStyle(fontSize: 20),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                        Card(
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height / 10,
-                          ),
-                        )
-                      ]),
-            ],
+                      ),
+                    );
+                  } else {
+                    return Container();
+                  }
+                }).toList() +
+                [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 5,
+                  )
+                ],
           );
         }
       },

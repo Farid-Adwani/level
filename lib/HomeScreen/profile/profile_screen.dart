@@ -7,6 +7,7 @@ import 'package:Aerobotix/HomeScreen/ui_view/photoView.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/title_view.dart';
 import 'package:Aerobotix/model/member.dart';
 import 'package:Aerobotix/screens/missionsScreen.dart';
+import 'package:Aerobotix/screens/utils/app_theme.dart';
 import 'package:Aerobotix/services/firebase_service.dart';
 import 'package:Aerobotix/utils/helpers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,15 +15,15 @@ import 'package:confetti/confetti.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class MyDiaryScreen extends StatefulWidget {
-  const MyDiaryScreen({Key? key, this.animationController}) : super(key: key);
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key, this.animationController}) : super(key: key);
 
   final AnimationController? animationController;
   @override
-  _MyDiaryScreenState createState() => _MyDiaryScreenState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _MyDiaryScreenState extends State<MyDiaryScreen>
+class _ProfileScreenState extends State<ProfileScreen>
     with TickerProviderStateMixin {
   final db = FirebaseFirestore.instance;
   AnimationController? animationController;
@@ -90,8 +91,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   }
 
   void addAllListData() {
-
-    int count = Member.claim > 0 ? 9 : 8;
+    int count = Member.claim > 0 ? 8 : 7;
     if (Member.claim > 0) {
       listViews.add(
         GlassTextView(
@@ -112,26 +112,26 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
             curve:
-                Interval((1 / count) * 1, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController!,
-      ),
-    );
-    listViews.add(
-      GlassTextView(
-        field: "first_name",
-        ratio: 1.3,
-        text: Member.first_name,
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController!,
-            curve:
                 Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController!,
       ),
     );
     listViews.add(
       GlassTextView(
+        field: "first_name",
+        ratio: 3,
+        text: Member.first_name,
+        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            parent: widget.animationController!,
+            curve:
+                Interval((1 / count) * 3, 1.0, curve: Curves.fastOutSlowIn))),
+        animationController: widget.animationController!,
+      ),
+    );
+    listViews.add(
+      GlassTextView(
         field: "last_name",
-        ratio: 1.3,
+        ratio: 3,
         text: Member.last_name,
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
@@ -142,13 +142,15 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
     );
     listViews.add(
       GlassTextView(
-        field: "branch",
-        ratio: 1.3,
-        text: Member.branch,
+        field: "class",
+        ratio: 3,
+        text: Member.level == 6
+            ? Member.branch + "5+"
+            : Member.branch + Member.level.toString(),
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
             curve:
-                Interval((1 / count) * 6, 1.0, curve: Curves.fastOutSlowIn))),
+                Interval((1 / count) * 5, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController!,
       ),
     );
@@ -158,18 +160,18 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
     print(Member.level);
     print(Member.level);
 
-    listViews.add(
-      GlassTextView(
-        field: "level",
-        ratio: 1.3,
-        text: Member.level==6? "5+" : Member.level.toString(),
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController!,
-            curve:
-                Interval((1 / count) * 7, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController!,
-      ),
-    );
+    // listViews.add(
+    //   GlassTextView(
+    //     field: "level",
+    //     ratio: 3,
+    //     text: Member.level == 6 ? "5+" : Member.level.toString(),
+    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    //         parent: widget.animationController!,
+    //         curve:
+    //             Interval((1 / count) * 7, 1.0, curve: Curves.fastOutSlowIn))),
+    //     animationController: widget.animationController!,
+    //   ),
+    // );
 
     // listViews.add(
     //   TitleView(
@@ -188,7 +190,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController!,
             curve:
-                Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
+                Interval((1 / count) * 6, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController!,
       ),
     );
@@ -197,7 +199,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
       GlassView(
           date: "",
           text: "Badges",
-          photo: "badge2.png",
+          icon: Icons.badge,
           phone: Member.phone,
           animation: Tween<double>(begin: 0.0, end: 1.0).animate(
               CurvedAnimation(
@@ -215,7 +217,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
               "-" +
               Member.birthDate.year.toString(),
           text: "Birth Date : ",
-          photo: "birthdate.png",
+          icon: Icons.date_range_outlined,
           animation: Tween<double>(begin: 0.0, end: 1.0).animate(
               CurvedAnimation(
                   parent: widget.animationController!,
@@ -227,11 +229,11 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
       GlassView(
           date: (DateTime.now().year - Member.entryYear).toString() + " Years",
           text: "Experience : ",
-          photo: "aerDate.png",
+          icon: Icons.timer_outlined,
           animation: Tween<double>(begin: 0.0, end: 1.0).animate(
               CurvedAnimation(
                   parent: widget.animationController!,
-                  curve: Interval((1 / count) * 8, 1.0,
+                  curve: Interval((1 / count) * 7, 1.0,
                       curve: Curves.fastOutSlowIn))),
           animationController: widget.animationController!),
     );
@@ -244,53 +246,55 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
 
   @override
   Widget build(BuildContext context) {
-    Widget stack=Stack(
-                children: <Widget>[
-                  // ConfettiWidget(
-                  //   confettiController: _controllerCenter,
-                  //   blastDirectionality: BlastDirectionality
-                  //       .explosive, // don't specify a direction, blast randomly
-                  //   shouldLoop:
-                  //       false, // start again as soon as the animation is finished
-                  //   colors: const [
-                  //     Colors.green,
-                  //     Colors.blue,
-                  //     Colors.red,
-                  //     Colors.blueAccent,
-                  //     Colors.yellow,
-                  //     Colors.black,
-                  //     Colors.white,
-                  //     Colors.pink,
-                  //     Colors.brown,
-                  //   ], // manually specify the colors to be used
-                  //   // createParticlePath: drawStar, // define a custom shape/path.
-                  //   emissionFrequency: 0.0001,
-                  //   gravity: 1,
-                  //   numberOfParticles: 200,
-                  //   minimumSize: Size(15, 15),
-                  //   maximumSize: Size(16, 16),
-                  //   particleDrag: 0.03,
-                  // ),
-                
-                  getMainListViewUI(),
-                  getAppBarUI(),
-                  SizedBox(
-                    height: MediaQuery.of(context).padding.bottom,
-                  )
-                ],
-              );
+    Widget stack = Stack(
+      children: <Widget>[
+        // ConfettiWidget(
+        //   confettiController: _controllerCenter,
+        //   blastDirectionality: BlastDirectionality
+        //       .explosive, // don't specify a direction, blast randomly
+        //   shouldLoop:
+        //       false, // start again as soon as the animation is finished
+        //   colors: const [
+        //     Colors.green,
+        //     Colors.blue,
+        //     Colors.red,
+        //     Colors.blueAccent,
+        //     Colors.yellow,
+        //     Colors.black,
+        //     Colors.white,
+        //     Colors.pink,
+        //     Colors.brown,
+        //   ], // manually specify the colors to be used
+        //   // createParticlePath: drawStar, // define a custom shape/path.
+        //   emissionFrequency: 0.0001,
+        //   gravity: 1,
+        //   numberOfParticles: 200,
+        //   minimumSize: Size(15, 15),
+        //   maximumSize: Size(16, 16),
+        //   particleDrag: 0.03,
+        // ),
+
+        getMainListViewUI(),
+        getAppBarUI(),
+        SizedBox(
+          height: MediaQuery.of(context).padding.bottom,
+        )
+      ],
+    );
     return Container(
       color: AerobotixAppTheme.background,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(
           child: SafeArea(
-            child:Member.isNew ? Banner(
-              message:  "Not verified",
-              location: BannerLocation.topEnd,
-              color:  Colors.red,
-              child: stack ,
-            ):stack,
+            child: Member.isNew
+                ? Banner(
+                    message: "Not verified",
+                    location: BannerLocation.topEnd,
+                    color: Colors.red,
+                    child: stack,
+                  )
+                : stack,
           ),
         ),
       ),
@@ -312,20 +316,70 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                   top: AppBar().preferredSize.height +
                       MediaQuery.of(context).padding.top +
                       24,
-                  bottom: 62 + MediaQuery.of(context).padding.bottom,
+                  bottom: 20 + MediaQuery.of(context).padding.bottom,
                 ),
                 shrinkWrap: true,
                 itemCount: listViews.length,
                 scrollDirection: Axis.vertical,
                 itemBuilder: (BuildContext context, int index) {
                   widget.animationController?.forward();
-
-                  return listViews[index];
+                  int claimm = 0;
+                  if (Member.claim > 0) {
+                    claimm = 1;
+                  } else {
+                    claimm = 0;
+                  }
+                  if (index == 0) {
+                    if (claimm == 1) {
+                      return listViews[0];
+                    } else {
+                      return Container();
+                    }
+                  } else if (index == 1) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: listViews[0 + claimm],
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              listViews[1 + claimm],
+                              listViews[2 + claimm],
+                              listViews[3 + claimm],
+                            ],
+                          ),
+                        )
+                      ],
+                    );
+                  } else if (index < 4 + claimm) {
+                    return Container();
+                  } else {
+                    return listViews[index];
+                  }
                 },
               ),
-               SizedBox(
-                    height: 35,
-                  )
+              Padding(
+                padding: EdgeInsets.only(
+                    right: MediaQuery.of(context).size.width / 10,
+                    left: MediaQuery.of(context).size.width / 10),
+                child: TextButton(
+                    style:
+                        TextButton.styleFrom(backgroundColor: Colors.red[400]),
+                    onPressed: () {
+                      FirestoreService.disconnect(Member.phone, context);
+                    },
+                    child: Text(
+                      "Log Out",
+                      style: AerobotixAppTheme.title,
+                    )),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.width / 4,
+              )
             ],
           );
         }
@@ -420,9 +474,10 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                                                     );
                                             },
                                             icon: Icon(
-                                              Icons.task_alt_sharp,
-                                              color: AerobotixAppTheme.darkerText,
-                                              size: 30,
+                                              Icons.notifications,
+                                              color:
+                                                  AerobotixAppTheme.darkerText,
+                                              size: 40,
                                             ),
                                           ),
                                           Positioned(
@@ -470,35 +525,34 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                                                   )))
                                         ],
                                       )),
-                                  Padding(
-                                      padding: const EdgeInsets.only(right: 8),
-                                      child: IconButton(
-                                        onPressed: () {
-                                              Navigator
-                                                      .pushReplacementNamed(
-                                                    context,
-                                                    AerobotixAppHomeScreen.id,
-                                                  );
-                                        },
-                                        icon: Icon(
-                                          Icons.refresh,
-                                          color: AerobotixAppTheme.darkerText,
-                                          size: 30,
-                                        ),
-                                      )),
-                                  Padding(
-                                      padding: const EdgeInsets.only(right: 8),
-                                      child: IconButton(
-                                        onPressed: () {
-                                          FirestoreService.disconnect(
-                                              Member.phone, context);
-                                        },
-                                        icon: Icon(
-                                          Icons.logout_rounded,
-                                          color: AerobotixAppTheme.darkerText,
-                                          size: 30,
-                                        ),
-                                      )),
+                                  // Padding(
+                                  //     padding: const EdgeInsets.only(right: 8),
+                                  //     child: IconButton(
+                                  //       onPressed: () {
+                                  //         Navigator.pushReplacementNamed(
+                                  //           context,
+                                  //           AerobotixAppHomeScreen.id,
+                                  //         );
+                                  //       },
+                                  //       icon: Icon(
+                                  //         Icons.refresh,
+                                  //         color: AerobotixAppTheme.darkerText,
+                                  //         size: 30,
+                                  //       ),
+                                  //     )),
+                                  // Padding(
+                                  //     padding: const EdgeInsets.only(right: 8),
+                                  //     child: IconButton(
+                                  //       onPressed: () {
+                                  //         FirestoreService.disconnect(
+                                  //             Member.phone, context);
+                                  //       },
+                                  //       icon: Icon(
+                                  //         Icons.logout_rounded,
+                                  //         color: AerobotixAppTheme.darkerText,
+                                  //         size: 30,
+                                  //       ),
+                                  //     )),
                                 ],
                               ),
                             ),

@@ -9,7 +9,8 @@ import 'package:Aerobotix/model/member.dart';
 import 'package:flutter/material.dart';
 
 class missionsScreen extends StatefulWidget {
-  const missionsScreen({Key? key, required this.animationController}) : super(key: key);
+  const missionsScreen({Key? key, required this.animationController})
+      : super(key: key);
 
   final AnimationController? animationController;
   @override
@@ -87,26 +88,58 @@ class _missionsScreenState extends State<missionsScreen>
           return const SizedBox();
         } else {
           return DefaultTabController(
-            length: Member.roles.contains("admin") ?  4 :3,
+            length: Member.roles.contains("admin") ? 4 : 3,
             child: Scaffold(
               appBar: AppBar(
-                bottom:  TabBar(
+                bottom: TabBar(
+                  isScrollable: true,
                   tabs: [
-                    if(Member.roles.contains("material"))   Tab(icon: Icon(Icons.add_box_outlined)),
-                    Tab(icon: Icon(Icons.fiber_new_rounded)),
-                    Tab(icon: Icon(Icons.ads_click)),
-                    Tab(icon: Icon(Icons.done_all_outlined)),
+                    if (Member.roles.contains("material"))
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Tab(icon: Icon(Icons.add_box_outlined)),
+                          Text("Add"),
+                        ],
+                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Tab(icon: Icon(Icons.fiber_new_rounded)),
+                        Text("Missions"),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Tab(icon: Icon(Icons.ads_click)),
+                        Text("Subscribed"),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Tab(icon: Icon(Icons.done_all_outlined)),
+                        Text("Done"),
+                      ],
+                    ),
                   ],
                 ),
               ),
               body: TabBarView(
                 children: [
-                   if(Member.roles.contains("material"))   AddMission(),
-                  MissionsList(animationController: widget.animationController,categ: ""),
-
-                  MissionsList(animationController: widget.animationController,categ: "sub",),
-                  MissionsList(animationController: widget.animationController,categ: "done",),
-
+                  if (Member.roles.contains("material")) AddMission(),
+                  MissionsList(
+                      animationController: widget.animationController,
+                      categ: ""),
+                  MissionsList(
+                    animationController: widget.animationController,
+                    categ: "sub",
+                  ),
+                  MissionsList(
+                    animationController: widget.animationController,
+                    categ: "done",
+                  ),
                 ],
               ),
             ),
@@ -132,4 +165,4 @@ class _missionsScreenState extends State<missionsScreen>
       },
     );
   }
-    }
+}

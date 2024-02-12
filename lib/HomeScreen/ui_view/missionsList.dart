@@ -11,9 +11,10 @@ import 'package:easy_container/easy_container.dart';
 import 'package:flutter/material.dart';
 
 class MissionsList extends StatefulWidget {
-  MissionsList({Key? key, this.animationController, required this.categ}) : super(key: key);
+  MissionsList({Key? key, this.animationController, required this.categ})
+      : super(key: key);
 
-  String categ="";
+  String categ = "";
   final AnimationController? animationController;
   @override
   _MissionsListState createState() => _MissionsListState();
@@ -38,34 +39,31 @@ class _MissionsListState extends State<MissionsList>
     } catch (e) {}
   }
 
+  List<String> names(List<dynamic> inn) {
+    List<String> l = [];
+    for (int i = 0; i < inn.length; i++) {
+      String e = inn[i];
 
-List<String> names(List<dynamic> inn){
-  List<String> l =[];
-  for(int i=0; i<inn.length;i++){
-    String e=inn[i];
-
-     if(e.toString().split("~").length>1){
-    l.add(e.toString().split("~")[1]);
-    }else{
-      l.add("nooo");
+      if (e.toString().split("~").length > 1) {
+        l.add(e.toString().split("~")[1]);
+      } else {
+        l.add("nooo");
+      }
     }
-  }
- 
 
-  return l;
-
-}
-
-List<String> phones(List<dynamic> inn){
-  List<String> l =[];
-  for(int i=0; i<inn.length;i++){
-    String e=inn[i];
-    l.add(e.toString().split("~")[0]);
+    return l;
   }
 
-  return l;
+  List<String> phones(List<dynamic> inn) {
+    List<String> l = [];
+    for (int i = 0; i < inn.length; i++) {
+      String e = inn[i];
+      l.add(e.toString().split("~")[0]);
+    }
 
-}
+    return l;
+  }
+
   final db = FirebaseFirestore.instance;
   Widget missionsList(categories) {
     return StreamBuilder<QuerySnapshot>(
@@ -108,7 +106,13 @@ List<String> phones(List<dynamic> inn){
                           if (imMap.containsKey(doc.get("name")) == false) {
                             getIm(doc.get("name"), doc.get("photo"));
                           }
-                          if ((categories == doc.get("state").toString() || (widget.categ=="sub" && phones(doc.get("members")).contains(Member.phone)) || (widget.categ=="done" && phones(doc.get("done")).contains(Member.phone))) &&
+                          if ((categories == doc.get("state").toString() ||
+                                  (widget.categ == "sub" &&
+                                      phones(doc.get("members"))
+                                          .contains(Member.phone)) ||
+                                  (widget.categ == "done" &&
+                                      phones(doc.get("done"))
+                                          .contains(Member.phone))) &&
                               (search == "" ||
                                   doc
                                       .get("name")
@@ -118,16 +122,26 @@ List<String> phones(List<dynamic> inn){
                             index = index + 1;
                             return Card(
                               borderOnForeground: true,
-                              // color: Color.fromARGB(255, 104, 45, 48),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                side: BorderSide(
+                                  color:
+                                      AerobotixAppTheme.white, // border color
+                                  width: 1.0, // border width
+                                ),
+                              ),
                               elevation: 1000,
                               margin: EdgeInsets.all(8),
                               child: GestureDetector(
                                 onLongPress: () {
-                             
-if(Member.roles.contains("admin")) {
-                                  popUp(context, doc.get("name"),doc.get("members"),doc.get("done"),doc.get("score"));
-
-}                                  // }
+                                  if (Member.roles.contains("admin")) {
+                                    popUp(
+                                        context,
+                                        doc.get("name"),
+                                        doc.get("members"),
+                                        doc.get("done"),
+                                        doc.get("score"));
+                                  } // }
                                 },
                                 onTap: () {},
                                 child: Padding(
@@ -183,7 +197,7 @@ if(Member.roles.contains("admin")) {
                                             foreground: Paint()
                                               ..style = PaintingStyle.stroke
                                               ..strokeWidth = 1
-                                              ..color = Colors.red,
+                                              ..color = Colors.blue,
                                           ),
                                         ),
                                       ),
@@ -202,76 +216,51 @@ if(Member.roles.contains("admin")) {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
-                                          Row(
-                                            children: [
-                                              Icon(Icons.card_giftcard),
-                                              Text(
-                                                "Award : ",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                ),
-                                              ),
-                                              Text(
-                                                doc.get('score') + " xp",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  foreground: Paint()
-                                                    ..style =
-                                                        PaintingStyle.stroke
-                                                    ..strokeWidth = 1
-                                                    ..color = Colors.red,
-                                                ),
-                                              ),
-                                            ],
+                                          Text(
+                                            doc.get('score') + " xp",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                            ),
                                           ),
-                                          // Row(
-                                          //   children: [
-                                          //     Icon(Icons.people_outline_sharp),
-                                          //     Text(
-                                          //       "Available : ",
-                                          //       textAlign: TextAlign.center,
-                                          //       style: TextStyle(
-                                          //         fontSize: 20,
-                                          //       ),
-                                          //     ),
-                                          //     Text(
-                                          //       doc.get('max'),
-                                          //       textAlign: TextAlign.center,
-                                          //       style: TextStyle(
-                                          //         fontSize: 20,
-                                          //         foreground: Paint()
-                                          //           ..style =
-                                          //               PaintingStyle.stroke
-                                          //           ..strokeWidth = 1
-                                          //           ..color = Colors.red,
-                                          //       ),
-                                          //     ),
-                                          //   ],
-                                          // ),
                                         ],
                                       ),
-                                      if ((phones(doc.get("members")).contains(Member.phone) || phones(doc.get("done")).contains(Member.phone))==false && doc.get("state")=="new" ) 
-                                      TextButton(
-                                          style: TextButton.styleFrom(
-                                            
-                                            backgroundColor: Colors.green,
-
-
-                                          ),
-                                          onPressed: () async {
-                                            setState(() {
-                                              isloading=true;
-
-                                            });
-                                            await FirestoreService.addMissionMember(doc.get("name"), Member.phone, Member.first_name+" "+Member.last_name, "members").then((value) {
+                                      if ((phones(doc.get("members"))
+                                                      .contains(Member.phone) ||
+                                                  phones(doc.get("done"))
+                                                      .contains(
+                                                          Member.phone)) ==
+                                              false &&
+                                          doc.get("state") == "new")
+                                        TextButton(
+                                            style: TextButton.styleFrom(
+                                              backgroundColor: Colors.green,
+                                            ),
+                                            onPressed: () async {
                                               setState(() {
-                                                isloading=false;
+                                                isloading = true;
                                               });
-                                            });
-                                          },
-                                          child:isloading==false? Text("Subscribe",style: TextStyle(color: Colors.white),): CircularProgressIndicator())
+                                              await FirestoreService
+                                                      .addMissionMember(
+                                                          doc.get("name"),
+                                                          Member.phone,
+                                                          Member.first_name +
+                                                              " " +
+                                                              Member.last_name,
+                                                          "members")
+                                                  .then((value) {
+                                                setState(() {
+                                                  isloading = false;
+                                                });
+                                              });
+                                            },
+                                            child: isloading == false
+                                                ? Text(
+                                                    "Subscribe",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  )
+                                                : CircularProgressIndicator())
                                     ],
                                   ),
                                 ),
@@ -283,19 +272,8 @@ if(Member.roles.contains("admin")) {
                         }).toList() +
                         [
                           Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(30.0),
-                              child: Center(
-                                child: Text(
-                                  "That's All 🚫 !",
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Card(
                             child: SizedBox(
-                              height: MediaQuery.of(context).size.height / 10,
+                              height: MediaQuery.of(context).size.height / 5,
                             ),
                           )
                         ]),
@@ -309,14 +287,14 @@ if(Member.roles.contains("admin")) {
 
   String entryYear = DateTime.now().year.toString();
   late AwesomeDialog ad;
-  bool popUp(context, String id,List<dynamic> members,List<dynamic> done,String score) {
+  bool popUp(context, String id, List<dynamic> members, List<dynamic> done,
+      String score) {
     List<String> output = [];
-members.forEach((element) {
-    if(!done.contains(element)){
-    output.add(element);
-}
-});
-
+    members.forEach((element) {
+      if (!done.contains(element)) {
+        output.add(element);
+      }
+    });
 
     entryYear = "";
 
@@ -346,63 +324,60 @@ members.forEach((element) {
                         ),
                         Divider(),
                         Column(
-                          children: names(output).asMap().entries.map((entry) {
-                            String doc=entry.value;
-                            int ind=entry.key;
-                              return 
-                                 Card(
-                              borderOnForeground: true,
-                              elevation: 50,
-                              margin: EdgeInsets.all(2),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GestureDetector(
-                                      onTap: () async {
-                                        setState(() {
-                                         
-                                        });
-                                       
-                                      },
-                                      child: Center(
-                                          child: Text(
-                                       
-                                       doc.toString(),
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          letterSpacing: 1.2,
-                                          fontSize: 15,
-                                          color: Color.fromARGB(
-                                              255, 255, 255, 255),
-                                        ),
-                                      ))),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                          onPressed: () async{
-                                            
-                                            ad..dismiss();
+                            children:
+                                names(output).asMap().entries.map((entry) {
+                          String doc = entry.value;
+                          int ind = entry.key;
+                          return Card(
+                            borderOnForeground: true,
+                            elevation: 50,
+                            margin: EdgeInsets.all(2),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                    onTap: () async {
+                                      setState(() {});
+                                    },
+                                    child: Center(
+                                        child: Text(
+                                      doc.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1.2,
+                                        fontSize: 15,
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
+                                      ),
+                                    ))),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                        onPressed: () async {
+                                          ad..dismiss();
 
-                                            await FirestoreService.addMissionMember(id,output[ind].split('~')[0],doc, "done").then((value) {
-
-                                            });
-                                           await  FirestoreService.setClaim(output[ind].split('~')[0],double.parse(score).toInt());
-                                            
-                                          },
-                                          icon: Icon(Icons.done_outline_rounded,color: Colors.green,)),
-                                    
-                                    ],
-                                  ),
-                                  
-                                ],
-                              ),
-                            )
-                      ;
-                          }).toList()
-                        )
-                      ,
-                      Text(
+                                          await FirestoreService
+                                                  .addMissionMember(
+                                                      id,
+                                                      output[ind].split('~')[0],
+                                                      doc,
+                                                      "done")
+                                              .then((value) {});
+                                          await FirestoreService.setClaim(
+                                              output[ind].split('~')[0],
+                                              double.parse(score).toInt());
+                                        },
+                                        icon: Icon(
+                                          Icons.done_outline_rounded,
+                                          color: Colors.green,
+                                        )),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList()),
+                        Text(
                           "Succeeded Members",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -412,43 +387,33 @@ members.forEach((element) {
                         ),
                         Divider(),
                         Column(
-                          children: names(done).map((doc) {
-                              return 
-                                 Card(
-                              borderOnForeground: true,
-                              elevation: 50,
-                              margin: EdgeInsets.all(2),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GestureDetector(
-                                      onTap: () async {
-                                        setState(() {
-                                         
-                                        });
-                                       
-                                      },
-                                      child: Center(
-                                          child: Text(
-                                       doc.toString(),
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          letterSpacing: 1.2,
-                                          fontSize: 15,
-                                          color: Color.fromARGB(
-                                              255, 255, 255, 255),
-                                        ),
-                                      ))),
-                             
-                                  
-                                ],
-                              ),
-                            )
-                      ;
-                          }).toList()
-                        )
-                     
+                            children: names(done).map((doc) {
+                          return Card(
+                            borderOnForeground: true,
+                            elevation: 50,
+                            margin: EdgeInsets.all(2),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                    onTap: () async {
+                                      setState(() {});
+                                    },
+                                    child: Center(
+                                        child: Text(
+                                      doc.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1.2,
+                                        fontSize: 15,
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
+                                      ),
+                                    ))),
+                              ],
+                            ),
+                          );
+                        }).toList())
                       ]),
                 ),
               ),
@@ -481,7 +446,7 @@ members.forEach((element) {
     return true;
   }
 
-bool isloading =false;
+  bool isloading = false;
   @override
   void initState() {
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -546,51 +511,50 @@ bool isloading =false;
           return const SizedBox();
         } else {
           return SafeArea(
-            child: 
-            widget.categ.isNotEmpty?
-            missionsList(""):
-            DefaultTabController(
-              initialIndex: 0,
-              length: 2,
-              child: Column(
-                children: <Widget>[
-                  ButtonsTabBar(
-                    radius: 12,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                    borderWidth: 2,
-                    borderColor: Colors.transparent,
-                    center: true,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: <Color>[
-                          Color(0xFF0D47A1),
-                          Color(0xFF1976D2),
-                          Color(0xFF42A5F5),
-                        ],
-                      ),
-                    ),
-                    unselectedLabelStyle: TextStyle(color: Colors.black),
-                    labelStyle: TextStyle(color: Colors.white),
-                    tabs: [
-                      Tab(
-                        text: "New",
-                      ),
-                      Tab(
-                        text: "Old",
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: TabBarView(
+            child: widget.categ.isNotEmpty
+                ? missionsList("")
+                : DefaultTabController(
+                    initialIndex: 0,
+                    length: 2,
+                    child: Column(
                       children: <Widget>[
-                        missionsList("new"),
-                        missionsList("old"),
+                        ButtonsTabBar(
+                          radius: 12,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                          borderWidth: 2,
+                          borderColor: Colors.transparent,
+                          center: true,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: <Color>[
+                                Color(0xFF0D47A1),
+                                Color(0xFF1976D2),
+                                Color(0xFF42A5F5),
+                              ],
+                            ),
+                          ),
+                          unselectedLabelStyle: TextStyle(color: Colors.black),
+                          labelStyle: TextStyle(color: Colors.white),
+                          tabs: [
+                            Tab(
+                              text: "New",
+                            ),
+                            Tab(
+                              text: "Old",
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            children: <Widget>[
+                              missionsList("new"),
+                              missionsList("old"),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
           );
         }
       },
@@ -726,5 +690,4 @@ bool isloading =false;
       ],
     );
   }
-
 }

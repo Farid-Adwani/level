@@ -82,7 +82,7 @@ class _OtherProfileState extends State<OtherProfile>
   }
 
   void addAllListData() {
-    const int count = 8;
+    const int count = 7;
     listViews.add(
       PhotoView(
         other: user,
@@ -115,36 +115,27 @@ class _OtherProfileState extends State<OtherProfile>
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: animationController!,
             curve:
+                Interval((1 / count) * 3, 1.0, curve: Curves.fastOutSlowIn))),
+        animationController: animationController!,
+      ),
+    );
+
+    listViews.add(
+      GlassTextView(
+        other: user,
+        field: "class",
+        ratio: 3,
+        text: user["level"] == 6
+            ? user["branch"]! + "5+"
+            : user["branch"]! + user["level"].toString(),
+        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            parent: animationController!,
+            curve:
                 Interval((1 / count) * 4, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: animationController!,
       ),
     );
-    listViews.add(
-      GlassTextView(
-        other: user,
-        field: "branch",
-        ratio: 1.1,
-        text: Member.branch,
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: animationController!,
-            curve:
-                Interval((1 / count) * 6, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: animationController!,
-      ),
-    );
-    listViews.add(
-      GlassTextView(
-        other: user,
-        field: "level",
-        ratio: 1.1,
-        text: Member.level==6? "5+" : Member.level.toString(),
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: animationController!,
-            curve:
-                Interval((1 / count) * 7, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: animationController!,
-      ),
-    );
+
     // listViews.add(
     //   TitleView(
     //     titleTxt: 'Level',
@@ -163,7 +154,7 @@ class _OtherProfileState extends State<OtherProfile>
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: animationController!,
             curve:
-                Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
+                Interval((1 / count) * 5, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: animationController!,
       ),
     );
@@ -172,12 +163,12 @@ class _OtherProfileState extends State<OtherProfile>
       GlassView(
           date: "",
           text: "Badges",
-          photo: "badge2.png",
+          icon: Icons.badge,
           phone: user["phone"]!,
           animation: Tween<double>(begin: 0.0, end: 1.0).animate(
               CurvedAnimation(
                   parent: animationController!,
-                  curve: Interval((1 / count) * 7, 1.0,
+                  curve: Interval((1 / count) * 6, 1.0,
                       curve: Curves.fastOutSlowIn))),
           animationController: animationController!),
     );
@@ -186,11 +177,11 @@ class _OtherProfileState extends State<OtherProfile>
       GlassView(
           date: user["birth_date"]!,
           text: "Birth Date : ",
-          photo: "birthdate.png",
+          icon: Icons.date_range_outlined,
           animation: Tween<double>(begin: 0.0, end: 1.0).animate(
               CurvedAnimation(
                   parent: animationController!,
-                  curve: Interval((1 / count) * 7, 1.0,
+                  curve: Interval((1 / count) * 6, 1.0,
                       curve: Curves.fastOutSlowIn))),
           animationController: animationController!),
     );
@@ -198,11 +189,11 @@ class _OtherProfileState extends State<OtherProfile>
       GlassView(
           date: (DateTime.now().year - Member.entryYear).toString() + " Years",
           text: "Experience : ",
-          photo: "aerDate.png",
+          icon: Icons.timer_sharp,
           animation: Tween<double>(begin: 0.0, end: 1.0).animate(
               CurvedAnimation(
                   parent: animationController!,
-                  curve: Interval((1 / count) * 8, 1.0,
+                  curve: Interval((1 / count) * 7, 1.0,
                       curve: Curves.fastOutSlowIn))),
           animationController: animationController!),
     );
@@ -401,7 +392,7 @@ class _OtherProfileState extends State<OtherProfile>
             //   maximumSize: Size(16, 16),
             //   particleDrag: 0.03,
             // ),
-            
+
             user.isEmpty
                 ? Center(child: CircularProgressIndicator())
                 : Member.roles.contains("admin")
@@ -566,7 +557,6 @@ class _OtherProfileState extends State<OtherProfile>
                                         0.0),
                                     child: TextButton(
                                         style: TextButton.styleFrom(
-                                        
                                           backgroundColor:
                                               user["music"] == "true"
                                                   ? Colors.red
@@ -616,10 +606,10 @@ class _OtherProfileState extends State<OtherProfile>
                                             : CircularProgressIndicator())),
                               );
                             },
+                          ),
+                          SizedBox(
+                            height: 35,
                           )
-                    ,  SizedBox(
-                    height: 35,
-                  )
                         ],
                       )
                     : ListView(
@@ -657,7 +647,31 @@ class _OtherProfileState extends State<OtherProfile>
             itemBuilder: (BuildContext context, int index) {
               animationController?.forward();
 
-              return listViews[index];
+              if (index == 0) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: listViews[0],
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          listViews[1],
+                          listViews[2],
+                          listViews[3],
+                        ],
+                      ),
+                    )
+                  ],
+                );
+              } else if (index < 4) {
+                return Container();
+              } else {
+                return listViews[index];
+              }
             },
           );
         }

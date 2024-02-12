@@ -1,4 +1,5 @@
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
+import 'package:Aerobotix/HomeScreen/profile/otherProfile.dart';
 import 'package:Aerobotix/model/member.dart';
 import 'package:Aerobotix/services/firebase_service.dart';
 import 'package:Aerobotix/ui/HexColor.dart';
@@ -27,18 +28,18 @@ class _AllMembersScreenState extends State<AllMembersScreen>
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
   String search = "";
-    String netIm = "wait";
-    Map<String,String> imMap={};
-  void getIm(String phone , String photo) async {
+  String netIm = "wait";
+  Map<String, String> imMap = {};
+  void getIm(String phone, String photo) async {
     try {
-      
-           await FirestoreService.getImage(
-              "profiles/" + phone + "/profile/", photo).then((value) {
-                      imMap[phone]=value;
-              });
+      await FirestoreService.getImage("profiles/" + phone + "/profile/", photo)
+          .then((value) {
+        imMap[phone] = value;
+      });
       setState(() {});
     } catch (e) {}
   }
+
   final db = FirebaseFirestore.instance;
   Widget MembersList(categories) {
     return StreamBuilder<QuerySnapshot>(
@@ -52,223 +53,237 @@ class _AllMembersScreenState extends State<AllMembersScreen>
           int index = 0;
           return ListView(
             children: [
-              Wrap(
-                  alignment: WrapAlignment.center,
-                  children: [
-                        Card(
-                          margin: EdgeInsets.all(20),
-                          child: TextFormField(
-                            initialValue: search,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.search),
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter name of the component',
-                            ),
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: TextFormField(
+                        initialValue: search,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15))),
+                          hintText: 'Enter a name',
+                        ),
 
-                            onChanged: (value) {
-                              setState(() {
-                                search = value.trim();
-                              });
-                            },
-                            // maxLength: 20,
-                            maxLines: 1,
-                          ),
-                        )
-                      ] +
-                      snapshot.data!.docs.map((doc) {
-                        String gif = "assets/HomeScreen/3asfour.gif";
-                        Color colorLevel = HexColor("973747");
-                        switch (doc.get("gameLevel").toString()) {
-                          case "wlidha":
-                            gif = "assets/HomeScreen/wlidha.gif";
-                            colorLevel = HexColor("973747");
-                            break;
-                          case "kassa7":
-                            gif = "assets/HomeScreen/kassa7.gif";
-                            colorLevel = HexColor("911E0E");
-                            break;
-                          case "r3ad":
-                            gif = "assets/HomeScreen/r3ad.gif";
-                            colorLevel = HexColor("E1CB53");
+                        onChanged: (value) {
+                          setState(() {
+                            search = value.trim();
+                          });
+                        },
+                        // maxLength: 20,
+                        maxLines: 1,
+                      ),
+                    ),
+                  )
+                ] +
+                snapshot.data!.docs.map((doc) {
+                  String gif = "assets/HomeScreen/3asfour.gif";
+                  Color colorLevel = HexColor("973747");
+                  switch (doc.get("gameLevel").toString()) {
+                    case "wlidha":
+                      gif = "assets/HomeScreen/wlidha.gif";
+                      colorLevel = HexColor("973747");
+                      break;
+                    case "kassa7":
+                      gif = "assets/HomeScreen/kassa7.gif";
+                      colorLevel = HexColor("911E0E");
+                      break;
+                    case "r3ad":
+                      gif = "assets/HomeScreen/r3ad.gif";
+                      colorLevel = HexColor("E1CB53");
 
-                            break;
-                          case "jen":
-                            gif = "assets/HomeScreen/jen.gif";
-                            colorLevel = HexColor("CA9FC8");
+                      break;
+                    case "jen":
+                      gif = "assets/HomeScreen/jen.gif";
+                      colorLevel = HexColor("CA9FC8");
 
-                            break;
-                          case "3orsa":
-                            gif = "assets/HomeScreen/3orsa.gif";
-                            colorLevel = HexColor("#90F1FB");
+                      break;
+                    case "3orsa":
+                      gif = "assets/HomeScreen/3orsa.gif";
+                      colorLevel = HexColor("#90F1FB");
 
-                            break;
-                          default:
-                            colorLevel = HexColor("BD8484");
-                            gif = "assets/HomeScreen/3asfour.gif";
+                      break;
+                    default:
+                      colorLevel = HexColor("BD8484");
+                      gif = "assets/HomeScreen/3asfour.gif";
+                  }
+                  if (imMap.containsKey(doc.get("phone")) == false) {
+                    getIm(doc.get("phone"), doc.get("photo"));
+                  }
+                  if (((categories == "all" && doc.get("new") == false) ||
+                          (categories == doc.get("gameLevel").toString() &&
+                              doc.get("new") == false) ||
+                          (categories == "new" && doc.get("new") == true)) &&
+                      (search == "" ||
+                          doc
+                              .get("first_name")
+                              .toString()
+                              .toUpperCase()
+                              .contains(search.toUpperCase()) ||
+                          doc
+                              .get("last_name")
+                              .toString()
+                              .toUpperCase()
+                              .contains(search.toUpperCase()))) {
+                    index = index + 1;
+                    return Container(
+                        child: GestureDetector(
+                      onLongPress: () {
+                        if (doc.get("new") == true) {
+                          print(doc.get("new"));
+                          popUp(context, doc.get("phone"));
                         }
-                        if(imMap.containsKey(doc.get("phone"))==false){
-                          getIm(doc.get("phone"), doc.get("photo"));
-                        }
-                        if (((categories == "all"  &&  doc.get("new")==false )||
-                                ( categories ==
-                                    doc.get("gameLevel").toString() &&  doc.get("new")==false ) || (categories =="new" &&
-                                    doc.get("new")==true))  &&
-                            (search == "" ||
-                                doc
-                                    .get("first_name")
-                                    .toString()
-                                    .toUpperCase()
-                                    .contains(search.toUpperCase()) ||
-                                doc
-                                    .get("last_name")
-                                    .toString()
-                                    .toUpperCase()
-                                    .contains(search.toUpperCase()))) {
-                          index = index + 1;
-                          return Card(
-                            borderOnForeground: true,
-                            color: Colors.transparent,
-                            elevation: 200,
-                            margin: EdgeInsets.all(8),
-                            child: GestureDetector(
-                              onLongPress: (){
-                                if(doc.get("new")==true){
-                                  print(doc.get("new"));
-                                  popUp(context,doc.get("phone"));
-                                }
-                              },
-                              onTap: () {
-                                Member.otherPhone = doc.get("phone");
-                                Navigator.pushNamed(context, "/otherProfile");
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                   children: [
-                                    AvatarGlow(
-                                      glowColor: Colors.blue,
-                                      endRadius:
-                                          MediaQuery.of(context).size.width /
-                                              8,
-                                      duration: Duration(milliseconds: 2000),
-                                      repeat: true,
-                                      showTwoGlows: true,
-                                      repeatPauseDuration:
-                                          Duration(milliseconds: 100),
-                                      child: Container(
-                                        // width: MediaQuery.of(context).size.width / 2,
-                                        // height: MediaQuery.of(context).size.width / 2,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: doc.get("gender") ==
-                                                      "Female"
-                                                  ? Colors.pinkAccent
-                                                  : Colors.blue,
-                                              width: 5),
-                                          shape: BoxShape.circle,
-                                          image: (imMap[doc.get("phone")].toString().isNotEmpty && imMap.containsKey(doc.get("phone"))  && 
-                                                  imMap[doc.get("phone")] != "wait")
-                                              ? DecorationImage(
-                                                  image: NetworkImage(
-                                                    imMap[doc.get("phone")].toString(),
-                                                  ),
-                                                  fit: BoxFit.fill)
-                                              : imMap[doc.get("phone")].toString().isEmpty
-                                                  ? doc.get("gender") ==
-                                                          "Female"
-                                                      ? DecorationImage(
-                                                          image: AssetImage(
-                                                            "assets/images/gadget2.jpg",
-                                                          ),
-                                                          fit: BoxFit.fill)
-                                                      : DecorationImage(
-                                                          image: AssetImage(
-                                                            "assets/images/gadget4.jpg",
-                                                          ),
-                                                          fit: BoxFit.fill)
-                                                  : null,
-                                        ),
+                      },
+                      onTap: () {
+                        Member.otherPhone = doc.get("phone");
+                        showModalBottomSheet(
+                            elevation: 1,
+                            context: context,
+                            builder: ((context) {
+                              return Container(
+                                  decoration: BoxDecoration(
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          color: AerobotixAppTheme
+                                              .white, // shadow color
+                                          blurRadius: 20, // shadow radius
+                                          offset:
+                                              Offset(5, 10), // shadow offset
+                                          spreadRadius:
+                                              0.1, // The amount the box should be inflated prior to applying the blur
+                                          blurStyle:
+                                              BlurStyle.outer // set blur style
+                                          ),
+                                    ],
+                                  ),
+                                  child: OtherProfile());
+                            })); // Navigator.pushNamed(context, "/otherProfile");
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15, right: 15, top: 5, bottom: 5),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
+                              color: Colors.white.withOpacity(0.1)),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: AvatarGlow(
+                                    glowColor: Colors.blue,
+                                    endRadius:
+                                        MediaQuery.of(context).size.width / 15,
+                                    duration: Duration(milliseconds: 2000),
+                                    repeat: true,
+                                    showTwoGlows: true,
+                                    repeatPauseDuration:
+                                        Duration(milliseconds: 100),
+                                    child: Container(
+                                      // width: MediaQuery.of(context).size.width / 2,
+                                      // height: MediaQuery.of(context).size.width / 2,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: (imMap[doc.get("phone")]
+                                                    .toString()
+                                                    .isNotEmpty &&
+                                                imMap.containsKey(
+                                                    doc.get("phone")) &&
+                                                imMap[doc.get("phone")] !=
+                                                    "wait")
+                                            ? DecorationImage(
+                                                image: NetworkImage(
+                                                  imMap[doc.get("phone")]
+                                                      .toString(),
+                                                ),
+                                                fit: BoxFit.fill)
+                                            : imMap[doc.get("phone")]
+                                                    .toString()
+                                                    .isEmpty
+                                                ? doc.get("gender") == "Female"
+                                                    ? DecorationImage(
+                                                        image: AssetImage(
+                                                          "assets/images/gadget2.jpg",
+                                                        ),
+                                                        fit: BoxFit.fill)
+                                                    : DecorationImage(
+                                                        image: AssetImage(
+                                                          "assets/images/gadget4.jpg",
+                                                        ),
+                                                        fit: BoxFit.fill)
+                                                : null,
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Stack(
-                                        children: <Widget>[
-                                          // Stroked text as border.
-                                          Text(
-                                            
-                                            doc.get('first_name') +
-                                                "\n" +
-                                                doc.get('last_name'),
-                                                textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              foreground: Paint()
-                                                ..style = PaintingStyle.stroke
-                                                ..strokeWidth = 2
-                                                ..color = colorLevel,
-                                            ),
-                                          ),
-                                          // Solid text as fill.
-                                          Text(
-
-                                            doc.get('first_name') +
-                                                "\n" +
-                                                doc.get('last_name'),
-                                            textAlign: TextAlign.center,
-
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                          );
-                        } else {
-                          return Card();
-                        }
-                      }).toList() +
-                      [
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(30.0),
-                            child: Center(
-                              child: Text(
-                                "That's All 🚫 !",
-                                style: TextStyle(fontSize: 20),
-                              ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 20,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                            doc.get('first_name') +
+                                                " " +
+                                                doc.get('last_name'),
+                                            softWrap: true,
+                                            textAlign: TextAlign.center,
+                                            style: AerobotixAppTheme.title),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                            doc.get("branch") +
+                                                doc.get("level").toString() +
+                                                " - " +
+                                                doc.get('xp').toString() +
+                                                " XP",
+                                            textAlign: TextAlign.center,
+                                            style: AerobotixAppTheme.subtitle),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                        Card(
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height / 10,
-                          ),
-                        )
-                      ]),
-            ],
+                      ),
+                    ));
+                  } else {
+                    return Container();
+                  }
+                }).toList() +
+                [
+                  Container(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height / 5,
+                    ),
+                  )
+                ],
           );
         }
       },
     );
   }
 
-String score="";
-String entryYear=DateTime.now().year.toString();
-late AwesomeDialog ad;
- bool popUp(context,String id) {
+  String score = "";
+  String entryYear = DateTime.now().year.toString();
+  late AwesomeDialog ad;
+  bool popUp(context, String id) {
     score = "";
-    entryYear="";
+    entryYear = "";
 
-     ad = AwesomeDialog(
+    ad = AwesomeDialog(
         context: context,
         animType: AnimType.SCALE,
         dialogType: DialogType.INFO,
@@ -287,7 +302,6 @@ late AwesomeDialog ad;
                           Text(
                             "Enter the data",
                             style: TextStyle(
-                              
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
                               color: Colors.blue,
@@ -295,7 +309,6 @@ late AwesomeDialog ad;
                           ),
                           Divider(),
                         ] +
-                        
                         [
                           TextField(
                             decoration: InputDecoration(
@@ -307,7 +320,8 @@ late AwesomeDialog ad;
                             autofocus: true,
                             textAlignVertical: TextAlignVertical.center,
                             onChanged: (text) => score = text,
-                            keyboardType: TextInputType.numberWithOptions(signed: false,decimal: true),
+                            keyboardType: TextInputType.numberWithOptions(
+                                signed: false, decimal: true),
                           ),
                           Divider(),
                           TextField(
@@ -320,9 +334,9 @@ late AwesomeDialog ad;
                             autofocus: true,
                             textAlignVertical: TextAlignVertical.center,
                             onChanged: (text) => entryYear = text,
-                            keyboardType: TextInputType.numberWithOptions(signed: false,decimal: true),
+                            keyboardType: TextInputType.numberWithOptions(
+                                signed: false, decimal: true),
                           ),
-                          
                         ],
                   ),
                 ),
@@ -330,113 +344,135 @@ late AwesomeDialog ad;
             ],
           ),
         ),
-        btnOk: 
-        Wrap(
+        btnOk: Wrap(
           alignment: WrapAlignment.center,
-
           children: [
             TextButton(
               child: Text("Chrara"),
-          onPressed: () async {
-            if(entryYear.isNotEmpty && double.tryParse(entryYear)!=null && double.parse(entryYear)<=DateTime.now().year  && double.parse(entryYear)>= 2000
-            && score.isNotEmpty && double.tryParse(score)!=null && double.parse(score)<=5000  && double.parse(score)>= 0
-             
-             ){
-            FirestoreService.verifyUser(id, double.parse(score).toInt(), double.parse(entryYear).toInt(),"3asfour");
-             }else{
-              showSnackBar("Please enter valid data",col:Colors.red);
-             }
-             
-             ad..dismiss();
-          },
-        ),
-       TextButton(
-              child: Text("7arbi"),
-          onPressed: () async {
-            if(entryYear.isNotEmpty && double.tryParse(entryYear)!=null && double.parse(entryYear)<=DateTime.now().year  && double.parse(entryYear)>= 2000
-            && score.isNotEmpty && double.tryParse(score)!=null && double.parse(score)<=5000  && double.parse(score)>= 0
-             
-             ){
-            FirestoreService.verifyUser(id, double.parse(score).toInt(), double.parse(entryYear).toInt(),"wlidha");
-             }else{
-              showSnackBar("Please enter valid data",col:Colors.red);
-             }
-             
-             ad..dismiss();
-          },
-        ),
-        TextButton(
-              child: Text("Kassa7"),
-          onPressed: () async {
-            if(entryYear.isNotEmpty && double.tryParse(entryYear)!=null && double.parse(entryYear)<=DateTime.now().year  && double.parse(entryYear)>= 2000
-            && score.isNotEmpty && double.tryParse(score)!=null && double.parse(score)<=5000  && double.parse(score)>= 0
-             
-             ){
-            FirestoreService.verifyUser(id, double.parse(score).toInt(), double.parse(entryYear).toInt(),"kassa7");
-             }else{
-              showSnackBar("Please enter valid data",col:Colors.red);
-             }
-             
-             ad..dismiss();
-          },
-        ),
-        TextButton(
-              child: Text("R3ad"),
-          onPressed: () async {
-            if(entryYear.isNotEmpty && double.tryParse(entryYear)!=null && double.parse(entryYear)<=DateTime.now().year  && double.parse(entryYear)>= 2000
-            && score.isNotEmpty && double.tryParse(score)!=null && double.parse(score)<=5000  && double.parse(score)>= 0
-             
-             ){
-            FirestoreService.verifyUser(id, double.parse(score).toInt(), double.parse(entryYear).toInt(),"r3ad");
-             }else{
-              showSnackBar("Please enter valid data",col:Colors.red);
-             }
-             
-             ad..dismiss();
-          },
-        ),
-        TextButton(
-              child: Text("Jen"),
-          onPressed: () async {
-            if(entryYear.isNotEmpty && double.tryParse(entryYear)!=null && double.parse(entryYear)<=DateTime.now().year  && double.parse(entryYear)>= 2000
-            && score.isNotEmpty && double.tryParse(score)!=null && double.parse(score)<=5000  && double.parse(score)>= 0
-             
-             ){
-            FirestoreService.verifyUser(id, double.parse(score).toInt(), double.parse(entryYear).toInt(),"jen");
-             }else{
-              showSnackBar("Please enter valid data",col:Colors.red);
-             }
-             
-             ad..dismiss();
-          },
-        ),
-        TextButton(
-              child: Text('3orsa'),
-          onPressed: () async {
-            if(entryYear.isNotEmpty && double.tryParse(entryYear)!=null && double.parse(entryYear)<=DateTime.now().year  && double.parse(entryYear)>= 2000
-            && score.isNotEmpty && double.tryParse(score)!=null && double.parse(score)<=5000  && double.parse(score)>= 0
-             
-             ){
-            FirestoreService.verifyUser(id, double.parse(score).toInt(), double.parse(entryYear).toInt(),"3orsa");
-             }else{
-              showSnackBar("Please enter valid data",col:Colors.red);
-             }
-             
-            //  ad..dismiss();
-          },
-        ),
-          ],
-        ) 
-        
-        );
+              onPressed: () async {
+                if (entryYear.isNotEmpty &&
+                    double.tryParse(entryYear) != null &&
+                    double.parse(entryYear) <= DateTime.now().year &&
+                    double.parse(entryYear) >= 2000 &&
+                    score.isNotEmpty &&
+                    double.tryParse(score) != null &&
+                    double.parse(score) <= 5000 &&
+                    double.parse(score) >= 0) {
+                  FirestoreService.verifyUser(id, double.parse(score).toInt(),
+                      double.parse(entryYear).toInt(), "3asfour");
+                } else {
+                  showSnackBar("Please enter valid data", col: Colors.red);
+                }
 
-    
-      
+                ad..dismiss();
+              },
+            ),
+            TextButton(
+              child: Text("7arbi"),
+              onPressed: () async {
+                if (entryYear.isNotEmpty &&
+                    double.tryParse(entryYear) != null &&
+                    double.parse(entryYear) <= DateTime.now().year &&
+                    double.parse(entryYear) >= 2000 &&
+                    score.isNotEmpty &&
+                    double.tryParse(score) != null &&
+                    double.parse(score) <= 5000 &&
+                    double.parse(score) >= 0) {
+                  FirestoreService.verifyUser(id, double.parse(score).toInt(),
+                      double.parse(entryYear).toInt(), "wlidha");
+                } else {
+                  showSnackBar("Please enter valid data", col: Colors.red);
+                }
+
+                ad..dismiss();
+              },
+            ),
+            TextButton(
+              child: Text("Kassa7"),
+              onPressed: () async {
+                if (entryYear.isNotEmpty &&
+                    double.tryParse(entryYear) != null &&
+                    double.parse(entryYear) <= DateTime.now().year &&
+                    double.parse(entryYear) >= 2000 &&
+                    score.isNotEmpty &&
+                    double.tryParse(score) != null &&
+                    double.parse(score) <= 5000 &&
+                    double.parse(score) >= 0) {
+                  FirestoreService.verifyUser(id, double.parse(score).toInt(),
+                      double.parse(entryYear).toInt(), "kassa7");
+                } else {
+                  showSnackBar("Please enter valid data", col: Colors.red);
+                }
+
+                ad..dismiss();
+              },
+            ),
+            TextButton(
+              child: Text("R3ad"),
+              onPressed: () async {
+                if (entryYear.isNotEmpty &&
+                    double.tryParse(entryYear) != null &&
+                    double.parse(entryYear) <= DateTime.now().year &&
+                    double.parse(entryYear) >= 2000 &&
+                    score.isNotEmpty &&
+                    double.tryParse(score) != null &&
+                    double.parse(score) <= 5000 &&
+                    double.parse(score) >= 0) {
+                  FirestoreService.verifyUser(id, double.parse(score).toInt(),
+                      double.parse(entryYear).toInt(), "r3ad");
+                } else {
+                  showSnackBar("Please enter valid data", col: Colors.red);
+                }
+
+                ad..dismiss();
+              },
+            ),
+            TextButton(
+              child: Text("Jen"),
+              onPressed: () async {
+                if (entryYear.isNotEmpty &&
+                    double.tryParse(entryYear) != null &&
+                    double.parse(entryYear) <= DateTime.now().year &&
+                    double.parse(entryYear) >= 2000 &&
+                    score.isNotEmpty &&
+                    double.tryParse(score) != null &&
+                    double.parse(score) <= 5000 &&
+                    double.parse(score) >= 0) {
+                  FirestoreService.verifyUser(id, double.parse(score).toInt(),
+                      double.parse(entryYear).toInt(), "jen");
+                } else {
+                  showSnackBar("Please enter valid data", col: Colors.red);
+                }
+
+                ad..dismiss();
+              },
+            ),
+            TextButton(
+              child: Text('3orsa'),
+              onPressed: () async {
+                if (entryYear.isNotEmpty &&
+                    double.tryParse(entryYear) != null &&
+                    double.parse(entryYear) <= DateTime.now().year &&
+                    double.parse(entryYear) >= 2000 &&
+                    score.isNotEmpty &&
+                    double.tryParse(score) != null &&
+                    double.parse(score) <= 5000 &&
+                    double.parse(score) >= 0) {
+                  FirestoreService.verifyUser(id, double.parse(score).toInt(),
+                      double.parse(entryYear).toInt(), "3orsa");
+                } else {
+                  showSnackBar("Please enter valid data", col: Colors.red);
+                }
+
+                //  ad..dismiss();
+              },
+            ),
+          ],
+        ));
+
     ad..show();
     return true;
   }
-
-
 
   @override
   void initState() {
@@ -475,8 +511,6 @@ late AwesomeDialog ad;
     return true;
   }
 
-
-  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -506,7 +540,7 @@ late AwesomeDialog ad;
           return SafeArea(
             child: DefaultTabController(
               initialIndex: 0,
-              length: Member.roles.contains("admin")==true ? 8 :7,
+              length: Member.roles.contains("admin") == true ? 8 : 7,
               child: Column(
                 children: <Widget>[
                   ButtonsTabBar(
@@ -526,64 +560,61 @@ late AwesomeDialog ad;
                     ),
                     unselectedLabelStyle: TextStyle(color: Colors.black),
                     labelStyle: TextStyle(color: Colors.white),
-                    tabs:
-                     (Member.roles.contains("admin")==true)?
-                     [
-                      Tab(
-                        text: "New",
-                      ),
-                      Tab(
-                        text: "All",
-                      ),
-                      Tab(
-                        text: "Chrara",
-                      ),
-                      Tab(
-                        text: "7arbi",
-                      ),
-                      Tab(
-                        text: "Kassa7",
-                      ),
-                      Tab(
-                        text: "R3ad",
-                      ),
-                      Tab(
-                        text: "Jen",
-                      ),
-                      Tab(
-                        text: '3orsa',
-                      ),
-                    ]:
-                     [
-                
-                      Tab(
-                        text: "All",
-                      ),
-                      Tab(
-                        text: "Chrara",
-                      ),
-                      Tab(
-                        text: "7arbi",
-                      ),
-                      Tab(
-                        text: "Kassa7",
-                      ),
-                      Tab(
-                        text: "R3ad",
-                      ),
-                      Tab(
-                        text: "Jen",
-                      ),
-                      Tab(
-                        text: '3orsa',
-                      ),
-                    ]
-                    ,
+                    tabs: (Member.roles.contains("admin") == true)
+                        ? [
+                            Tab(
+                              text: "New",
+                            ),
+                            Tab(
+                              text: "All",
+                            ),
+                            Tab(
+                              text: "Chrara",
+                            ),
+                            Tab(
+                              text: "7arbi",
+                            ),
+                            Tab(
+                              text: "Kassa7",
+                            ),
+                            Tab(
+                              text: "R3ad",
+                            ),
+                            Tab(
+                              text: "Jen",
+                            ),
+                            Tab(
+                              text: '3orsa',
+                            ),
+                          ]
+                        : [
+                            Tab(
+                              text: "All",
+                            ),
+                            Tab(
+                              text: "Chrara",
+                            ),
+                            Tab(
+                              text: "7arbi",
+                            ),
+                            Tab(
+                              text: "Kassa7",
+                            ),
+                            Tab(
+                              text: "R3ad",
+                            ),
+                            Tab(
+                              text: "Jen",
+                            ),
+                            Tab(
+                              text: '3orsa',
+                            ),
+                          ],
                   ),
                   Expanded(
                     child: TabBarView(
                       children: <Widget>[
-                       if   (Member.roles.contains("admin"))  MembersList("new"),
+                        if (Member.roles.contains("admin")) MembersList("new"),
                         MembersList("all"),
                         MembersList("3asfour"),
                         MembersList("wlidha"),

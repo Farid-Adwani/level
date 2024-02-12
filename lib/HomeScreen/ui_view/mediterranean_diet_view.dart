@@ -7,114 +7,106 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-
-
 class MediterranesnDietView extends StatefulWidget {
   final AnimationController? animationController;
   final Animation<double>? animation;
-Map<String,String> other;
-int xp=0;
-   MediterranesnDietView(
-      {Key? key, this.animationController, this.animation,this.other=const {},required this.xp})
+  Map<String, String> other;
+  int xp = 0;
+  MediterranesnDietView(
+      {Key? key,
+      this.animationController,
+      this.animation,
+      this.other = const {},
+      required this.xp})
       : super(key: key);
-
 
   @override
   State<MediterranesnDietView> createState() => _MediterranesnDietViewState();
 }
 
 class _MediterranesnDietViewState extends State<MediterranesnDietView> {
-
-String song="";
-bool playing=false;
-String levelText="";
-String gif="";
-Color colorLevel=Color.fromARGB(255,255,0,255);
-void setGameLevel(){
-  String toSwitch="";
-  if(widget.other.isNotEmpty){
-    toSwitch=widget.other["gameLevel"]!;
-  }else{
-    toSwitch=Member.gameLevel;
-  }
-  switch (toSwitch) {
-    case "wlidha":
-      print("wlidha");
-      song="audio/wlidha.mp3";
-      levelText='7arbi';
-      gif="assets/HomeScreen/wlidha.gif";
-      colorLevel=HexColor("973747");
-      break;
+  String song = "";
+  bool playing = false;
+  String levelText = "";
+  String gif = "";
+  Color colorLevel = Color.fromARGB(255, 255, 0, 255);
+  void setGameLevel() {
+    String toSwitch = "";
+    if (widget.other.isNotEmpty) {
+      toSwitch = widget.other["gameLevel"]!;
+    } else {
+      toSwitch = Member.gameLevel;
+    }
+    switch (toSwitch) {
+      case "wlidha":
+        print("wlidha");
+        song = "audio/wlidha.mp3";
+        levelText = '7arbi';
+        gif = "assets/HomeScreen/wlidha.gif";
+        colorLevel = HexColor("973747");
+        break;
       case "kassa7":
-
-      song="audio/kassa7.mp3";
-      levelText='Kassa7';
-      gif="assets/HomeScreen/kassa7.gif";
-colorLevel=HexColor("911E0E");
-      break;
+        song = "audio/kassa7.mp3";
+        levelText = 'Kassa7';
+        gif = "assets/HomeScreen/kassa7.gif";
+        colorLevel = HexColor("911E0E");
+        break;
       case "r3ad":
-      print("r3ad");
-      song="audio/r3ad.mp3";
-      levelText='R3ad';
-      gif="assets/HomeScreen/r3ad.gif";
-colorLevel=HexColor("E1CB53");
+        print("r3ad");
+        song = "audio/r3ad.mp3";
+        levelText = 'R3ad';
+        gif = "assets/HomeScreen/r3ad.gif";
+        colorLevel = HexColor("E1CB53");
 
-      break;
+        break;
       case "jen":
-      print("jen");
-      song="audio/jen.mp3";
-      levelText='Jen';
-      gif="assets/HomeScreen/jen.gif";
-colorLevel=HexColor("CA9FC8");
+        print("jen");
+        song = "audio/jen.mp3";
+        levelText = 'Jen';
+        gif = "assets/HomeScreen/jen.gif";
+        colorLevel = HexColor("CA9FC8");
 
-      break;
+        break;
       case "3orsa":
-      print("3orsa");
-      song="audio/3orsa.mp3";
-      levelText='3orsa';
-      gif="assets/HomeScreen/3orsa.gif";
-colorLevel=HexColor("#90F1FB");
+        print("3orsa");
+        song = "audio/3orsa.mp3";
+        levelText = '3orsa';
+        gif = "assets/HomeScreen/3orsa.gif";
+        colorLevel = HexColor("#90F1FB");
 
-      break;
-    default:
-    print("3asfour");
-    	colorLevel=HexColor("BD8484");
-      song="audio/3asfour.mp3";
-      levelText='Chrara';
-      gif="assets/HomeScreen/3asfour.gif";
+        break;
+      default:
+        print("3asfour");
+        colorLevel = HexColor("BD8484");
+        song = "audio/3asfour.mp3";
+        levelText = 'Chrara';
+        gif = "assets/HomeScreen/3asfour.gif";
+    }
   }
-}
-AudioPlayer player = AudioPlayer();
-void playAudio() async{
-  
-await player.setVolume(1);
-await player.setSourceAsset(song);
 
-}
+  AudioPlayer player = AudioPlayer();
+  void playAudio() async {
+    await player.setVolume(1);
+    await player.setSourceAsset(song);
+  }
 
-  
-void fetch() async{
-  await   FirestoreService.fetchUser(Member.phone).then((value) {
-              setState(() {
-                
-              });
-            });  
-}
- void initState() {
-   fetch();
-playAudio();
-super.initState();
- }
+  void fetch() async {
+    await FirestoreService.fetchUser(Member.phone).then((value) {
+      setState(() {});
+    });
+  }
 
+  void initState() {
+    fetch();
+    playAudio();
+    super.initState();
+  }
 
-
-@override
-  void dispose() async{
+  @override
+  void dispose() async {
     super.dispose();
     await player.stop();
-    
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -128,18 +120,19 @@ super.initState();
             transform: new Matrix4.translationValues(
                 0.0, 30 * (1.0 - widget.animation!.value), 0.0),
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 24, right: 24, top: 0, bottom: 18),
+              padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width / 10,
+                  right: MediaQuery.of(context).size.width / 10,
+                  top: 8,
+                  bottom: 8),
               child: GestureDetector(
                 onTap: () async {
-                 if(playing==false)  {
-                  playing=true;
-                  await player.play(AssetSource(song));
-                  
-                 }else{
-                  playing=false;
-                  await player.stop();
-                  
+                  if (playing == false) {
+                    playing = true;
+                    await player.play(AssetSource(song));
+                  } else {
+                    playing = false;
+                    await player.stop();
                   }
                 },
                 child: Container(
@@ -154,172 +147,179 @@ super.initState();
                         bottomLeft: Radius.circular(20.0),
                         bottomRight: Radius.circular(20.0),
                         topRight: Radius.circular(20.0)),
-                        
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                    
                       Column(
                         children: [
                           Stack(
-  children: <Widget>[
-    // Stroked text as border.
-    Text(
-      levelText,
-      style: TextStyle(
-        fontSize: 40,
-        foreground: Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 6
-          ..color = colorLevel,
-      ),
-    ),
-    // Solid text as fill.
-    Text(
-      levelText,
-      style: TextStyle(
-        fontSize: 40,
-        color: Colors.grey[300],
-      ),
-    ),
-  ],
-),
-                              // Text(
-                              //   levelText,
-                              //   textAlign: TextAlign.center,
-
-                              //   style: TextStyle(
-                              //     fontFamily: AerobotixAppTheme.fontName,
-                              //     fontWeight: FontWeight.w600,
-                              //     fontSize: 32,
-                              //     color: colorLevel,
-
-                              //   ),
-                              // ),
-                                   Padding(
-                        padding:
-                            const EdgeInsets.only(top: 16, left: 16, right: 16),
-                        child: Row(
-                          children: <Widget>[
-                        Padding(
-                              padding: const EdgeInsets.only(right: 16),
-                              child: Center(
-                                child: Stack(
-                                  clipBehavior: Clip.none,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        width: 100,
-                                        height: 100,
-                                        decoration: BoxDecoration(
-                                          color: AerobotixAppTheme.white,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(100.0),
-                                          ),
-                                          border: new Border.all(
-                                              width: 4,
-                                              color: AerobotixAppTheme
-                                                  .nearlyDarkBlue
-                                                  .withOpacity(0.2)),
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Text(
-                                             widget.other.isNotEmpty? (widget.xp*widget.animation!.value.toInt()).toString() : (widget.xp*widget.animation!.value).toInt().toString(),
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontFamily:
-                                                    AerobotixAppTheme.fontName,
-                                                fontWeight: FontWeight.normal,
-                                                fontSize: 24,
-                                                letterSpacing: 0.0,
-                                                color:Colors.purple[900],
-                                              ),
-                                            ),
-                                            Text(
-                                              'XP',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontFamily:
-                                                    AerobotixAppTheme.fontName,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 12,
-                                                letterSpacing: 0.0,
-                                                color: AerobotixAppTheme.grey
-                                                    .withOpacity(0.5),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: CustomPaint(
-                                        painter: CurvePainter(
-                                            colors: [
-                                              colorLevel,
-                                              HexColor("#8A98E8"),
-                                              colorLevel
-                                            ],
-                                            angle: widget.xp*360/5000 +
-                                                (360 - 140) *
-                                                    (1.0 - widget.animation!.value)),
-                                        child: SizedBox(
-                                          width: 108,
-                                          height: 108,
-                                        ),
-                                      ),
-                                    )
-                                  ],
+                            children: <Widget>[
+                              // Stroked text as border.
+                              Text(
+                                levelText,
+                                style: TextStyle(
+                                  fontSize: 40,
+                                  foreground: Paint()
+                                    ..style = PaintingStyle.stroke
+                                    ..strokeWidth = 6
+                                    ..color = colorLevel,
                                 ),
                               ),
-                            )
-                          ],
-                        ),
-                      ),
-                    
-                            
-                             
-                        ],
-                      )
-                    , 
-                      Padding(
-                          padding:
-                              const EdgeInsets.only(left: 16, right: 8, top: 16),
-                          child: Container(
-                            width: 60,
-                            height: 160,
-                            decoration: BoxDecoration(
-                              color: HexColor('#E8EDFE'),
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(80.0),
-                                  bottomLeft: Radius.circular(80.0),
-                                  bottomRight: Radius.circular(80.0),
-                                  topRight: Radius.circular(80.0)),
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                    color: AerobotixAppTheme.grey.withOpacity(0.4),
-                                    offset: const Offset(2, 2),
-                                    blurRadius: 4),
+                              // Solid text as fill.
+                              Text(
+                                levelText,
+                                style: TextStyle(
+                                  fontSize: 40,
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+                            ],
+                          ),
+                          // Text(
+                          //   levelText,
+                          //   textAlign: TextAlign.center,
+
+                          //   style: TextStyle(
+                          //     fontFamily: AerobotixAppTheme.fontName,
+                          //     fontWeight: FontWeight.w600,
+                          //     fontSize: 32,
+                          //     color: colorLevel,
+
+                          //   ),
+                          // ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 16, left: 16, right: 16),
+                            child: Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 16),
+                                  child: Center(
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            width: 100,
+                                            height: 100,
+                                            decoration: BoxDecoration(
+                                              color: AerobotixAppTheme.white,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(100.0),
+                                              ),
+                                              border: new Border.all(
+                                                  width: 4,
+                                                  color: AerobotixAppTheme
+                                                      .nearlyDarkBlue
+                                                      .withOpacity(0.2)),
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text(
+                                                  widget.other.isNotEmpty
+                                                      ? (widget.xp *
+                                                              widget.animation!
+                                                                  .value
+                                                                  .toInt())
+                                                          .toString()
+                                                      : (widget.xp *
+                                                              widget.animation!
+                                                                  .value)
+                                                          .toInt()
+                                                          .toString(),
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontFamily:
+                                                        AerobotixAppTheme
+                                                            .fontName,
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    fontSize: 24,
+                                                    letterSpacing: 0.0,
+                                                    color: Colors.purple[900],
+                                                  ),
+                                                ),
+                                                Text(
+                                                  'XP',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontFamily:
+                                                        AerobotixAppTheme
+                                                            .fontName,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 12,
+                                                    letterSpacing: 0.0,
+                                                    color: AerobotixAppTheme
+                                                        .grey
+                                                        .withOpacity(0.5),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: CustomPaint(
+                                            painter: CurvePainter(
+                                                colors: [
+                                                  colorLevel,
+                                                  HexColor("#8A98E8"),
+                                                  colorLevel
+                                                ],
+                                                angle: widget.xp * 360 / 5000 +
+                                                    (360 - 140) *
+                                                        (1.0 -
+                                                            widget.animation!
+                                                                .value)),
+                                            child: SizedBox(
+                                              width: 108,
+                                              height: 108,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
                               ],
                             ),
-                            child: WaveView(
-                              couleur: colorLevel,
-                              percentageValue: widget.xp*100/5000,
-              
-                            ),
                           ),
-                        )
-              
-                    
-                      ,
+                        ],
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 16, right: 8, top: 16),
+                        child: Container(
+                          width: 60,
+                          height: 160,
+                          decoration: BoxDecoration(
+                            color: HexColor('#E8EDFE'),
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(80.0),
+                                bottomLeft: Radius.circular(80.0),
+                                bottomRight: Radius.circular(80.0),
+                                topRight: Radius.circular(80.0)),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color:
+                                      AerobotixAppTheme.grey.withOpacity(0.4),
+                                  offset: const Offset(2, 2),
+                                  blurRadius: 4),
+                            ],
+                          ),
+                          child: WaveView(
+                            couleur: colorLevel,
+                            percentageValue: widget.xp * 100 / 5000,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -330,7 +330,6 @@ super.initState();
       },
     );
   }
-
 }
 
 class CurvePainter extends CustomPainter {

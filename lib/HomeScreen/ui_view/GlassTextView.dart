@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_home_screen.dart';
 import 'package:Aerobotix/HomeScreen/Aerobotix_app_theme.dart';
 import 'package:Aerobotix/HomeScreen/ui_view/wave_view.dart';
@@ -38,8 +40,10 @@ class GlassTextView extends StatefulWidget {
 }
 
 class _GlassTextViewState extends State<GlassTextView> {
-  bool edited = false;
   int level = 0;
+  bool edit = false;
+  String branchChoice = Member.branch;
+  String levelChoice = Member.level.toString();
   String filiere = "";
   List<bool> _isSelected = [false, false, false, false, false, false];
   List<bool> _isSelected2 = [
@@ -52,16 +56,15 @@ class _GlassTextViewState extends State<GlassTextView> {
     false,
     false
   ];
+  TextEditingController _controller = new TextEditingController();
+
   late AwesomeDialog ad;
   final _popKey = GlobalKey<FormState>();
   String fieldReset = "";
   bool popUp(context) {
-    if (widget.field == "branch" || widget.field == "level") {
-      setState(() {
-        edited = true;
-      });
-      return true;
-    }
+    _controller.text = widget.text;
+
+    print(widget.text);
     level = 0;
     ad = AwesomeDialog(
         context: context,
@@ -83,6 +86,7 @@ class _GlassTextViewState extends State<GlassTextView> {
                 color: Colors.transparent,
                 child: Form(
                   child: TextField(
+                    controller: _controller,
                     textAlign: TextAlign.center,
                     autofocus: true,
                     textAlignVertical: TextAlignVertical.center,
@@ -92,38 +96,16 @@ class _GlassTextViewState extends State<GlassTextView> {
                   ),
                 ),
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: [
-              //     IconButton(
-              //       onPressed: () {
-              //         FirestoreService.call();
-              //         //launch("tel://21620671572");
-              //       },
-              //       icon:  Icon(Icons.call),
-              //       iconSize: 50,
-              //     ),
-              //     IconButton(
-              //       iconSize: 50,
-              //       onPressed: () {
-              //         FirestoreService.sms("+21620671572");
-              //       },
-              //       icon: Icon(Icons.sms),
-              //     )
-              //   ],
-              // )
             ],
           ),
         ),
         btnOk: IconButton(
           iconSize: 50,
           onPressed: () async {
-
             await FirestoreService.setString(widget.field, fieldReset)
                 .then((value) {
               FirestoreService.fetchUser(Member.phone).then((value) {
-                setState(() {
-                });
+                setState(() {});
                 ad..dismiss();
               });
             });
@@ -146,11 +128,8 @@ class _GlassTextViewState extends State<GlassTextView> {
         case "first_name":
           interpretedText = widget.other["first_name"]!;
           break;
-        case "branch":
-          interpretedText = widget.other["branch"]!;
-          break;
-        case "level":
-          interpretedText = widget.other["level"]!;
+        case "class":
+          interpretedText = widget.other["branch"]! + widget.other["level"]!;
           break;
         default:
       }
@@ -162,16 +141,15 @@ class _GlassTextViewState extends State<GlassTextView> {
         case "first_name":
           interpretedText = Member.first_name;
           break;
-        case "branch":
-          interpretedText = Member.branch;
-          break;
-        case "level":
-          interpretedText = Member.level==6? "5+" : Member.level.toString();
+        case "class":
+          interpretedText = Member.level == 6
+              ? Member.branch + interpretedText + "5+"
+              : Member.branch + interpretedText + Member.level.toString();
           break;
         case "claim":
           interpretedText = widget.text;
           break;
-          
+
         default:
       }
     }
@@ -180,316 +158,205 @@ class _GlassTextViewState extends State<GlassTextView> {
       animation: widget.animationController!,
       builder: (BuildContext context, Widget? child) {
         return FadeTransition(
-          opacity: widget.animation!,
-          child: new Transform(
-            transform: new Matrix4.translationValues(
-                0.0, 30 * (1.0 - widget.animation!.value), 0.0),
-            child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 24, right: 24, top: 0, bottom: 0),
-                child: Column(
-                  children: [
-                    edited == true
-                        ? widget.field == "branch"
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ToggleButtons(
-                                    constraints: BoxConstraints(
-                                        maxWidth:
-                                            MediaQuery.of(context).size.width /
-                                                13,
-                                        minWidth:
-                                            MediaQuery.of(context).size.width /
-                                                13,
-                                        maxHeight:
-                                            MediaQuery.of(context).size.width /
-                                                10,
-                                        minHeight:
-                                            MediaQuery.of(context).size.width /
-                                                10),
-
-                                    children: <Widget>[
-                                      Text("MPI"),
-                                      Text("CBA"),
-                                      Text("IIA"),
-                                      Text("IMI"),
-                                      Text("GL"),
-                                      Text("RT"),
-                                      Text("BIO"),
-                                      Text("CH"),
+            opacity: widget.animation!,
+            child: new Transform(
+                transform: new Matrix4.translationValues(
+                    0.0, 30 * (1.0 - widget.animation!.value), 0.0),
+                child: edit == false
+                    ? GestureDetector(
+                        onTap: () {
+                          if (widget.other.isEmpty) {
+                            if (widget.field == "claim") {
+                              FirestoreService.setXp({
+                                "phone": Member.phone,
+                                "gameLevel": Member.gameLevel,
+                                "xp": Member.xp.toString()
+                              }, Member.claim)
+                                  .then((value) {
+                                FirestoreService.resetClaim(Member.phone);
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  AerobotixAppHomeScreen.id,
+                                );
+                              });
+                            } else if (widget.field != "class") {
+                              popUp(context);
+                            } else {
+                              setState(() {
+                                edit = true;
+                              });
+                            }
+                          }
+                        },
+                        child: widget.field == "claim"
+                            ? GlassmorphicContainer(
+                                width: MediaQuery.of(context).size.width /
+                                    widget.ratio,
+                                height: MediaQuery.of(context).size.width / 9,
+                                borderRadius: 20,
+                                blur: 20,
+                                alignment: Alignment.bottomCenter,
+                                border: 2,
+                                linearGradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Color.fromARGB(255, 192, 204, 23)
+                                          .withOpacity(0.1),
+                                      Color.fromARGB(255, 255, 252, 62)
+                                          .withOpacity(0.05),
                                     ],
-
-                                    isSelected: _isSelected2,
-
-                                    onPressed: (int index) {
-                                      setState(() {
-                                        _isSelected2 = [
-                                          false,
-                                          false,
-                                          false,
-                                          false,
-                                          false,
-                                          false,
-                                          false,
-                                          false
-                                        ];
-                                        _isSelected2[index] =
-                                            !_isSelected2[index];
-                                        switch (index) {
-                                          case 0:
-                                            filiere = "MPI";
-                                            break;
-                                          case 1:
-                                            filiere = "CBA";
-                                            break;
-                                          case 2:
-                                            filiere = "IIA";
-                                            break;
-                                          case 3:
-                                            filiere = "IMI";
-                                            break;
-                                          case 4:
-                                            filiere = "GL";
-                                            break;
-                                          case 5:
-                                            filiere = "RT";
-                                            break;
-                                          case 6:
-                                            filiere = "BIO";
-                                            break;
-                                          case 7:
-                                            filiere = "CH";
-                                            break;
-
-                                          default:
-                                        }
-                                      });
-                                    },
-
-                                    // region example 1
-
-                                    color: Colors.grey,
-
-                                    selectedColor: Colors.red,
-
-                                    fillColor: Colors.lightBlueAccent,
-
-                                    // endregion
-
-                                    // region example 2
-
-                                    borderColor: Colors.lightBlueAccent,
-
-                                    selectedBorderColor: Colors.red,
-
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-
-                                    // endregion
-                                  ),
-                                  IconButton(
-                                      onPressed: () async {
-                                        setState(() {
-                                          edited = false;
-                                        });
-                                        await FirestoreService.setString(
-                                                widget.field, filiere)
-                                            .then((value) {
-                                          FirestoreService.fetchUser(
-                                                  Member.phone)
-                                              .then((value) {
-                                            setState(() {
-                                            });
-                                          });
-                                        });
-                                      },
-                                      icon: Icon(Icons.send))
-                                ],
-                              )
-                            : Center(
+                                    stops: [
+                                      0.1,
+                                      1,
+                                    ]),
+                                borderGradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Color.fromARGB(255, 208, 211, 13)
+                                        .withOpacity(0.5),
+                                    Color((0xFFFFFFFF)).withOpacity(0.5),
+                                  ],
+                                ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    ToggleButtons(
-                                      constraints: BoxConstraints(
-                                          maxWidth: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              10,
-                                          minWidth: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              10,
-                                          maxHeight: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              10,
-                                          minHeight: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              10),
-                                      children: <Widget>[
-                                        Text("1"),
-                                        Text("2"),
-                                        Text("3"),
-                                        Text("4"),
-                                        Text("5"),
-                                        Text("5+"),
-                                      ],
-
-                                      isSelected: _isSelected,
-
-                                      onPressed: (int index) {
-                                        setState(() {
-                                          _isSelected = [
-                                            false,
-                                            false,
-                                            false,
-                                            false,
-                                            false,
-                                            false,
-                                          ];
-                                          _isSelected[index] =
-                                              !_isSelected[index];
-                                          switch (index) {
-                                            case 0:
-                                              level = 1;
-                                              break;
-                                            case 1:
-                                              level = 2;
-                                              break;
-                                            case 2:
-                                              level = 3;
-                                              break;
-                                            case 3:
-                                              level = 4;
-                                              break;
-                                            case 4:
-                                              level = 5;
-                                              break;
-                                            case 5:
-                                              level = 6;
-                                              break;
-                                            default:
-                                          }
-                                        });
-                                      },
-
-                                      // region example 1
-
-                                      color: Colors.grey,
-
-                                      selectedColor: Colors.red,
-
-                                      fillColor: Colors.lightBlueAccent,
-
-                                      // endregion
-
-                                      // region example 2
-
-                                      borderColor: Colors.lightBlueAccent,
-
-                                      selectedBorderColor: Colors.red,
-
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(10)),
-
-                                      // endregion
-                                    ),
-                                    IconButton(
-                                        onPressed: () async {
-                                          setState(() {
-                                            edited = false;
-                                          });
-                                          await FirestoreService.setlevel(
-                                                  widget.field, level)
-                                              .then((value) {
-                                            FirestoreService.fetchUser(
-                                                    Member.phone)
-                                                .then((value) {
-                                              setState(() {
-                                              });
-                                            });
-                                          });
-                                        },
-                                        icon: Icon(Icons.send))
+                                    Expanded(
+                                        child: Center(
+                                            child: Text(
+                                      interpretedText,
+                                    ))),
                                   ],
                                 ),
                               )
-                        : GestureDetector(
-                          onTap: (){
-                            FirestoreService.setXp({"phone":Member.phone,"gameLevel":Member.gameLevel,"xp":Member.xp.toString()}, Member.claim).then((value) {
-                              FirestoreService.resetClaim(Member.phone);
-                               Navigator
-                                                      .pushReplacementNamed(
-                                                    context,
-                                                    AerobotixAppHomeScreen.id,
-                                                  );
-                                                  
-                            });
-                          },
-                          child: GlassmorphicContainer(
-                              width: MediaQuery.of(context).size.width /
-                                  widget.ratio,
-                              height: MediaQuery.of(context).size.width / 9,
-                              borderRadius: 20,
-                              blur: 20,
-                              alignment: Alignment.bottomCenter,
-                              border: 2,
-                              linearGradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: widget.field == "claim"
-                                      ? [
-                                          Color.fromARGB(255, 192, 204, 23).withOpacity(0.1),
-                                          Color.fromARGB(255, 255, 252, 62).withOpacity(0.05),
-                                        ]
-                                      : [
-                                          Color(0xFFffffff).withOpacity(0.1),
-                                          Color(0xFFFFFFFF).withOpacity(0.05),
-                                        ],
-                                  stops: [
-                                    0.1,
-                                    1,
-                                  ]),
-                              borderGradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors:widget.field == "claim" ?
-                                
-                                [
-                                  Color.fromARGB(255, 208, 211, 13)
-                                      .withOpacity(0.5),
-                                  Color((0xFFFFFFFF)).withOpacity(0.5),
-                                ]: [
-                                  Color.fromARGB(255, 165, 26, 26)
-                                      .withOpacity(0.5),
-                                  Color((0xFFFFFFFF)).withOpacity(0.5),
-                                ],
+                            : Text(
+                                interpretedText,
+                                overflow: TextOverflow.ellipsis,
+                                style: widget.field != "class"
+                                    ? TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      )
+                                    : TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic,
+                                        color: AerobotixAppTheme.grey),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Expanded(child: Center(child: Text(interpretedText))),
-                                  if (widget.other.isEmpty &&
-                                      widget.field != "claim")
-                                    IconButton(
-                                        onPressed: () {
-                                          popUp(context);
-                                        },
-                                        icon: Icon(Icons.edit))
-                                ],
-                              ),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: DropdownButton(
+                              dropdownColor: AerobotixAppTheme.background,
+                              value: branchChoice,
+                              items: [
+                                DropdownMenuItem(
+                                  child: Text('MPI'),
+                                  value: 'MPI',
+                                ),
+                                DropdownMenuItem(
+                                  child: Text('CBA'),
+                                  value: 'CBA',
+                                ),
+                                DropdownMenuItem(
+                                  child: Text('GL'),
+                                  value: 'GL',
+                                ),
+                                DropdownMenuItem(
+                                  child: Text('RT'),
+                                  value: 'RT',
+                                ),
+                                DropdownMenuItem(
+                                  child: Text('IIA'),
+                                  value: 'IIA',
+                                ),
+                                DropdownMenuItem(
+                                  child: Text('IMI'),
+                                  value: 'IMI',
+                                ),
+                                DropdownMenuItem(
+                                  child: Text('CH'),
+                                  value: 'CH',
+                                ),
+                                DropdownMenuItem(
+                                  child: Text('BIO'),
+                                  value: 'BIO',
+                                ),
+                              ],
+                              onChanged: (String? value) {
+                                setState(() {
+                                  branchChoice = value!;
+                                });
+                              },
                             ),
-                        ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height / 150,
-                    ),
-                  ],
-                )),
-          ),
-        );
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: DropdownButton(
+                              dropdownColor: AerobotixAppTheme.background,
+                              value: levelChoice,
+                              items: [
+                                DropdownMenuItem(
+                                  child: Text('1'),
+                                  value: '1',
+                                ),
+                                DropdownMenuItem(
+                                  child: Text('2'),
+                                  value: '2',
+                                ),
+                                DropdownMenuItem(
+                                  child: Text('3'),
+                                  value: '3',
+                                ),
+                                DropdownMenuItem(
+                                  child: Text('4'),
+                                  value: '4',
+                                ),
+                                DropdownMenuItem(
+                                  child: Text('5'),
+                                  value: '5',
+                                ),
+                                DropdownMenuItem(
+                                  child: Text('5+'),
+                                  value: '6',
+                                ),
+                              ],
+                              onChanged: (String? value) {
+                                setState(() {
+                                  levelChoice = value!;
+                                });
+                              },
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () async {
+                                setState(() {
+                                  edit = false;
+                                });
+                                await FirestoreService.setString(
+                                        "branch", branchChoice)
+                                    .then((value) {
+                                  FirestoreService.fetchUser(Member.phone)
+                                      .then((value) {
+                                    setState(() {});
+                                  });
+                                });
+                                await FirestoreService.setlevel(
+                                        "level", int.parse(levelChoice))
+                                    .then((value) {
+                                  FirestoreService.fetchUser(Member.phone)
+                                      .then((value) {
+                                    setState(() {});
+                                  });
+                                });
+                              },
+                              icon: Icon(Icons.send))
+                        ],
+                      )));
       },
     );
   }

@@ -52,7 +52,7 @@ class FirestoreService {
     } catch (e) {}
   }
 
-    static Future<void> addMissionPhoto(String photo, String name) async {
+  static Future<void> addMissionPhoto(String photo, String name) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentReference memberRef = db.collection('missions').doc(name);
     try {
@@ -116,10 +116,8 @@ class FirestoreService {
           "xp": 0,
           "gameLevel": "3asfour",
           "new": true,
-          'roles':[],
-          'claim':0,
-
-
+          'roles': [],
+          'claim': 0,
         });
         Member.phone = phone;
         Member.first_name = first_name;
@@ -140,8 +138,7 @@ class FirestoreService {
         Member.device = deviceId!;
         Member.isNew = true;
         Member.roles = [];
-        Member.claim=0;
-
+        Member.claim = 0;
       } catch (e) {}
     }
     return exist;
@@ -186,7 +183,7 @@ class FirestoreService {
     }
   }
 
-   static Future<bool> addMission(name, description,score,maxSub) async {
+  static Future<bool> addMission(name, description, score, maxSub) async {
     bool result = await InternetConnectionChecker().hasConnection;
     if (result == false) {
       showSnackBar('Please check your internet connection!',
@@ -212,13 +209,10 @@ class FirestoreService {
           "description": description,
           "photo": "",
           "score": score,
-          "max":maxSub,
-          "state":"new",
-          "members":[],
-          "done":[],
-
-
-
+          "max": maxSub,
+          "state": "new",
+          "members": [],
+          "done": [],
         });
         showSnackBar('Your component is added successfully');
         return true;
@@ -255,25 +249,22 @@ class FirestoreService {
     return map;
   }
 
-
   static Future<String> getFullName(String ph) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     CollectionReference memberRef = db.collection('members');
 
     try {
       print("tryinnnnnnnnnnnnnnnnnnnnng");
-      QuerySnapshot user = await memberRef
-          .where("phone", isEqualTo: ph)
-          .limit(1)
-          .get();
-      DocumentSnapshot name = user.docs.first["first_name"]+" "+ user.docs.first["last_name"];
+      QuerySnapshot user =
+          await memberRef.where("phone", isEqualTo: ph).limit(1).get();
+      DocumentSnapshot name =
+          user.docs.first["first_name"] + " " + user.docs.first["last_name"];
       return name.toString();
     } catch (e) {
       return "";
     }
     return "";
   }
-
 
   static Future<bool> isConnected() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
@@ -541,9 +532,7 @@ class FirestoreService {
       Member.gameLevel = user.get("gameLevel");
       Member.isNew = user.get("new");
       Member.roles = user.get("roles");
-      Member.claim=user.get("claim");
-
-     
+      Member.claim = user.get("claim");
     } catch (e) {}
   }
 
@@ -613,14 +602,12 @@ class FirestoreService {
             "-" +
             doc.get("birth_date").toDate().year.toString();
         user["claim"] = doc.get("claim").toString();
-        if(doc.get("roles").contains("music")){
-        user["music"] = "true";
-
-        }else{
-        user["music"] = "false";
-
+        if (doc.get("roles").contains("music")) {
+          user["music"] = "true";
+        } else {
+          user["music"] = "false";
         }
-          
+
         print(user);
       }).timeout(Duration(seconds: 5));
     } on TimeoutException catch (e) {
@@ -777,8 +764,7 @@ class FirestoreService {
     }
   }
 
-  static Future<bool> changeMissionState(
-      identifiant, String state) async {
+  static Future<bool> changeMissionState(identifiant, String state) async {
     bool result = await InternetConnectionChecker().hasConnection;
     if (result == false) {
       showSnackBar('Please check your internet connection!',
@@ -790,15 +776,12 @@ class FirestoreService {
       FirebaseFirestore db = FirebaseFirestore.instance;
       DocumentReference requesstRef =
           db.collection('missions').doc(identifiant);
-      
 
-   
-        await requesstRef.set({
-          "state": state,
-        }, SetOptions(merge: true)).then((e) {
-          showSnackBar("Data updated successfully");
-        });
-      
+      await requesstRef.set({
+        "state": state,
+      }, SetOptions(merge: true)).then((e) {
+        showSnackBar("Data updated successfully");
+      });
 
       return true;
     } on TimeoutException catch (e) {
@@ -812,8 +795,7 @@ class FirestoreService {
     }
   }
 
-  static Future<bool> MusicPermission(
-      String phone,bool dec) async {
+  static Future<bool> MusicPermission(String phone, bool dec) async {
     bool result = await InternetConnectionChecker().hasConnection;
     if (result == false) {
       showSnackBar('Please check your internet connection!',
@@ -823,28 +805,23 @@ class FirestoreService {
 
     try {
       FirebaseFirestore db = FirebaseFirestore.instance;
-      DocumentReference requesstRef =
-          db.collection('members').doc(phone);
-      
+      DocumentReference requesstRef = db.collection('members').doc(phone);
 
-   
-        if (dec==true){
-          await requesstRef.set({
+      if (dec == true) {
+        await requesstRef.set({
           "roles": FieldValue.arrayUnion(["music"]),
         }, SetOptions(merge: true)).then((e) {
           showSnackBar("Done adding music permission");
         });
         Member.roles.add("music");
-        }else{
-          await requesstRef.set({
+      } else {
+        await requesstRef.set({
           "roles": FieldValue.arrayRemove(["music"]),
         }, SetOptions(merge: true)).then((e) {
           showSnackBar("Done removing music permission");
         });
         Member.roles.remove("music");
-
-        }
-      
+      }
 
       return true;
     } on TimeoutException catch (e) {
@@ -858,9 +835,7 @@ class FirestoreService {
     }
   }
 
-
-static Future<bool> subscribeToMission(
-      identifiant, String phone) async {
+  static Future<bool> subscribeToMission(identifiant, String phone) async {
     bool result = await InternetConnectionChecker().hasConnection;
     if (result == false) {
       showSnackBar('Please check your internet connection!',
@@ -872,15 +847,12 @@ static Future<bool> subscribeToMission(
       FirebaseFirestore db = FirebaseFirestore.instance;
       DocumentReference requesstRef =
           db.collection('missions').doc(identifiant);
-      
 
-   
-        await requesstRef.set({
-          "members": FieldValue.arrayUnion([phone]),
-        }, SetOptions(merge: true)).then((e) {
-          showSnackBar("Done affecting mission");
-        });
-      
+      await requesstRef.set({
+        "members": FieldValue.arrayUnion([phone]),
+      }, SetOptions(merge: true)).then((e) {
+        showSnackBar("Done affecting mission");
+      });
 
       return true;
     } on TimeoutException catch (e) {
@@ -893,10 +865,9 @@ static Future<bool> subscribeToMission(
       return false;
     }
   }
-
 
   static Future<bool> addMissionMember(
-      identifiant, String phone,String full_name,String field) async {
+      identifiant, String phone, String full_name, String field) async {
     bool result = await InternetConnectionChecker().hasConnection;
     if (result == false) {
       showSnackBar('Please check your internet connection!',
@@ -908,14 +879,14 @@ static Future<bool> subscribeToMission(
       FirebaseFirestore db = FirebaseFirestore.instance;
       DocumentReference requesstRef =
           db.collection('missions').doc(identifiant);
-      
 
-        await requesstRef.set({
-          field: FieldValue.arrayUnion([phone+"~"+full_name]),
-        }, SetOptions(merge: true)).then((e) {
-        if(field=="members"){showSnackBar("Done affecting mission");}
-        });
-      
+      await requesstRef.set({
+        field: FieldValue.arrayUnion([phone + "~" + full_name]),
+      }, SetOptions(merge: true)).then((e) {
+        if (field == "members") {
+          showSnackBar("Done affecting mission");
+        }
+      });
 
       return true;
     } on TimeoutException catch (e) {
@@ -1000,72 +971,74 @@ static Future<bool> subscribeToMission(
           db.collection('members').doc(userr["phone"].toString());
 
       String neww = "wlidha";
-      if(x<0){
-         if (userr["gameLevel"] == "3asfour") {
-          neww = "3asfour";
-          x=-5000;
-
-        } else if (userr["gameLevel"] == "wlidha") {
-          neww = "3asfour";
-        } else if (userr["gameLevel"] == "kassa7") {
-          neww = "wlidha";
-        } else if (userr["gameLevel"] == "r3ad") {
-          neww = "kassa7";
-        } else if (userr["gameLevel"] == "jen") {
-          neww = "r3ad";
-        }
-        else if (userr["gameLevel"] == "3orsa") {
-          neww = "jen";
-        }
-         
-
-          await userRef.set({
-            "gameLevel": neww,
-            "xp": x +5000,
-          }, SetOptions(merge: true)).timeout(Duration(seconds:6)).then((e) {
-            showSnackBar("Data updated successfully");
-          });
-          Member.xp=x +5000;
-          return true;
-      }else{
-         if ((x / 5000) >= 1) {
+      if (x < 0) {
         if (userr["gameLevel"] == "3asfour") {
-          neww = "wlidha";
+          neww = "3asfour";
+          x = -5000;
         } else if (userr["gameLevel"] == "wlidha") {
-          neww = "kassa7";
+          neww = "3asfour";
         } else if (userr["gameLevel"] == "kassa7") {
-          neww = "r3ad";
+          neww = "wlidha";
         } else if (userr["gameLevel"] == "r3ad") {
-          neww = "jen";
+          neww = "kassa7";
         } else if (userr["gameLevel"] == "jen") {
-          neww = "3orsa";
-         
+          neww = "r3ad";
+        } else if (userr["gameLevel"] == "3orsa") {
+          neww = "jen";
         }
-        else if (userr["gameLevel"] == "3orsa") {
-          neww = "3orsa";
-          x=4999;
-         
-        }
-          await userRef.set({
-            "gameLevel": neww,
-            "xp": x / 5000,
-          }, SetOptions(merge: true)).timeout(Duration(seconds:6)).then((e) {
-            showSnackBar("Data updated successfully");
-          });
-          Member.xp=x % 5000;
+
+        await userRef
+            .set({
+              "gameLevel": neww,
+              "xp": x + 5000,
+            }, SetOptions(merge: true))
+            .timeout(Duration(seconds: 6))
+            .then((e) {
+              showSnackBar("Data updated successfully");
+            });
+        Member.xp = x + 5000;
+        return true;
+      } else {
+        if ((x / 5000) >= 1) {
+          if (userr["gameLevel"] == "3asfour") {
+            neww = "wlidha";
+          } else if (userr["gameLevel"] == "wlidha") {
+            neww = "kassa7";
+          } else if (userr["gameLevel"] == "kassa7") {
+            neww = "r3ad";
+          } else if (userr["gameLevel"] == "r3ad") {
+            neww = "jen";
+          } else if (userr["gameLevel"] == "jen") {
+            neww = "3orsa";
+          } else if (userr["gameLevel"] == "3orsa") {
+            neww = "3orsa";
+            x = 4999;
+          }
+          await userRef
+              .set({
+                "gameLevel": neww,
+                "xp": x / 5000,
+              }, SetOptions(merge: true))
+              .timeout(Duration(seconds: 6))
+              .then((e) {
+                showSnackBar("Data updated successfully");
+              });
+          Member.xp = x % 5000;
 
           return true;
-        
-      } else {
-        await userRef.set({
-          "xp": x % 5000,
-        }, SetOptions(merge: true)).timeout(Duration(seconds:6)).then((e) {
-          showSnackBar("Data updated successfully");
-        });
-          Member.xp=x % 5000;
+        } else {
+          await userRef
+              .set({
+                "xp": x % 5000,
+              }, SetOptions(merge: true))
+              .timeout(Duration(seconds: 6))
+              .then((e) {
+                showSnackBar("Data updated successfully");
+              });
+          Member.xp = x % 5000;
 
-        return true;
-      }
+          return true;
+        }
       }
     } on TimeoutException catch (e) {
       showSnackBar('Please check your internet connection!',
@@ -1078,9 +1051,7 @@ static Future<bool> subscribeToMission(
     }
   }
 
-
   static Future<bool> setClaim(String phone, int value) async {
-   
     bool result = await InternetConnectionChecker().hasConnection;
     if (result == false) {
       showSnackBar('Please check your internet connection!',
@@ -1093,7 +1064,7 @@ static Future<bool> subscribeToMission(
     try {
       FirebaseFirestore db = FirebaseFirestore.instance;
       DocumentReference userRef = db.collection('members').doc(phone);
-      int claimm=0;
+      int claimm = 0;
       await userRef.get().then((doc) {
         claimm = doc["claim"];
       }).timeout(Duration(seconds: 5));
@@ -1102,10 +1073,9 @@ static Future<bool> subscribeToMission(
       print(claimm);
       print(claimm);
 
-
-       userRef.update({"claim": value+claimm});
-        showSnackBar("Done giving award");
-        return true;
+      userRef.update({"claim": value + claimm});
+      showSnackBar("Done giving award");
+      return true;
     } on TimeoutException catch (e) {
       showSnackBar('Please check your internet connection!',
           col: Colors.redAccent[700]);
@@ -1118,7 +1088,6 @@ static Future<bool> subscribeToMission(
   }
 
   static Future<bool> resetClaim(String phone) async {
-   
     bool result = await InternetConnectionChecker().hasConnection;
     if (result == false) {
       showSnackBar('Please check your internet connection!',
@@ -1131,9 +1100,9 @@ static Future<bool> subscribeToMission(
     try {
       FirebaseFirestore db = FirebaseFirestore.instance;
       DocumentReference userRef = db.collection('members').doc(phone);
-       userRef.update({"claim": 0});
-       Member.claim=0;
-        return true;
+      userRef.update({"claim": 0});
+      Member.claim = 0;
+      return true;
     } on TimeoutException catch (e) {
       showSnackBar('Please check your internet connection!',
           col: Colors.redAccent[700]);
@@ -1145,9 +1114,8 @@ static Future<bool> subscribeToMission(
     }
   }
 
-
   static Future<bool> setlevel(String key, int value) async {
-    if (value == 0 ) {
+    if (value == 0) {
       showSnackBar('Please select a level', col: Colors.redAccent[700]);
       return false;
     }
@@ -1193,11 +1161,8 @@ static Future<bool> subscribeToMission(
     }
   }
 
-
-
-
-  static Future<bool> verifyUser(String phone, int score,int  entryYear,String gameLevel) async {
-   
+  static Future<bool> verifyUser(
+      String phone, int score, int entryYear, String gameLevel) async {
     bool result = await InternetConnectionChecker().hasConnection;
     if (result == false) {
       showSnackBar('Please check your internet connection!',
@@ -1209,16 +1174,14 @@ static Future<bool> subscribeToMission(
       FirebaseFirestore db = FirebaseFirestore.instance;
       DocumentReference userRef = db.collection('members').doc(phone);
 
-    
-     
-        userRef.update({"new": false,
-        "xp":score,
-        "entryYear":entryYear,
-        "gameLevel":gameLevel
-        });
-        showSnackBar("Data updated successfully");
-        return true;
-      
+      userRef.update({
+        "new": false,
+        "xp": score,
+        "entryYear": entryYear,
+        "gameLevel": gameLevel
+      });
+      showSnackBar("Data updated successfully");
+      return true;
     } on TimeoutException catch (e) {
       showSnackBar('Please check your internet connection!',
           col: Colors.redAccent[700]);
@@ -1229,8 +1192,8 @@ static Future<bool> subscribeToMission(
       return false;
     }
   }
-  static Future<bool> playSong(String phone, String url,String title) async {
-   
+
+  static Future<bool> playSong(String phone, String url, String title) async {
     bool result = await InternetConnectionChecker().hasConnection;
     if (result == false) {
       showSnackBar('Please check your internet connection!',
@@ -1242,17 +1205,13 @@ static Future<bool> subscribeToMission(
       FirebaseFirestore db = FirebaseFirestore.instance;
       DocumentReference songRef = db.collection('app').doc("song");
 
-    
-     
-        
       songRef.set({
         "url": url,
-        "name": Member.first_name+" "+Member.last_name,
-        "title":title
+        "name": Member.first_name + " " + Member.last_name,
+        "title": title
       }, SetOptions(merge: true));
-        showSnackBar("Your song will be playing now");
-        return true;
-      
+      showSnackBar("Done");
+      return true;
     } on TimeoutException catch (e) {
       showSnackBar('Please check your internet connection!',
           col: Colors.redAccent[700]);
@@ -1264,9 +1223,8 @@ static Future<bool> subscribeToMission(
     }
   }
 
-
-  static Future<bool> addBadge(String phone,String title, String description , String date, String type) async {
-   bool result = await InternetConnectionChecker().hasConnection;
+  static Future<bool> showMessage(String msg) async {
+    bool result = await InternetConnectionChecker().hasConnection;
     if (result == false) {
       showSnackBar('Please check your internet connection!',
           col: Colors.redAccent[700]);
@@ -1275,20 +1233,13 @@ static Future<bool> subscribeToMission(
 
     try {
       FirebaseFirestore db = FirebaseFirestore.instance;
-      DocumentReference userRef = db.collection('members').doc(phone).collection("badges").doc(title+DateTime.now().toString());
+      DocumentReference songRef = db.collection('app').doc("message");
 
-    print("rrrrrrrrrrrr");
-     
-        
-      userRef.set({"title" : title,
-        "description": description,
-        "date":date,
-        "type":type
-              }, SetOptions(merge: true));
-        showSnackBar("Your badge is  added");
-        
-        return true;
-      
+      songRef.set({
+        "msg": msg,
+      }, SetOptions(merge: true));
+      showSnackBar("Message sent successfully");
+      return true;
     } on TimeoutException catch (e) {
       showSnackBar('Please check your internet connection!',
           col: Colors.redAccent[700]);
@@ -1300,5 +1251,76 @@ static Future<bool> subscribeToMission(
     }
   }
 
+  static Future<bool> showMatrix(List<List<Color>> matrix) async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (!result) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
 
+    try {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      DocumentReference matrixRef = db.collection('app').doc("matrix");
+
+      // Flatten the matrix into a 1D list of RGB values
+      List<Map<String, int>> flattenedMatrix = matrix
+          .expand((row) => row.map((color) => {
+                'red': color.red,
+                'green': color.green,
+                'blue': color.blue,
+              }))
+          .toList();
+
+      matrixRef.set({
+        "matrix": flattenedMatrix,
+      }, SetOptions(merge: true));
+
+      showSnackBar("Matrix sent successfully");
+      return true;
+    } catch (e) {
+      showSnackBar('An error occurred while sending the matrix!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+  }
+
+  static Future<bool> addBadge(String phone, String title, String description,
+      String date, String type) async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+
+    try {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      DocumentReference userRef = db
+          .collection('members')
+          .doc(phone)
+          .collection("badges")
+          .doc(title + DateTime.now().toString());
+
+      print("rrrrrrrrrrrr");
+
+      userRef.set({
+        "title": title,
+        "description": description,
+        "date": date,
+        "type": type
+      }, SetOptions(merge: true));
+      showSnackBar("Your badge is  added");
+
+      return true;
+    } on TimeoutException catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    } catch (e) {
+      showSnackBar('Please check your internet connection!',
+          col: Colors.redAccent[700]);
+      return false;
+    }
+  }
 }

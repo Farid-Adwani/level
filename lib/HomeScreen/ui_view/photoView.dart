@@ -52,11 +52,11 @@ class _PhotoViewState extends State<PhotoView> {
   Future uploadFile() async {
     if (_photo == null) return;
 
- setState(() {
+    setState(() {
       uploading = true;
     });
-        final filePath = _photo!.absolute.path;
-    
+    final filePath = _photo!.absolute.path;
+
     // Create output file path
     // eg:- "Volume/VM/abcd_out.jpeg"
     final lastIndex = filePath.lastIndexOf(new RegExp(r'.jp'));
@@ -64,52 +64,48 @@ class _PhotoViewState extends State<PhotoView> {
     final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
 
     final compressedImage = await FlutterImageCompress.compressAndGetFile(
-          filePath, 
-          outPath,
-          minWidth: 1000,
-          minHeight: 1000,
-          quality: 50).then((value) async {
+            filePath, outPath,
+            minWidth: 1000, minHeight: 1000, quality: 50)
+        .then((value) async {
+      _photo = value;
+      final fileName = basename(_photo!.path);
+      final destination = 'profiles/${Member.phone}/profile/';
 
-_photo=value;
-final fileName = basename(_photo!.path);
-    final destination = 'profiles/${Member.phone}/profile/';
+      try {
+        String name = DateTime.now().toString() + fileName;
+        Member.photo = name;
+        final ref = FirebaseStorage.instance.ref(destination).child(name);
 
-    try {
-      String name = DateTime.now().toString() + fileName;
-      Member.photo = name;
-      final ref = FirebaseStorage.instance.ref(destination).child(name);
-
-      await ref.putFile(_photo!).timeout(Duration(seconds: 7));
-      await FirestoreService.addProfilePhoto(name, Member.phone)
-          .timeout(Duration(seconds: 7))
-          .then((value) {
-        showSnackBar("Your photo is updated successfully !");
-        getIm();
-      });
-    } on TimeoutException {
-      showSnackBar("Please check your internet connection and retry !",
-          col: Colors.red);
-      setState(() {
-        uploading = false;
-        _photo = null;
-      });
-    } catch (e) {
-      showSnackBar("Please check your internet connection and retry !",
-          col: Colors.red);
-      print(e);
-      setState(() {
-        uploading = false;
-        _photo = null;
-      });
-    }
-          });
+        await ref.putFile(_photo!).timeout(Duration(seconds: 7));
+        await FirestoreService.addProfilePhoto(name, Member.phone)
+            .timeout(Duration(seconds: 7))
+            .then((value) {
+          showSnackBar("Your photo is updated successfully !");
+          getIm();
+        });
+      } on TimeoutException {
+        showSnackBar("Please check your internet connection and retry !",
+            col: Colors.red);
+        setState(() {
+          uploading = false;
+          _photo = null;
+        });
+      } catch (e) {
+        showSnackBar("Please check your internet connection and retry !",
+            col: Colors.red);
+        print(e);
+        setState(() {
+          uploading = false;
+          _photo = null;
+        });
+      }
+    });
 
     //  await compressedImage!.length().then((value) {
     //   print(value);
     //   print("111");
     // });
-   
-    
+
     setState(() {
       uploading = false;
     });
@@ -185,10 +181,9 @@ final fileName = basename(_photo!.path);
                 child: Padding(
                   padding: const EdgeInsets.only(
                       left: 24, right: 24, top: 0, bottom: 0),
-                  child:
-                   AvatarGlow(
+                  child: AvatarGlow(
                     glowColor: Colors.blue,
-                    endRadius: MediaQuery.of(context).size.width / 4,
+                    endRadius: MediaQuery.of(context).size.width / 6,
                     duration: Duration(milliseconds: 2000),
                     repeat: true,
                     showTwoGlows: true,
@@ -199,11 +194,6 @@ final fileName = basename(_photo!.path);
                           width: MediaQuery.of(context).size.width / 2.5,
                           height: MediaQuery.of(context).size.width / 2.5,
                           decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Member.gender == Gender.Female
-                                    ? Colors.pinkAccent
-                                    : Colors.blue,
-                                width: 5),
                             shape: BoxShape.circle,
                             image: (netIm.isNotEmpty && netIm != "wait")
                                 ? DecorationImage(

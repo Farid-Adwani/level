@@ -33,7 +33,8 @@ class _BottomBarViewState extends State<BottomBarView>
     super.initState();
   }
 
-bool inProfile=true;
+  bool inProfile = true;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -69,9 +70,9 @@ bool inProfile=true;
                                   removeAllSelect: () {
                                     setRemoveAllSelection(
                                         widget.tabIconsList?[0]);
-                                                 setState(() {
-                            inProfile=false;
-                         });
+                                    setState(() {
+                                      inProfile = false;
+                                    });
                                     widget.changeIndex!(0);
                                   }),
                             ),
@@ -81,9 +82,9 @@ bool inProfile=true;
                                   removeAllSelect: () {
                                     setRemoveAllSelection(
                                         widget.tabIconsList?[1]);
-                                                 setState(() {
-                            inProfile=false;
-                         });
+                                    setState(() {
+                                      inProfile = false;
+                                    });
                                     widget.changeIndex!(1);
                                   }),
                             ),
@@ -101,9 +102,9 @@ bool inProfile=true;
                                   removeAllSelect: () {
                                     setRemoveAllSelection(
                                         widget.tabIconsList?[2]);
-                                         setState(() {
-                            inProfile=false;
-                         });
+                                    setState(() {
+                                      inProfile = false;
+                                    });
                                     widget.changeIndex!(2);
                                   }),
                             ),
@@ -113,9 +114,9 @@ bool inProfile=true;
                                   removeAllSelect: () {
                                     setRemoveAllSelection(
                                         widget.tabIconsList?[3]);
-                                                 setState(() {
-                            inProfile=false;
-                         });
+                                    setState(() {
+                                      inProfile = false;
+                                    });
                                     widget.changeIndex!(3);
                                   }),
                             ),
@@ -156,22 +157,21 @@ bool inProfile=true;
                       // alignment: Alignment.center,s
                       decoration: BoxDecoration(
                         color: AerobotixAppTheme.nearlyDarkBlue,
-                        gradient: inProfile==false? 
-                         LinearGradient(
-                            colors: [
-                             Colors.white,
-                             Colors.white,
-
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight) :
-                             LinearGradient(
-                            colors: [
-                              Colors.blue,
-                             Color.fromARGB(255, 173, 17, 30)
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight),
+                        gradient: inProfile == false
+                            ? LinearGradient(
+                                colors: [
+                                    Colors.white,
+                                    Colors.white,
+                                  ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight)
+                            : LinearGradient(
+                                colors: [
+                                    Colors.blue,
+                                    Color.fromARGB(255, 173, 17, 30)
+                                  ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight),
                         shape: BoxShape.circle,
                         boxShadow: <BoxShadow>[
                           BoxShadow(
@@ -187,18 +187,16 @@ bool inProfile=true;
                           splashColor: Colors.white.withOpacity(0.1),
                           highlightColor: Colors.transparent,
                           focusColor: Colors.transparent,
-                          onTap:(){ widget.addClick!();
+                          onTap: () {
+                            widget.addClick!();
 
-                         setState(() {
-                            inProfile=true;
-                         });
-                              widget.tabIconsList?.forEach((TabIconData tab) {
-        tab.isSelected = false;
-        widget.addClick!();
-
-      });
-
-
+                            setState(() {
+                              inProfile = true;
+                            });
+                            widget.tabIconsList?.forEach((TabIconData tab) {
+                              tab.isSelected = false;
+                              widget.addClick!();
+                            });
                           },
                           child: Image.asset("assets/HomeScreen/profile.png"),
                         ),

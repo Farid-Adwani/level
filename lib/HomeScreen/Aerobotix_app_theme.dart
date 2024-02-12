@@ -5,7 +5,7 @@ class AerobotixAppTheme {
   static const Color nearlyWhite = Color(0xFFFAFAFA);
   static const Color white = Color.fromARGB(255, 252, 252, 252);
   static const Color button_bar = Color(0xFFFFFFFF);
-   
+
   static const Color background = Color(0xFF040F2D);
   static const Color nearlyDarkBlue = Color.fromARGB(255, 38, 51, 197);
 

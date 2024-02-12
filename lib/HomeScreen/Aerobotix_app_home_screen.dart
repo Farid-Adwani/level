@@ -7,10 +7,10 @@ import 'package:Aerobotix/screens/musicScreen.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigation_view/bottom_bar_view.dart';
 
-import 'my_diary/my_diary_screen.dart';
+import 'profile/profile_screen.dart';
 
 class AerobotixAppHomeScreen extends StatefulWidget {
-   static const id = 'SignUpScreen';
+  static const id = 'SignUpScreen';
   @override
   _AerobotixAppHomeScreenState createState() => _AerobotixAppHomeScreenState();
 }
@@ -30,11 +30,11 @@ class _AerobotixAppHomeScreenState extends State<AerobotixAppHomeScreen>
     tabIconsList.forEach((TabIconData tab) {
       tab.isSelected = false;
     });
-   // tabIconsList[3].isSelected = true;
+    // tabIconsList[3].isSelected = true;
 
     animationController = AnimationController(
         duration: const Duration(milliseconds: 600), vsync: this);
-    tabBody = MyDiaryScreen(animationController: animationController);
+    tabBody = ProfileScreen(animationController: animationController);
     super.initState();
   }
 
@@ -84,51 +84,48 @@ class _AerobotixAppHomeScreenState extends State<AerobotixAppHomeScreen>
           tabIconsList: tabIconsList,
           addClick: () {
             setState(() {
-                  tabBody =
-                      MyDiaryScreen(animationController: animationController);
-                    
-                });
+              tabBody = ProfileScreen(animationController: animationController);
+            });
           },
           changeIndex: (int index) {
-            if (index == 0  ) {
+            if (index == 0) {
+              animationController?.reverse().then<dynamic>((data) {
+                if (!mounted) {
+                  return;
+                }
+                setState(() {
+                  tabBody = leaderboardScreen(
+                      animationController: animationController);
+                });
+              });
+            } else if (index == 1) {
+              animationController?.reverse().then<dynamic>((data) {
+                if (!mounted) {
+                  return;
+                }
+                setState(() {
+                  tabBody = AllMembersScreen(
+                      animationController: animationController);
+                });
+              });
+            } else if (index == 2) {
               animationController?.reverse().then<dynamic>((data) {
                 if (!mounted) {
                   return;
                 }
                 setState(() {
                   tabBody =
-                        leaderboardScreen(animationController: animationController);
+                      TrainingScreen(animationController: animationController);
                 });
               });
-            } else  if (index == 1  ) {
+            } else if (index == 3) {
               animationController?.reverse().then<dynamic>((data) {
                 if (!mounted) {
                   return;
                 }
                 setState(() {
                   tabBody =
-                      AllMembersScreen(animationController: animationController);
-                });
-              });
-            }  else  if (index == 2  ) {
-              animationController?.reverse().then<dynamic>((data) {
-                if (!mounted) {
-                  return;
-                }
-                setState(() {
-                  tabBody =TrainingScreen(animationController: animationController);
-                     
-                });
-              });
-            } 
-            else if (index == 3) {
-              animationController?.reverse().then<dynamic>((data) {
-                if (!mounted) {
-                  return;
-                }
-                setState(() {
-                  tabBody =
-                   MusicScreen(animationController: animationController);
+                      MusicScreen(animationController: animationController);
                 });
               });
             }
